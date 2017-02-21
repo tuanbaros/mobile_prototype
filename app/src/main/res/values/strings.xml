@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Mobile Prototype</string>
+    <string name="action_start">start</string>
 </resources>
