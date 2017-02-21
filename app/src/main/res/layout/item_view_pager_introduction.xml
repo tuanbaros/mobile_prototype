@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="introduction"
+            type="com.framgia.mobileprototype.introduction.ViewPagerAdapter.Introduction"/>
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/dp_16"
+        android:orientation="vertical"
+        android:background="@android:color/white">
+
+        <ImageView
+            android:id="@+id/image_view"
+            android:layout_width="@dimen/dp_280"
+            android:layout_height="@dimen/dp_280"
+            android:layout_gravity="center_horizontal"
+            app:src="@{introduction.image}"/>
+
+        <TextView
+            android:id="@+id/text_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:layout_marginTop="@dimen/dp_16"
+            android:textSize="@dimen/sp_20"
+            android:textStyle="bold"
+            android:textColor="@color/colorPrimary"
+            app:text="@{introduction.title}"/>
+
+        <TextView
+            android:id="@+id/text_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:textSize="@dimen/sp_16"
+            android:layout_marginTop="@dimen/dp_9"
+            app:text="@{introduction.description}"/>
+
+    </LinearLayout>
+</layout>

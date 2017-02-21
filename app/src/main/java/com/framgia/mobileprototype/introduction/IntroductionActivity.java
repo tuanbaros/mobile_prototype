@@ -2,7 +2,9 @@ package com.framgia.mobileprototype.introduction;
 
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableBoolean;
+import android.databinding.ObservableField;
 import android.os.Bundle;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
@@ -11,9 +13,10 @@ import android.widget.LinearLayout;
 import com.framgia.mobileprototype.R;
 import com.framgia.mobileprototype.databinding.ActivityIntroductionBinding;
 
-public class IntroductionActivity extends AppCompatActivity implements IntroductionContract.View {
+public class IntroductionActivity extends AppCompatActivity implements
+    IntroductionContract.View, ViewPager.OnPageChangeListener {
     private static final String PREF_NAME = "PREF_NAME";
-    private static final int DOT_COUNT = 5;
+    private static final int DOT_COUNT = 4;
     private static final int MARGIN_TOP = 0;
     private static final int MARGIN_BOTTOM = 0;
     private static final int MARGIN_LEFT = 10;
@@ -22,6 +25,7 @@ public class IntroductionActivity extends AppCompatActivity implements Introduct
     private IntroductionContract.Presenter mIntroductionPresenter;
     private ObservableBoolean mCanStart = new ObservableBoolean();
     private ImageView[] mDots;
+    private ObservableField<ViewPagerAdapter> mViewPagerAdapter = new ObservableField<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +35,7 @@ public class IntroductionActivity extends AppCompatActivity implements Introduct
         mIntroductionPresenter = new IntroductionPresenter(this);
         mIntroductionBinding.setIntroductionActivity(this);
         mIntroductionBinding.setPresenter(mIntroductionPresenter);
+        mIntroductionBinding.setListener(this);
         mIntroductionPresenter.checkFirstOpenApp(
             getSharedPreferences(PREF_NAME, MODE_PRIVATE));
     }
@@ -38,6 +43,7 @@ public class IntroductionActivity extends AppCompatActivity implements Introduct
     private void setUpView() {
         setUpActionBar();
         setUpIncubator();
+        setUpViewPager();
     }
 
     private void setUpActionBar() {
@@ -60,6 +66,10 @@ public class IntroductionActivity extends AppCompatActivity implements Introduct
         mDots[0].setImageDrawable(getResources().getDrawable(R.drawable.dot_selected));
     }
 
+    private void setUpViewPager() {
+        mViewPagerAdapter.set(new ViewPagerAdapter(this));
+    }
+
     @Override
     public void showProjectsScreenUi() {
         // TODO: start project activity
@@ -72,5 +82,27 @@ public class IntroductionActivity extends AppCompatActivity implements Introduct
 
     public ObservableBoolean getCanStart() {
         return mCanStart;
+    }
+
+    public ObservableField<ViewPagerAdapter> getViewPagerAdapter() {
+        return mViewPagerAdapter;
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        for (int i = 0; i < DOT_COUNT; i++) {
+            mDots[i].setImageDrawable(getResources().getDrawable(R.drawable.dot_normal));
+        }
+        mDots[position].setImageDrawable(getResources().getDrawable(R.drawable.dot_selected));
+        if (position + 1 == DOT_COUNT) mCanStart.set(true);
+        else mCanStart.set(false);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
     }
 }
