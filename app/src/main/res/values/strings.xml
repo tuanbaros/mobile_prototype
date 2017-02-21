@@ -1,4 +1,12 @@
 <resources>
     <string name="app_name">Mobile Prototype</string>
     <string name="action_start">start</string>
+    <string name="title_idea">Have an app idea?</string>
+    <string name="title_take_picture">Take pictures of your drawings.</string>
+    <string name="title_link">Link them with hot spots.</string>
+    <string name="title_play">Play and get feedback!</string>
+    <string name="msg_description">
+        Draw it on paper and use Mobile Prototype to make it come to life on your mobile
+        devices
+    </string>
 </resources>

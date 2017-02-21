@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools">
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -13,6 +14,10 @@
         <variable
             name="introductionActivity"
             type="com.framgia.mobileprototype.introduction.IntroductionActivity"/>
+
+        <variable
+            name="listener"
+            type="android.support.v4.view.ViewPager.OnPageChangeListener"/>
     </data>
 
     <RelativeLayout
@@ -20,12 +25,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="@dimen/dp_16"
+        android:background="@android:color/white"
         tools:context="com.framgia.mobileprototype.introduction.IntroductionActivity">
 
         <android.support.v4.view.ViewPager
             android:id="@+id/view_pager_introduction"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            tools:listitem="@layout/item_view_pager_introduction"
+            app:adapter="@{introductionActivity.viewPagerAdapter}"
+            app:listener="@{listener}"/>
 
         <RelativeLayout
             android:id="@+id/relative_indicator"
