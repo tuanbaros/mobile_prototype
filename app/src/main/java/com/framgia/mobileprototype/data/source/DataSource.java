@@ -16,7 +16,7 @@ public interface DataSource<T> {
     }
     void getDatas(@NonNull GetListCallback getListCallback);
     void getData(@NonNull String dataId, @NonNull GetListCallback getListCallback);
-    void saveData(T data);
+    long saveData(T data);
     void updateData(T data);
     void deleteData(T data);
 }

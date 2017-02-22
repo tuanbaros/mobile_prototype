@@ -10,7 +10,7 @@ import com.framgia.mobileprototype.data.source.project.ProjectPersistenceContrac
 
 public class DataHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "mobileprototype.mSQLiteDatabase";
+    private static final String DATABASE_NAME = "mobileprototype.db";
     private static final String TEXT_TYPE = " TEXT";
     private static final String INTEGER_TYPE = " INTEGER";
     private static final String COMMA_SEP = ",";
@@ -60,6 +60,7 @@ public class DataHelper extends SQLiteOpenHelper {
     private static final String SQL_DROP_ELEMENT_ENTRIES =
         "DROP TABLE IF EXISTS " + ElementPersistenceContract.ElementEntry.TABLE_NAME;
     protected SQLiteDatabase mSQLiteDatabase;
+    protected static final long INSERT_ERROR = -1;
 
     public DataHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);

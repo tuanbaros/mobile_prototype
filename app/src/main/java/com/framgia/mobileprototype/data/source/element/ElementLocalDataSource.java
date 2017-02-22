@@ -38,11 +38,12 @@ public class ElementLocalDataSource extends DataHelper implements DataSource<Ele
     }
 
     @Override
-    public void saveData(Element data) {
+    public long saveData(Element data) {
+        long elementId = INSERT_ERROR;
         openDb();
         mSQLiteDatabase.beginTransaction();
         try {
-            mSQLiteDatabase.insert(
+            elementId = mSQLiteDatabase.insert(
                 ElementPersistenceContract.ElementEntry.TABLE_NAME, null, getContentValues(data));
             mSQLiteDatabase.setTransactionSuccessful();
         } catch (Exception e) {
@@ -51,6 +52,7 @@ public class ElementLocalDataSource extends DataHelper implements DataSource<Ele
             mSQLiteDatabase.endTransaction();
             closeDb();
         }
+        return elementId;
     }
 
     @Override

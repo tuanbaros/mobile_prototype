@@ -36,8 +36,8 @@ public class ElementRepository implements DataSource<Element> {
     }
 
     @Override
-    public void saveData(Element data) {
-        mElementLocalDataSource.saveData(data);
+    public long saveData(Element data) {
+        return mElementLocalDataSource.saveData(data);
     }
 
     @Override

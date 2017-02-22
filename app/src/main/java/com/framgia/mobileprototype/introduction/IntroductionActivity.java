@@ -1,6 +1,5 @@
 package com.framgia.mobileprototype.introduction;
 
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
@@ -28,6 +27,7 @@ public class IntroductionActivity extends AppCompatActivity implements
     private ObservableBoolean mCanStart = new ObservableBoolean();
     private ImageView[] mDots;
     private ObservableField<ViewPagerAdapter> mViewPagerAdapter = new ObservableField<>();
+    private boolean mIsFirstOpenApp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,12 +74,13 @@ public class IntroductionActivity extends AppCompatActivity implements
 
     @Override
     public void showProjectsScreenUi() {
-        startActivity(new Intent(this, ProjectsActivity.class));
+        startActivity(ProjectsActivity.getProjectsIntent(this, mIsFirstOpenApp));
         finish();
     }
 
     @Override
     public void start() {
+        mIsFirstOpenApp = true;
         setUpView();
     }
 

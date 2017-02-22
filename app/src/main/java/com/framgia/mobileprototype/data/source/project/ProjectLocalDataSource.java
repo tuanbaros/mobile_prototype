@@ -39,11 +39,12 @@ public class ProjectLocalDataSource extends DataHelper implements DataSource<Pro
     }
 
     @Override
-    public void saveData(Project data) {
+    public long saveData(Project data) {
+        long projectId = INSERT_ERROR;
         openDb();
         mSQLiteDatabase.beginTransaction();
         try {
-            mSQLiteDatabase
+            projectId = mSQLiteDatabase
                 .insertWithOnConflict(ProjectPersistenceContract.ProjectEntry.TABLE_NAME, null,
                     getContentValues(data), SQLiteDatabase.CONFLICT_IGNORE);
             mSQLiteDatabase.setTransactionSuccessful();
@@ -53,6 +54,7 @@ public class ProjectLocalDataSource extends DataHelper implements DataSource<Pro
             mSQLiteDatabase.endTransaction();
             closeDb();
         }
+        return projectId;
     }
 
     @Override
