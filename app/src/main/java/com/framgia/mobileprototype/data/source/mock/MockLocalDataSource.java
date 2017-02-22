@@ -2,6 +2,7 @@ package com.framgia.mobileprototype.data.source.mock;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 
 import com.framgia.mobileprototype.data.model.Mock;
@@ -40,17 +41,17 @@ public class MockLocalDataSource extends DataHelper implements DataSource<Mock> 
     @Override
     public long saveData(Mock data) {
         long mockId = INSERT_ERROR;
-        openDb();
-        mSQLiteDatabase.beginTransaction();
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        sqLiteDatabase.beginTransaction();
         try {
-            mockId = mSQLiteDatabase.insert(
+            mockId = sqLiteDatabase.insert(
                 MockPersistenceContract.MockEntry.TABLE_NAME, null, getContentValues(data));
-            mSQLiteDatabase.setTransactionSuccessful();
+            sqLiteDatabase.setTransactionSuccessful();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            mSQLiteDatabase.endTransaction();
-            closeDb();
+            sqLiteDatabase.endTransaction();
+            sqLiteDatabase.close();
         }
         return mockId;
     }

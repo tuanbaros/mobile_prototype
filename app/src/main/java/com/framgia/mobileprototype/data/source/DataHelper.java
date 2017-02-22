@@ -59,7 +59,6 @@ public class DataHelper extends SQLiteOpenHelper {
         "DROP TABLE IF EXISTS " + MockPersistenceContract.MockEntry.TABLE_NAME;
     private static final String SQL_DROP_ELEMENT_ENTRIES =
         "DROP TABLE IF EXISTS " + ElementPersistenceContract.ElementEntry.TABLE_NAME;
-    protected SQLiteDatabase mSQLiteDatabase;
     protected static final long INSERT_ERROR = -1;
 
     public DataHelper(Context context) {
@@ -79,13 +78,5 @@ public class DataHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(SQL_DROP_MOCK_ENTRIES);
         sqLiteDatabase.execSQL(SQL_DROP_ELEMENT_ENTRIES);
         onCreate(sqLiteDatabase);
-    }
-
-    public void openDb() {
-        mSQLiteDatabase = getWritableDatabase();
-    }
-
-    public void closeDb() {
-        mSQLiteDatabase.close();
     }
 }

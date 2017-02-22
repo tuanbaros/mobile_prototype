@@ -1,0 +1,67 @@
+package com.framgia.mobileprototype.projects;
+
+import android.content.Context;
+import android.databinding.DataBindingUtil;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
+
+import com.framgia.mobileprototype.R;
+import com.framgia.mobileprototype.data.model.Project;
+import com.framgia.mobileprototype.databinding.ItemProjectBinding;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created by tuannt on 24/02/2017.
+ * Project: mobile_prototype
+ * Package: com.framgia.mobileprototype.projects
+ */
+public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.ViewHolder> {
+    private List<Project> mProjects = new ArrayList<>();
+    private LayoutInflater mLayoutInflater;
+    private ProjectsContract.Presenter mListener;
+
+    public ProjectsAdapter(Context context, List<Project> projects,
+                           ProjectsContract.Presenter listener) {
+        if (projects != null) mProjects.addAll(projects);
+        mLayoutInflater = LayoutInflater.from(context);
+        mListener = listener;
+    }
+
+    class ViewHolder extends RecyclerView.ViewHolder {
+        private ItemProjectBinding mItemProjectBinding;
+        private ProjectItemActionHandler mProjectItemActionHandler;
+
+        ViewHolder(ItemProjectBinding itemProjectBinding) {
+            super(itemProjectBinding.getRoot());
+            mItemProjectBinding = itemProjectBinding;
+            mProjectItemActionHandler = new ProjectItemActionHandler(mListener);
+            mItemProjectBinding.setHandler(mProjectItemActionHandler);
+        }
+
+        void bindData(Project project) {
+            if (project == null) return;
+            mItemProjectBinding.setProject(project);
+            mItemProjectBinding.executePendingBindings();
+        }
+    }
+
+    @Override
+    public ProjectsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        ItemProjectBinding itemProjectBinding =
+            DataBindingUtil.inflate(mLayoutInflater, R.layout.item_project, parent, false);
+        return new ProjectsAdapter.ViewHolder(itemProjectBinding);
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        holder.bindData(mProjects.get(position));
+    }
+
+    @Override
+    public int getItemCount() {
+        return null != mProjects ? mProjects.size() : 0;
+    }
+}
