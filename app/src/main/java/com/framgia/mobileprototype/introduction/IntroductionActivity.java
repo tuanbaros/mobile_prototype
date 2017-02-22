@@ -1,5 +1,6 @@
 package com.framgia.mobileprototype.introduction;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
@@ -12,6 +13,7 @@ import android.widget.LinearLayout;
 
 import com.framgia.mobileprototype.R;
 import com.framgia.mobileprototype.databinding.ActivityIntroductionBinding;
+import com.framgia.mobileprototype.projects.ProjectsActivity;
 
 public class IntroductionActivity extends AppCompatActivity implements
     IntroductionContract.View, ViewPager.OnPageChangeListener {
@@ -72,7 +74,8 @@ public class IntroductionActivity extends AppCompatActivity implements
 
     @Override
     public void showProjectsScreenUi() {
-        // TODO: start project activity
+        startActivity(new Intent(this, ProjectsActivity.class));
+        finish();
     }
 
     @Override

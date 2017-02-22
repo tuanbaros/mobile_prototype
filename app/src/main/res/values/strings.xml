@@ -9,4 +9,12 @@
         Draw it on paper and use Mobile Prototype to make it come to life on your mobile
         devices
     </string>
+    <string name="title_project">Project</string>
+    <string name="title_introduction">Introduction</string>
+    <string name="title_about">About</string>
+    <string name="title_rate">Rate Us</string>
+    <string name="msg_open_drawer">open</string>
+    <string name="msg_close_drawer">close</string>
+    <string name="msg_project">%d projects</string>
+    <string name="msg_mock">%d mocks</string>
 </resources>
