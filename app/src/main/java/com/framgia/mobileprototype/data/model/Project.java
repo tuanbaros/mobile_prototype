@@ -1,7 +1,11 @@
 package com.framgia.mobileprototype.data.model;
 
+import android.database.Cursor;
+
+import com.framgia.mobileprototype.data.source.project.ProjectPersistenceContract;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,7 +30,27 @@ public class Project {
     @SerializedName("poster")
     private String mPoster;
     @SerializedName("mockups")
-    private List<Mock> mMocks;
+    private List<Mock> mMocks = new ArrayList<>();
+    private int mNumberMocks;
+
+    public Project(Cursor cursor) {
+        mId = cursor.getString(cursor.getColumnIndexOrThrow(
+            ProjectPersistenceContract.ProjectEntry._ID));
+        mTitle = cursor.getString(cursor.getColumnIndexOrThrow(
+            ProjectPersistenceContract.ProjectEntry.COLUMN_NAME_TITLE));
+        mDescription = cursor.getString(cursor.getColumnIndexOrThrow(
+            ProjectPersistenceContract.ProjectEntry.COLUMN_NAME_DESCRIPTION));
+        mType = cursor.getString(cursor.getColumnIndexOrThrow(
+            ProjectPersistenceContract.ProjectEntry.COLUMN_NAME_TYPE));
+        mWidth = cursor.getInt(cursor.getColumnIndexOrThrow(
+            ProjectPersistenceContract.ProjectEntry.COLUMN_NAME_WIDTH));
+        mHeight = cursor.getInt(cursor.getColumnIndexOrThrow(
+            ProjectPersistenceContract.ProjectEntry.COLUMN_NAME_HEIGHT));
+        mOrientation = cursor.getString(cursor.getColumnIndexOrThrow(
+            ProjectPersistenceContract.ProjectEntry.COLUMN_NAME_ORIENTATION));
+        mPoster = cursor.getString(cursor.getColumnIndexOrThrow(
+            ProjectPersistenceContract.ProjectEntry.COLUMN_NAME_POSTER));
+    }
 
     public String getDescription() {
         return mDescription;
@@ -98,5 +122,13 @@ public class Project {
 
     public void setMocks(List<Mock> mocks) {
         mMocks = mocks;
+    }
+
+    public int getNumberMocks() {
+        return mNumberMocks;
+    }
+
+    public void setNumberMocks(int numberMocks) {
+        mNumberMocks = numberMocks;
     }
 }

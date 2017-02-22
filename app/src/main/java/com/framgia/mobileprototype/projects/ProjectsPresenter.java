@@ -1,12 +1,15 @@
 package com.framgia.mobileprototype.projects;
 
+import com.framgia.mobileprototype.data.model.Project;
 import com.framgia.mobileprototype.data.source.DataImport;
+import com.framgia.mobileprototype.data.source.DataSource;
 import com.framgia.mobileprototype.data.source.element.ElementRepository;
 import com.framgia.mobileprototype.data.source.mock.MockRepository;
 import com.framgia.mobileprototype.data.source.project.ProjectRepository;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 /**
  * Created by tuannt on 23/02/2017.
@@ -41,7 +44,17 @@ public class ProjectsPresenter implements ProjectsContract.Presenter {
 
     @Override
     public void getProjects() {
-        // TODO: 23/02/2017 get list projects
+        mProjectRepository.getDatas(new DataSource.GetListCallback<Project>() {
+            @Override
+            public void onSuccess(List<Project> datas) {
+                mProjectsView.projectsLoaded(datas);
+            }
+
+            @Override
+            public void onError() {
+                mProjectsView.projectsNotAvailable();
+            }
+        });
     }
 
     @Override
