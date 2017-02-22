@@ -9,6 +9,10 @@
         <variable
             name="projectsActivity"
             type="com.framgia.mobileprototype.projects.ProjectsActivity"/>
+
+        <variable
+            name="presenter"
+            type="com.framgia.mobileprototype.projects.ProjectsContract.Presenter"/>
     </data>
 
     <android.support.v4.widget.DrawerLayout
@@ -24,7 +28,8 @@
             layout="@layout/app_bar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            bind:activity="@{projectsActivity}"/>
+            bind:activity="@{projectsActivity}"
+            bind:presenter="@{presenter}"/>
 
         <android.support.design.widget.NavigationView
             android:id="@+id/nav_view"

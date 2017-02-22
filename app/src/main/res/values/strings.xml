@@ -19,4 +19,15 @@
     <string name="msg_mock">%d mocks</string>
     <string name="msg_empty_project">Empty Project ^^</string>
     <string name="msg_grant_permission">Please grant all permissions! ^^</string>
+    <string name="title_new_project">New Project</string>
+    <string name="msg_project_name">Name</string>
+    <string name="msg_project_description">Description</string>
+    <string name="orientation_portrait">Portrait</string>
+    <string name="orientation_landcape">Landscape</string>
+    <string name="action_add_poster">Change Poster</string>
+    <string name="action_change_poster">Change</string>
+    <string name="action_create_project">Create</string>
+    <string name="action_cancel_project">Cancel</string>
+    <string name="error_empty_project_name">Project name is empty!</string>
+    <string name="error_project_name_exist">Project name is exist!</string>
 </resources>

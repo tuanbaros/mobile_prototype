@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.framgia.mobileprototype.Constant;
+import com.framgia.mobileprototype.R;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -71,6 +72,10 @@ public class BindingAdapterUtil {
 
     @BindingAdapter({"imageUrl"})
     public static void loadImage(ImageView view, String path) {
+        if (path == null) {
+            view.setImageResource(R.mipmap.ic_launcher);
+            return;
+        }
         try {
             InputStream inputStream = view.getContext().getAssets().open(path);
             Drawable drawable = Drawable.createFromStream(inputStream, null);

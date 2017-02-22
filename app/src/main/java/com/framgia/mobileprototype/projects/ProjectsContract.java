@@ -18,10 +18,22 @@ public interface ProjectsContract {
         void prepare() throws IOException;
         void projectsLoaded(List<Project> projects);
         void projectsNotAvailable();
+        void showCreateProjectDialog(Project project);
+        void cancelCreateProjectDialog();
+        void showErrorEmptyProjectName();
+        void showErrorProjectNameExist();
+        void updateListProjects(Project project);
+        void savePojectPoster(String fileName);
+        void pickPoster();
     }
 
     interface Presenter extends BasePresenter {
         void saveSampleProject(boolean isFirstApp, InputStream inputStream);
+        void createAppStorageFolder(String path);
         void getProjects();
+        void createProject();
+        void storeProject(Project project, boolean isPosterChanged);
+        void cancelCreateProject();
+        void changePoster();
     }
 }

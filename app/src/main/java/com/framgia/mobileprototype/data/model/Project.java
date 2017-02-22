@@ -1,7 +1,10 @@
 package com.framgia.mobileprototype.data.model;
 
 import android.database.Cursor;
+import android.databinding.BaseObservable;
+import android.databinding.Bindable;
 
+import com.framgia.mobileprototype.BR;
 import com.framgia.mobileprototype.data.source.project.ProjectPersistenceContract;
 import com.google.gson.annotations.SerializedName;
 
@@ -13,7 +16,9 @@ import java.util.List;
  * Project: mobile_prototype
  * Package: com.framgia.mobileprototype.data
  */
-public class Project {
+public class Project extends BaseObservable {
+    private static final String PORTRAIT = "portrait";
+    private static final String LANDSCAPE = "landscape";
     private String mId;
     @SerializedName("title")
     private String mTitle;
@@ -52,12 +57,17 @@ public class Project {
             ProjectPersistenceContract.ProjectEntry.COLUMN_NAME_POSTER));
     }
 
+    public Project() {
+    }
+
+    @Bindable
     public String getDescription() {
         return mDescription;
     }
 
     public void setDescription(String description) {
         this.mDescription = description;
+        notifyPropertyChanged(BR.description);
     }
 
     public int getHeight() {
@@ -84,20 +94,24 @@ public class Project {
         this.mOrientation = orientation;
     }
 
+    @Bindable
     public String getPoster() {
         return mPoster;
     }
 
     public void setPoster(String poster) {
         this.mPoster = poster;
+        notifyPropertyChanged(BR.poster);
     }
 
+    @Bindable
     public String getTitle() {
         return mTitle;
     }
 
     public void setTitle(String title) {
         this.mTitle = title;
+        notifyPropertyChanged(BR.title);
     }
 
     public int getWidth() {
@@ -130,5 +144,16 @@ public class Project {
 
     public void setNumberMocks(int numberMocks) {
         mNumberMocks = numberMocks;
+    }
+
+    @Bindable
+    public boolean isPortrait() {
+        return PORTRAIT.equals(getOrientation());
+    }
+
+    public void setPortrait(boolean portrait) {
+        if (portrait) setOrientation(PORTRAIT);
+        else setOrientation(LANDSCAPE);
+        notifyPropertyChanged(BR.portrait);
     }
 }

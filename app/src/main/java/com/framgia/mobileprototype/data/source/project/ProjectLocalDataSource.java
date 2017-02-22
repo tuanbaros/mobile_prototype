@@ -111,7 +111,7 @@ public class ProjectLocalDataSource extends DataHelper implements DataSource<Pro
     private ContentValues getContentValues(Project project) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(
-            ProjectPersistenceContract.ProjectEntry.COLUMN_NAME_TITLE, project.getTitle());
+            ProjectPersistenceContract.ProjectEntry.COLUMN_NAME_TITLE, project.getTitle().trim());
         contentValues.put(
             ProjectPersistenceContract.ProjectEntry.COLUMN_NAME_TYPE, project.getType());
         contentValues.put(
