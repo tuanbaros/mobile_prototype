@@ -18,4 +18,5 @@
     <string name="msg_project">%d projects</string>
     <string name="msg_mock">%d mocks</string>
     <string name="msg_empty_project">Empty Project ^^</string>
+    <string name="msg_grant_permission">Please grant all permissions! ^^</string>
 </resources>
