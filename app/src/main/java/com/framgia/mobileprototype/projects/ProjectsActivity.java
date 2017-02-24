@@ -1,5 +1,7 @@
 package com.framgia.mobileprototype.projects;
 
+import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableBoolean;
 import android.os.Bundle;
@@ -9,13 +11,34 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.framgia.mobileprototype.R;
+import com.framgia.mobileprototype.data.model.Project;
+import com.framgia.mobileprototype.data.source.element.ElementLocalDataSource;
+import com.framgia.mobileprototype.data.source.element.ElementRepository;
+import com.framgia.mobileprototype.data.source.mock.MockLocalDataSource;
+import com.framgia.mobileprototype.data.source.mock.MockRepository;
+import com.framgia.mobileprototype.data.source.project.ProjectLocalDataSource;
+import com.framgia.mobileprototype.data.source.project.ProjectRepository;
 import com.framgia.mobileprototype.databinding.ActivityProjectsBinding;
 import com.framgia.mobileprototype.databinding.NavHeaderBinding;
 
-public class ProjectsActivity extends AppCompatActivity {
+import java.io.IOException;
+import java.util.List;
+
+public class ProjectsActivity extends AppCompatActivity implements ProjectsContract.View {
+    private static final String EXTRA_FIRST_OPEN_APP = "EXTRA_FIRST_OPEN_APP";
+    private static final String SAMPLE_PROJECT_FILE_NAME = "sample_project.json";
     private ActivityProjectsBinding mProjectsBinding;
     private ObservableBoolean mIsDrawerOpen = new ObservableBoolean();
     private ActionBarDrawerToggle mActionBarDrawerToggle;
+    private ObservableBoolean mIsLoading = new ObservableBoolean();
+    private ObservableBoolean mIsEmptyProject = new ObservableBoolean();
+    private ProjectsContract.Presenter mProjectsPresenter;
+
+    public static Intent getProjectsIntent(Context context, boolean isFirstOpenApp) {
+        Intent intent = new Intent(context, ProjectsActivity.class);
+        intent.putExtra(EXTRA_FIRST_OPEN_APP, isFirstOpenApp);
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,8 +46,11 @@ public class ProjectsActivity extends AppCompatActivity {
         mProjectsBinding =
             DataBindingUtil.setContentView(this, R.layout.activity_projects);
         mProjectsBinding.setProjectsActivity(this);
-        setUpDrawerListener();
-        setUpNavigationHeader();
+        mProjectsPresenter = new ProjectsPresenter(this,
+            ProjectRepository.getInstance(ProjectLocalDataSource.getInstance(this)),
+            MockRepository.getInstance(MockLocalDataSource.getInstance(this)),
+            ElementRepository.getInstance(ElementLocalDataSource.getInstance(this)));
+        start();
     }
 
     private void setUpDrawerListener() {
@@ -59,6 +85,14 @@ public class ProjectsActivity extends AppCompatActivity {
         return mIsDrawerOpen;
     }
 
+    public ObservableBoolean getIsLoading() {
+        return mIsLoading;
+    }
+
+    public ObservableBoolean getIsEmptyProject() {
+        return mIsEmptyProject;
+    }
+
     @Override
     public void onBackPressed() {
         if (mIsDrawerOpen.get()) {
@@ -72,5 +106,32 @@ public class ProjectsActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         return mActionBarDrawerToggle.onOptionsItemSelected(item) ||
             super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void prepare() throws IOException {
+        mIsLoading.set(true);
+        mProjectsPresenter.saveSampleProject(
+            getIntent().getBooleanExtra(EXTRA_FIRST_OPEN_APP, true),
+            getAssets().open(SAMPLE_PROJECT_FILE_NAME));
+    }
+
+    @Override
+    public void projectsLoaded(List<Project> projects) {
+        mIsLoading.set(false);
+        // TODO: 23/02/2017 show list projects ui
+    }
+
+    @Override
+    public void projectsNotAvailable() {
+        mIsLoading.set(false);
+        mIsEmptyProject.set(true);
+    }
+
+    @Override
+    public void start() {
+        setUpDrawerListener();
+        setUpNavigationHeader();
+        mProjectsPresenter.start();
     }
 }

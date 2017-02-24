@@ -38,11 +38,12 @@ public class MockLocalDataSource extends DataHelper implements DataSource<Mock> 
     }
 
     @Override
-    public void saveData(Mock data) {
+    public long saveData(Mock data) {
+        long mockId = INSERT_ERROR;
         openDb();
         mSQLiteDatabase.beginTransaction();
         try {
-            mSQLiteDatabase.insert(
+            mockId = mSQLiteDatabase.insert(
                 MockPersistenceContract.MockEntry.TABLE_NAME, null, getContentValues(data));
             mSQLiteDatabase.setTransactionSuccessful();
         } catch (Exception e) {
@@ -51,6 +52,7 @@ public class MockLocalDataSource extends DataHelper implements DataSource<Mock> 
             mSQLiteDatabase.endTransaction();
             closeDb();
         }
+        return mockId;
     }
 
     @Override
