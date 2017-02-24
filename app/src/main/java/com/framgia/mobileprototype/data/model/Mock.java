@@ -1,5 +1,8 @@
 package com.framgia.mobileprototype.data.model;
 
+import android.database.Cursor;
+
+import com.framgia.mobileprototype.data.source.mock.MockPersistenceContract;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -22,6 +25,21 @@ public class Mock {
     private String mProjectId;
     @SerializedName("elements")
     private List<Element> mElements;
+
+    public Mock(Cursor cursor) {
+        mId = cursor.getString(cursor.getColumnIndexOrThrow(
+            MockPersistenceContract.MockEntry._ID));
+        mTitle = cursor.getString(cursor.getColumnIndexOrThrow(
+            MockPersistenceContract.MockEntry.COLUMN_NAME_TITLE));
+        mEntryId = cursor.getString(cursor.getColumnIndexOrThrow(
+            MockPersistenceContract.MockEntry.COLUMN_NAME_ENTRY_ID));
+        mNote = cursor.getString(cursor.getColumnIndexOrThrow(
+            MockPersistenceContract.MockEntry.COLUMN_NAME_NOTE));
+        mImage = cursor.getString(cursor.getColumnIndexOrThrow(
+            MockPersistenceContract.MockEntry.COLUMN_NAME_IMAGE));
+        mProjectId = cursor.getString(cursor.getColumnIndexOrThrow(
+            MockPersistenceContract.MockEntry.COLUMN_NAME_PROJECT_ID));
+    }
 
     public String getEntryId() {
         return mEntryId;
