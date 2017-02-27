@@ -1,5 +1,6 @@
 package com.framgia.mobileprototype.projects;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -7,11 +8,12 @@ import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.framgia.mobileprototype.PermissionActivity;
 import com.framgia.mobileprototype.R;
+import com.framgia.mobileprototype.RegisterPermission;
 import com.framgia.mobileprototype.data.model.Project;
 import com.framgia.mobileprototype.data.source.element.ElementLocalDataSource;
 import com.framgia.mobileprototype.data.source.element.ElementRepository;
@@ -25,7 +27,10 @@ import com.framgia.mobileprototype.databinding.NavHeaderBinding;
 import java.io.IOException;
 import java.util.List;
 
-public class ProjectsActivity extends AppCompatActivity implements ProjectsContract.View {
+@RegisterPermission(permissions = {
+    Manifest.permission.WRITE_EXTERNAL_STORAGE,
+    Manifest.permission.CAMERA})
+public class ProjectsActivity extends PermissionActivity implements ProjectsContract.View {
     private static final String EXTRA_FIRST_OPEN_APP = "EXTRA_FIRST_OPEN_APP";
     private static final String SAMPLE_PROJECT_FILE_NAME = "sample_project.json";
     private ActivityProjectsBinding mProjectsBinding;
