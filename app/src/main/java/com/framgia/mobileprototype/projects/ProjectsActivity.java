@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableBoolean;
+import android.databinding.ObservableField;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -33,6 +34,7 @@ public class ProjectsActivity extends AppCompatActivity implements ProjectsContr
     private ObservableBoolean mIsLoading = new ObservableBoolean();
     private ObservableBoolean mIsEmptyProject = new ObservableBoolean();
     private ProjectsContract.Presenter mProjectsPresenter;
+    private ObservableField<ProjectsAdapter> mProjectsAdapter = new ObservableField<>();
 
     public static Intent getProjectsIntent(Context context, boolean isFirstOpenApp) {
         Intent intent = new Intent(context, ProjectsActivity.class);
@@ -89,6 +91,10 @@ public class ProjectsActivity extends AppCompatActivity implements ProjectsContr
         return mIsLoading;
     }
 
+    public ObservableField<ProjectsAdapter> getProjectsAdapter() {
+        return mProjectsAdapter;
+    }
+
     public ObservableBoolean getIsEmptyProject() {
         return mIsEmptyProject;
     }
@@ -119,7 +125,7 @@ public class ProjectsActivity extends AppCompatActivity implements ProjectsContr
     @Override
     public void projectsLoaded(List<Project> projects) {
         mIsLoading.set(false);
-        // TODO: 23/02/2017 show list projects ui
+        mProjectsAdapter.set(new ProjectsAdapter(this, projects, mProjectsPresenter));
     }
 
     @Override

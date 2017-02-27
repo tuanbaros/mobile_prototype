@@ -37,9 +37,9 @@ public class ProjectLocalDataSource extends DataHelper implements DataSource<Pro
     @Override
     public void getDatas(@NonNull GetListCallback getListCallback) {
         List<Project> projects = null;
-        openDb();
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         String sortOrder = ProjectPersistenceContract.ProjectEntry._ID + " DESC";
-        Cursor cursor = mSQLiteDatabase.query(
+        Cursor cursor = sqLiteDatabase.query(
             ProjectPersistenceContract.ProjectEntry.TABLE_NAME,
             null, null, null, null, null, sortOrder);
         if (cursor != null && cursor.getCount() > 0) {
@@ -57,14 +57,14 @@ public class ProjectLocalDataSource extends DataHelper implements DataSource<Pro
             }
             getListCallback.onSuccess(projects);
         }
-        closeDb();
+        sqLiteDatabase.close();
     }
 
     @Override
     public void getData(@NonNull String dataId, @NonNull GetListCallback getListCallback) {
         List<Mock> mocks = null;
-        openDb();
-        Cursor cursor = mSQLiteDatabase.query(
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        Cursor cursor = sqLiteDatabase.query(
             MockPersistenceContract.MockEntry.TABLE_NAME,
             null, null, null, null, null, null);
         if (cursor != null && cursor.getCount() > 0) {
@@ -76,23 +76,24 @@ public class ProjectLocalDataSource extends DataHelper implements DataSource<Pro
         if (cursor != null) cursor.close();
         if (mocks == null) getListCallback.onError();
         else getListCallback.onSuccess(mocks);
+        sqLiteDatabase.close();
     }
 
     @Override
     public long saveData(Project data) {
         long projectId = INSERT_ERROR;
-        openDb();
-        mSQLiteDatabase.beginTransaction();
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        sqLiteDatabase.beginTransaction();
         try {
-            projectId = mSQLiteDatabase
+            projectId = sqLiteDatabase
                 .insertWithOnConflict(ProjectPersistenceContract.ProjectEntry.TABLE_NAME, null,
                     getContentValues(data), SQLiteDatabase.CONFLICT_IGNORE);
-            mSQLiteDatabase.setTransactionSuccessful();
+            sqLiteDatabase.setTransactionSuccessful();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            mSQLiteDatabase.endTransaction();
-            closeDb();
+            sqLiteDatabase.endTransaction();
+            sqLiteDatabase.close();
         }
         return projectId;
     }
@@ -129,13 +130,12 @@ public class ProjectLocalDataSource extends DataHelper implements DataSource<Pro
     }
 
     private int countMocks(String projectId) {
-        openDb();
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         int count = 0;
-        mSQLiteDatabase.beginTransaction();
         String[] columns = {"COUNT(*)"};
         String selection = MockPersistenceContract.MockEntry.COLUMN_NAME_PROJECT_ID + " = ?";
         String[] selectionArgs = {projectId};
-        Cursor cursor = mSQLiteDatabase.query(
+        Cursor cursor = sqLiteDatabase.query(
             MockPersistenceContract.MockEntry.TABLE_NAME, columns, selection, selectionArgs,
             null, null, null);
         if (cursor == null) return 0;
@@ -143,7 +143,7 @@ public class ProjectLocalDataSource extends DataHelper implements DataSource<Pro
             count = cursor.getInt(0);
         }
         cursor.close();
-        closeDb();
+        sqLiteDatabase.close();
         return count;
     }
 }

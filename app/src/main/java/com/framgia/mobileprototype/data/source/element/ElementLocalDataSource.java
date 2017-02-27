@@ -2,6 +2,7 @@ package com.framgia.mobileprototype.data.source.element;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 
 import com.framgia.mobileprototype.data.model.Element;
@@ -40,17 +41,17 @@ public class ElementLocalDataSource extends DataHelper implements DataSource<Ele
     @Override
     public long saveData(Element data) {
         long elementId = INSERT_ERROR;
-        openDb();
-        mSQLiteDatabase.beginTransaction();
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        sqLiteDatabase.beginTransaction();
         try {
-            elementId = mSQLiteDatabase.insert(
+            elementId = sqLiteDatabase.insert(
                 ElementPersistenceContract.ElementEntry.TABLE_NAME, null, getContentValues(data));
-            mSQLiteDatabase.setTransactionSuccessful();
+            sqLiteDatabase.setTransactionSuccessful();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            mSQLiteDatabase.endTransaction();
-            closeDb();
+            sqLiteDatabase.endTransaction();
+            sqLiteDatabase.close();
         }
         return elementId;
     }
