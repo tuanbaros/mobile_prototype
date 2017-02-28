@@ -23,6 +23,7 @@ public class ProjectsPresenter implements ProjectsContract.Presenter {
     private ProjectRepository mProjectRepository;
     private MockRepository mMockRepository;
     private ElementRepository mElementRepository;
+    private Project mEditProject;
 
     public ProjectsPresenter(ProjectsContract.View projectsView,
                              ProjectRepository projectRepository,
@@ -97,8 +98,41 @@ public class ProjectsPresenter implements ProjectsContract.Presenter {
     }
 
     @Override
+    public void cancelEditProject(Project project) {
+        project.setTitle(mEditProject.getTitle());
+        project.setDescription(mEditProject.getDescription());
+        project.setPoster(mEditProject.getPoster());
+        mProjectsView.cancelEditProjectDialog();
+    }
+
+    @Override
     public void changePoster() {
         mProjectsView.pickPoster();
+    }
+
+    @Override
+    public void editProject(Project project) {
+        try {
+            mEditProject = (Project) project.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        mProjectsView.showUpdateProjectDialog(project);
+    }
+
+    @Override
+    public void updateProject(Project project, boolean isPosterChanged) {
+        if (project.getTitle() == null || project.getTitle().trim().equals("")) {
+            mProjectsView.showErrorEmptyProjectName();
+            return;
+        }
+        project.setPoster(project.getTitle() + Constant.DEFAULT_COMPRESS_FORMAT);
+        mProjectRepository.updateData(project);
+        if (isPosterChanged) {
+            mProjectsView.savePojectPoster(project.getPoster());
+        }
+        // TODO: 28/02/2017 check project name exist 
+        mProjectsView.cancelEditProjectDialog();
     }
 
     @Override

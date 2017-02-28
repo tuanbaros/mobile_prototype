@@ -77,7 +77,8 @@
             app:backgroundTint="@color/colorPrimary"
             app:srcCompat="@drawable/ic_plus"
             android:visibility="@{activity.isLoading ? View.GONE : View.VISIBLE}"
-            android:onClick="@{() -> presenter.createProject()}"/>
+            android:onClick="@{() -> presenter.createProject()}"
+            app:layout_behavior="com.framgia.mobileprototype.ui.widget.ScrollAwareFabBehavior"/>
 
     </android.support.design.widget.CoordinatorLayout>
 </layout>

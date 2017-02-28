@@ -100,7 +100,20 @@ public class ProjectLocalDataSource extends DataHelper implements DataSource<Pro
 
     @Override
     public void updateData(Project data) {
-        // TODO: 22/02/2017 update project 
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        sqLiteDatabase.beginTransaction();
+        String whereClause = ProjectPersistenceContract.ProjectEntry._ID + "=?";
+        String[] whereArgs = {data.getId()};
+        try {
+            sqLiteDatabase.updateWithOnConflict(ProjectPersistenceContract.ProjectEntry.TABLE_NAME,
+                getContentValues(data), whereClause, whereArgs, SQLiteDatabase.CONFLICT_IGNORE);
+            sqLiteDatabase.setTransactionSuccessful();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            sqLiteDatabase.endTransaction();
+            sqLiteDatabase.close();
+        }
     }
 
     @Override

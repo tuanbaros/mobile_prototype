@@ -38,12 +38,39 @@
                 app:imageUrl="@{project.poster}"/>
 
             <LinearLayout
+                android:id="@+id/linear_option"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true">
+
+                <ImageView
+                    android:layout_width="@dimen/dp_32"
+                    android:layout_height="@dimen/dp_32"
+                    android:padding="@dimen/dp_5"
+                    android:src="@drawable/ic_edit"
+                    android:onClick="@{() -> handler.editProject(project)}"/>
+
+                <ImageView
+                    android:layout_width="@dimen/dp_32"
+                    android:layout_height="@dimen/dp_32"
+                    android:padding="@dimen/dp_5"
+                    android:src="@drawable/ic_delete"
+                    />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:layout_toRightOf="@+id/image_project_poster"
                 android:layout_toEndOf="@+id/image_project_poster"
-                android:layout_alignTop="@+id/image_project_poster">
+                android:layout_alignTop="@+id/image_project_poster"
+                android:layout_toLeftOf="@+id/linear_option"
+                android:layout_toStartOf="@+id/linear_option">
 
                 <TextView
                     android:id="@+id/text_project_title"

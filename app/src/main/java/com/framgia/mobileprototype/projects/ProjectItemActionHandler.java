@@ -1,5 +1,7 @@
 package com.framgia.mobileprototype.projects;
 
+import com.framgia.mobileprototype.data.model.Project;
+
 /**
  * Created by tuannt on 24/02/2017.
  * Project: mobile_prototype
@@ -10,5 +12,9 @@ public class ProjectItemActionHandler {
 
     public ProjectItemActionHandler(ProjectsContract.Presenter listener) {
         mListener = listener;
+    }
+
+    public void editProject(Project project) {
+        mListener.editProject(project);
     }
 }

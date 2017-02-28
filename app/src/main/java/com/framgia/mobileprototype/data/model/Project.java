@@ -16,7 +16,7 @@ import java.util.List;
  * Project: mobile_prototype
  * Package: com.framgia.mobileprototype.data
  */
-public class Project extends BaseObservable {
+public class Project extends BaseObservable implements Cloneable {
     private static final String PORTRAIT = "portrait";
     private static final String LANDSCAPE = "landscape";
     private String mId;
@@ -155,5 +155,10 @@ public class Project extends BaseObservable {
         if (portrait) setOrientation(PORTRAIT);
         else setOrientation(LANDSCAPE);
         notifyPropertyChanged(BR.portrait);
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

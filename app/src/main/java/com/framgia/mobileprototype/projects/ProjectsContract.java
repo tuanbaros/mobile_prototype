@@ -20,11 +20,13 @@ public interface ProjectsContract {
         void projectsNotAvailable();
         void showCreateProjectDialog(Project project);
         void cancelCreateProjectDialog();
+        void cancelEditProjectDialog();
         void showErrorEmptyProjectName();
         void showErrorProjectNameExist();
         void updateListProjects(Project project);
         void savePojectPoster(String fileName);
         void pickPoster();
+        void showUpdateProjectDialog(Project project);
     }
 
     interface Presenter extends BasePresenter {
@@ -34,6 +36,9 @@ public interface ProjectsContract {
         void createProject();
         void storeProject(Project project, boolean isPosterChanged);
         void cancelCreateProject();
+        void cancelEditProject(Project project);
         void changePoster();
+        void editProject(Project project);
+        void updateProject(Project project, boolean isPosterChanged);
     }
 }
