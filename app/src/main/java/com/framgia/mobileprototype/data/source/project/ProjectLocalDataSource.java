@@ -4,14 +4,18 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 
+import com.framgia.mobileprototype.Constant;
 import com.framgia.mobileprototype.data.model.Mock;
 import com.framgia.mobileprototype.data.model.Project;
 import com.framgia.mobileprototype.data.source.DataHelper;
 import com.framgia.mobileprototype.data.source.DataSource;
+import com.framgia.mobileprototype.data.source.element.ElementPersistenceContract;
 import com.framgia.mobileprototype.data.source.mock.MockPersistenceContract;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -99,15 +103,39 @@ public class ProjectLocalDataSource extends DataHelper implements DataSource<Pro
     }
 
     @Override
-    public void updateData(Project data) {
+    public long updateData(Project data) {
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        sqLiteDatabase.beginTransaction();
+        String whereClause = ProjectPersistenceContract.ProjectEntry._ID + "=?";
+        String[] whereArgs = {data.getId()};
+        long changeRows = 0;
+        try {
+            changeRows = sqLiteDatabase.updateWithOnConflict(ProjectPersistenceContract.ProjectEntry
+                    .TABLE_NAME, getContentValues(data), whereClause, whereArgs,
+                SQLiteDatabase.CONFLICT_IGNORE);
+            sqLiteDatabase.setTransactionSuccessful();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            sqLiteDatabase.endTransaction();
+            sqLiteDatabase.close();
+        }
+        return changeRows;
+    }
+
+    @Override
+    public void deleteData(Project data) {
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         sqLiteDatabase.beginTransaction();
         String whereClause = ProjectPersistenceContract.ProjectEntry._ID + "=?";
         String[] whereArgs = {data.getId()};
         try {
-            sqLiteDatabase.updateWithOnConflict(ProjectPersistenceContract.ProjectEntry.TABLE_NAME,
-                getContentValues(data), whereClause, whereArgs, SQLiteDatabase.CONFLICT_IGNORE);
+            sqLiteDatabase.delete(
+                ProjectPersistenceContract.ProjectEntry.TABLE_NAME, whereClause, whereArgs);
+            removeDetailProject(sqLiteDatabase, data.getId());
+            removeAllMockInProject(sqLiteDatabase, data.getId());
             sqLiteDatabase.setTransactionSuccessful();
+            deleteImage(data.getPoster());
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -116,9 +144,47 @@ public class ProjectLocalDataSource extends DataHelper implements DataSource<Pro
         }
     }
 
-    @Override
-    public void deleteData(Project data) {
-        // TODO: 22/02/2017 delete project 
+    private void deleteImage(String filename) {
+        if (filename == null) return;
+        String filePath = Environment.getExternalStorageDirectory() + Constant.FILE_PATH + filename;
+        File file = new File(filePath);
+        if (file.exists()) file.delete();
+    }
+
+    private void removeDetailProject(SQLiteDatabase sqLiteDatabase, String projectId) {
+        String[] columns = {
+            MockPersistenceContract.MockEntry._ID,
+            MockPersistenceContract.MockEntry.COLUMN_NAME_IMAGE
+        };
+        String whereClause = MockPersistenceContract.MockEntry.COLUMN_NAME_PROJECT_ID + "=?";
+        String[] whereArgs = {projectId};
+        Cursor cursor = sqLiteDatabase.query(
+            MockPersistenceContract.MockEntry.TABLE_NAME,
+            columns, whereClause, whereArgs, null, null, null);
+        if (cursor != null && cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                removeAllElementInMock(sqLiteDatabase,
+                    cursor.getString(cursor.getColumnIndexOrThrow(
+                        MockPersistenceContract.MockEntry._ID)));
+                deleteImage(cursor.getString(cursor.getColumnIndexOrThrow(
+                    MockPersistenceContract.MockEntry.COLUMN_NAME_IMAGE)));
+            }
+        }
+        if (cursor != null) cursor.close();
+    }
+
+    private void removeAllElementInMock(SQLiteDatabase sqLiteDatabase, String mockId) {
+        String whereClause = ElementPersistenceContract.ElementEntry.COLUMN_NAME_MOCK_ID + "=?";
+        String[] whereArgs = {mockId};
+        sqLiteDatabase.delete(
+            ElementPersistenceContract.ElementEntry.TABLE_NAME, whereClause, whereArgs);
+    }
+
+    private void removeAllMockInProject(SQLiteDatabase sqLiteDatabase, String projectId) {
+        String whereClause = MockPersistenceContract.MockEntry.COLUMN_NAME_PROJECT_ID + "=?";
+        String[] whereArgs = {projectId};
+        sqLiteDatabase.delete(
+            MockPersistenceContract.MockEntry.TABLE_NAME, whereClause, whereArgs);
     }
 
     private ContentValues getContentValues(Project project) {

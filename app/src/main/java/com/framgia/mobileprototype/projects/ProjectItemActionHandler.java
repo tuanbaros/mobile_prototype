@@ -17,4 +17,8 @@ public class ProjectItemActionHandler {
     public void editProject(Project project) {
         mListener.editProject(project);
     }
+
+    public void removeProject(Project project, int position) {
+        mListener.requestDeleteProject(project, position);
+    }
 }

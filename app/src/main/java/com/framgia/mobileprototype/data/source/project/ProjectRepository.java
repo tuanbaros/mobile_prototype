@@ -41,8 +41,8 @@ public class ProjectRepository implements DataSource<Project> {
     }
 
     @Override
-    public void updateData(Project data) {
-        mProjectLocalDataSource.updateData(data);
+    public long updateData(Project data) {
+        return mProjectLocalDataSource.updateData(data);
     }
 
     @Override

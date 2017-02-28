@@ -57,8 +57,9 @@ public class MockLocalDataSource extends DataHelper implements DataSource<Mock> 
     }
 
     @Override
-    public void updateData(Mock data) {
-        // TODO: 22/02/2017 update mock 
+    public long updateData(Mock data) {
+        // TODO: 22/02/2017 update mock
+        return 0;
     }
 
     @Override

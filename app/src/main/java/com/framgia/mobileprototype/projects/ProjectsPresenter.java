@@ -127,12 +127,25 @@ public class ProjectsPresenter implements ProjectsContract.Presenter {
             return;
         }
         project.setPoster(project.getTitle() + Constant.DEFAULT_COMPRESS_FORMAT);
-        mProjectRepository.updateData(project);
+        long check = mProjectRepository.updateData(project);
+        if (check < 1) {
+            mProjectsView.showErrorProjectNameExist();
+            return;
+        }
         if (isPosterChanged) {
             mProjectsView.savePojectPoster(project.getPoster());
         }
-        // TODO: 28/02/2017 check project name exist 
         mProjectsView.cancelEditProjectDialog();
+    }
+
+    public void requestDeleteProject(Project project, int position) {
+        mProjectsView.showDeleteProjectDialog(project, position);
+    }
+
+    @Override
+    public void removeProject(Project project, int position) {
+        mProjectRepository.deleteData(project);
+        mProjectsView.onProjectRemoved(position);
     }
 
     @Override

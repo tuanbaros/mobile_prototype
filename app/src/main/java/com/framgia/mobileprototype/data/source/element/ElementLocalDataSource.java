@@ -57,8 +57,9 @@ public class ElementLocalDataSource extends DataHelper implements DataSource<Ele
     }
 
     @Override
-    public void updateData(Element data) {
-        // TODO: 22/02/2017 update element 
+    public long updateData(Element data) {
+        // TODO: 22/02/2017 update element
+        return 0;
     }
 
     @Override

@@ -32,4 +32,8 @@
     <string name="error_project_name_exist">Project name is exist!</string>
     <string name="title_edit_project">Edit project</string>
     <string name="action_update_project">Update</string>
+    <string name="title_delete_project">Are you sure?</string>
+    <string name="msg_delete_project">Delete this project.</string>
+    <string name="action_yes">Yes</string>
+    <string name="action_no">No</string>
 </resources>
