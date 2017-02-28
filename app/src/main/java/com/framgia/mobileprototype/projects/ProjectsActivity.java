@@ -29,7 +29,8 @@ import com.framgia.mobileprototype.data.source.mock.MockRepository;
 import com.framgia.mobileprototype.data.source.project.ProjectLocalDataSource;
 import com.framgia.mobileprototype.data.source.project.ProjectRepository;
 import com.framgia.mobileprototype.databinding.ActivityProjectsBinding;
-import com.framgia.mobileprototype.databinding.DialogAddeditProjectBinding;
+import com.framgia.mobileprototype.databinding.DialogAddProjectBinding;
+import com.framgia.mobileprototype.databinding.DialogEditProjectBinding;
 import com.framgia.mobileprototype.databinding.NavHeaderBinding;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -53,8 +54,9 @@ public class ProjectsActivity extends PermissionActivity implements ProjectsCont
     private ObservableBoolean mIsEmptyProject = new ObservableBoolean();
     private ProjectsContract.Presenter mProjectsPresenter;
     private ObservableField<ProjectsAdapter> mProjectsAdapter = new ObservableField<>();
-    private Dialog mCreateProjectDialog;
-    private DialogAddeditProjectBinding mAddeditProjectBinding;
+    private Dialog mCreateProjectDialog, mEditProjectDialog;
+    private DialogAddProjectBinding mAddProjectBinding;
+    private DialogEditProjectBinding mEditProjectBinding;
 
     public static Intent getProjectsIntent(Context context, boolean isFirstOpenApp) {
         Intent intent = new Intent(context, ProjectsActivity.class);
@@ -104,13 +106,23 @@ public class ProjectsActivity extends PermissionActivity implements ProjectsCont
         mProjectsBinding.navView.addHeaderView(navHeaderBinding.getRoot());
     }
 
+    private void setUpEditProjectDialog() {
+        mEditProjectBinding = DataBindingUtil.inflate(getLayoutInflater(),
+            R.layout.dialog_edit_project, null, false);
+        mEditProjectBinding.setPresenter(mProjectsPresenter);
+        mEditProjectDialog = new Dialog(this);
+        mEditProjectDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mEditProjectDialog.setContentView(mEditProjectBinding.getRoot());
+        mEditProjectDialog.setCanceledOnTouchOutside(false);
+    }
+
     private void setUpCreateProjectDialog() {
-        mAddeditProjectBinding = DataBindingUtil.inflate(getLayoutInflater(),
-            R.layout.dialog_addedit_project, null, false);
-        mAddeditProjectBinding.setPresenter(mProjectsPresenter);
+        mAddProjectBinding = DataBindingUtil.inflate(getLayoutInflater(),
+            R.layout.dialog_add_project, null, false);
+        mAddProjectBinding.setPresenter(mProjectsPresenter);
         mCreateProjectDialog = new Dialog(this);
         mCreateProjectDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        mCreateProjectDialog.setContentView(mAddeditProjectBinding.getRoot());
+        mCreateProjectDialog.setContentView(mAddProjectBinding.getRoot());
         mCreateProjectDialog.setCanceledOnTouchOutside(false);
     }
 
@@ -167,13 +179,19 @@ public class ProjectsActivity extends PermissionActivity implements ProjectsCont
 
     @Override
     public void showCreateProjectDialog(Project project) {
-        mAddeditProjectBinding.setProject(project);
+        if (mCreateProjectDialog == null) setUpCreateProjectDialog();
+        mAddProjectBinding.setProject(project);
         if (!mCreateProjectDialog.isShowing()) mCreateProjectDialog.show();
     }
 
     @Override
     public void cancelCreateProjectDialog() {
         if (mCreateProjectDialog.isShowing()) mCreateProjectDialog.cancel();
+    }
+
+    @Override
+    public void cancelEditProjectDialog() {
+        if (mEditProjectDialog.isShowing()) mEditProjectDialog.cancel();
     }
 
     @Override
@@ -194,8 +212,8 @@ public class ProjectsActivity extends PermissionActivity implements ProjectsCont
 
     @Override
     public void savePojectPoster(String filename) {
-        mAddeditProjectBinding.imageProjectPoster.buildDrawingCache();
-        Bitmap bitmap = mAddeditProjectBinding.imageProjectPoster.getDrawingCache();
+        mAddProjectBinding.imageProjectPoster.buildDrawingCache();
+        Bitmap bitmap = mAddProjectBinding.imageProjectPoster.getDrawingCache();
         OutputStream fOut = null;
         File root = new File(Environment.getExternalStorageDirectory()
             + Constant.FILE_PATH);
@@ -222,10 +240,16 @@ public class ProjectsActivity extends PermissionActivity implements ProjectsCont
     }
 
     @Override
+    public void showUpdateProjectDialog(Project project) {
+        if (mEditProjectDialog == null) setUpEditProjectDialog();
+        mEditProjectBinding.setProject(project);
+        if (!mEditProjectDialog.isShowing()) mEditProjectDialog.show();
+    }
+
+    @Override
     public void start() {
         setUpDrawerListener();
         setUpNavigationHeader();
-        setUpCreateProjectDialog();
         mProjectsPresenter.createAppStorageFolder(
             Environment.getExternalStorageDirectory() + Constant.FILE_PATH);
         mProjectsPresenter.start();
@@ -241,8 +265,14 @@ public class ProjectsActivity extends PermissionActivity implements ProjectsCont
                     break;
                 case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
                     CropImage.ActivityResult result = CropImage.getActivityResult(data);
-                    mAddeditProjectBinding.imageProjectPoster.setImageURI(result.getUri());
-                    mAddeditProjectBinding.setIsPosterChanged(true);
+                    if (mAddProjectBinding != null && mCreateProjectDialog.isShowing()) {
+                        mAddProjectBinding.imageProjectPoster.setImageURI(result.getUri());
+                        mAddProjectBinding.setIsPosterChanged(true);
+                    }
+                    if (mEditProjectBinding != null && mEditProjectDialog.isShowing()) {
+                        mEditProjectBinding.imageProjectPoster.setImageURI(result.getUri());
+                        mEditProjectBinding.setIsPosterChanged(true);
+                    }
                     break;
                 default:
                     break;
