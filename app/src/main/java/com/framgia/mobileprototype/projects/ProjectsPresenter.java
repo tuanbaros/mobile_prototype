@@ -1,5 +1,6 @@
 package com.framgia.mobileprototype.projects;
 
+import com.framgia.mobileprototype.Constant;
 import com.framgia.mobileprototype.data.model.Project;
 import com.framgia.mobileprototype.data.source.DataImport;
 import com.framgia.mobileprototype.data.source.DataSource;
@@ -7,6 +8,7 @@ import com.framgia.mobileprototype.data.source.element.ElementRepository;
 import com.framgia.mobileprototype.data.source.mock.MockRepository;
 import com.framgia.mobileprototype.data.source.project.ProjectRepository;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -43,6 +45,12 @@ public class ProjectsPresenter implements ProjectsContract.Presenter {
     }
 
     @Override
+    public void createAppStorageFolder(String path) {
+        File folder = new File(path);
+        if (!folder.exists()) folder.mkdirs();
+    }
+
+    @Override
     public void getProjects() {
         mProjectRepository.getDatas(new DataSource.GetListCallback<Project>() {
             @Override
@@ -55,6 +63,42 @@ public class ProjectsPresenter implements ProjectsContract.Presenter {
                 mProjectsView.projectsNotAvailable();
             }
         });
+    }
+
+    @Override
+    public void createProject() {
+        Project project = new Project();
+        project.setPortrait(true);
+        mProjectsView.showCreateProjectDialog(project);
+    }
+
+    @Override
+    public void storeProject(Project project, boolean isPosterChanged) {
+        if (project.getTitle() == null || project.getTitle().trim().equals("")) {
+            mProjectsView.showErrorEmptyProjectName();
+            return;
+        }
+        project.setPoster(project.getTitle() + Constant.DEFAULT_COMPRESS_FORMAT);
+        long id = mProjectRepository.saveData(project);
+        if (id < 1) {
+            mProjectsView.showErrorProjectNameExist();
+            return;
+        }
+        if (isPosterChanged) {
+            mProjectsView.savePojectPoster(project.getPoster());
+        }
+        project.setId(String.valueOf(id));
+        mProjectsView.updateListProjects(project);
+    }
+
+    @Override
+    public void cancelCreateProject() {
+        mProjectsView.cancelCreateProjectDialog();
+    }
+
+    @Override
+    public void changePoster() {
+        mProjectsView.pickPoster();
     }
 
     @Override

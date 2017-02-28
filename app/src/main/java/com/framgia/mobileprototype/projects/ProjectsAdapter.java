@@ -23,11 +23,18 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.ViewHo
     private LayoutInflater mLayoutInflater;
     private ProjectsContract.Presenter mListener;
 
-    public ProjectsAdapter(Context context, List<Project> projects,
-                           ProjectsContract.Presenter listener) {
+    ProjectsAdapter(Context context, List<Project> projects,
+                    ProjectsContract.Presenter listener) {
         if (projects != null) mProjects.addAll(projects);
         mLayoutInflater = LayoutInflater.from(context);
         mListener = listener;
+    }
+
+    void updateData(Project project) {
+        if (project != null) {
+            mProjects.add(0, project);
+            notifyDataSetChanged();
+        }
     }
 
     class ViewHolder extends RecyclerView.ViewHolder {

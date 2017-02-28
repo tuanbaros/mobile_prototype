@@ -12,6 +12,10 @@
         <variable
             name="activity"
             type="com.framgia.mobileprototype.projects.ProjectsActivity"/>
+
+        <variable
+            name="presenter"
+            type="com.framgia.mobileprototype.projects.ProjectsContract.Presenter"/>
     </data>
 
     <android.support.design.widget.CoordinatorLayout
@@ -72,7 +76,8 @@
             android:layout_margin="@dimen/dp_16"
             app:backgroundTint="@color/colorPrimary"
             app:srcCompat="@drawable/ic_plus"
-            android:visibility="@{activity.isLoading ? View.GONE : View.VISIBLE}"/>
+            android:visibility="@{activity.isLoading ? View.GONE : View.VISIBLE}"
+            android:onClick="@{() -> presenter.createProject()}"/>
 
     </android.support.design.widget.CoordinatorLayout>
 </layout>
