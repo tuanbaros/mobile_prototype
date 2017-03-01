@@ -1,8 +1,10 @@
 package com.framgia.mobileprototype.projects;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableBoolean;
@@ -15,6 +17,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.framgia.mobileprototype.Constant;
@@ -212,8 +215,14 @@ public class ProjectsActivity extends PermissionActivity implements ProjectsCont
 
     @Override
     public void savePojectPoster(String filename) {
-        mAddProjectBinding.imageProjectPoster.buildDrawingCache();
-        Bitmap bitmap = mAddProjectBinding.imageProjectPoster.getDrawingCache();
+        ImageView imageView;
+        if (mCreateProjectDialog != null && mCreateProjectDialog.isShowing()) {
+            imageView = mAddProjectBinding.imageProjectPoster;
+        } else {
+            imageView = mEditProjectBinding.imageProjectPoster;
+        }
+        imageView.buildDrawingCache();
+        Bitmap bitmap = imageView.getDrawingCache();
         OutputStream fOut = null;
         File root = new File(Environment.getExternalStorageDirectory()
             + Constant.FILE_PATH);
@@ -244,6 +253,34 @@ public class ProjectsActivity extends PermissionActivity implements ProjectsCont
         if (mEditProjectDialog == null) setUpEditProjectDialog();
         mEditProjectBinding.setProject(project);
         if (!mEditProjectDialog.isShowing()) mEditProjectDialog.show();
+    }
+
+    public void showDeleteProjectDialog(final Project project, final int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.title_delete_project);
+        builder.setMessage(R.string.msg_delete_project);
+        builder.setPositiveButton(R.string.action_yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                mProjectsPresenter.removeProject(project, position);
+                dialogInterface.dismiss();
+            }
+        });
+        builder.setNegativeButton(R.string.action_no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+        builder.create().show();
+    }
+
+    @Override
+    public void onProjectRemoved(int position) {
+        mProjectsAdapter.get().removeItem(position);
+        if (mProjectsAdapter.get().getItemCount() == 0) {
+            mIsEmptyProject.set(true);
+        }
     }
 
     @Override

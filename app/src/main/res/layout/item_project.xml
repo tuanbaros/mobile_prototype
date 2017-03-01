@@ -9,6 +9,10 @@
             type="com.framgia.mobileprototype.data.model.Project"/>
 
         <variable
+            name="position"
+            type="int"/>
+
+        <variable
             name="handler"
             type="com.framgia.mobileprototype.projects.ProjectItemActionHandler"/>
     </data>
@@ -58,7 +62,7 @@
                     android:layout_height="@dimen/dp_32"
                     android:padding="@dimen/dp_5"
                     android:src="@drawable/ic_delete"
-                    />
+                    android:onClick="@{() -> handler.removeProject(project, position)}"/>
 
             </LinearLayout>
 

@@ -37,6 +37,11 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.ViewHo
         }
     }
 
+    void removeItem(int position) {
+        mProjects.remove(position);
+        notifyDataSetChanged();
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder {
         private ItemProjectBinding mItemProjectBinding;
         private ProjectItemActionHandler mProjectItemActionHandler;
@@ -48,9 +53,10 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.ViewHo
             mItemProjectBinding.setHandler(mProjectItemActionHandler);
         }
 
-        void bindData(Project project) {
+        void bindData(Project project, int position) {
             if (project == null) return;
             mItemProjectBinding.setProject(project);
+            mItemProjectBinding.setPosition(position);
             mItemProjectBinding.executePendingBindings();
         }
     }
@@ -64,7 +70,7 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.bindData(mProjects.get(position));
+        holder.bindData(mProjects.get(position), position);
     }
 
     @Override

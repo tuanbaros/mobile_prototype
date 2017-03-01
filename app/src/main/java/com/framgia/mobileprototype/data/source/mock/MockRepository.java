@@ -41,8 +41,8 @@ public class MockRepository implements DataSource<Mock> {
     }
 
     @Override
-    public void updateData(Mock data) {
-        mMockLocalDataSource.updateData(data);
+    public long updateData(Mock data) {
+        return mMockLocalDataSource.updateData(data);
     }
 
     @Override

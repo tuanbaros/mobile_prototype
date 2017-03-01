@@ -88,6 +88,8 @@ public class BindingAdapterUtil {
             if (imgFile.exists()) {
                 Bitmap bitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
                 view.setImageBitmap(bitmap);
+            } else {
+                view.setImageResource(R.mipmap.ic_launcher);
             }
         } catch (IOException e) {
             e.printStackTrace();
