@@ -21,4 +21,8 @@ public class ProjectItemActionHandler {
     public void removeProject(Project project, int position) {
         mListener.requestDeleteProject(project, position);
     }
+
+    public void openDetailProject(Project project) {
+        mListener.openDetailProject(project);
+    }
 }

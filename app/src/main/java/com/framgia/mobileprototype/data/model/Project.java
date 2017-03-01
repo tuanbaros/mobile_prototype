@@ -8,6 +8,7 @@ import com.framgia.mobileprototype.BR;
 import com.framgia.mobileprototype.data.source.project.ProjectPersistenceContract;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +17,7 @@ import java.util.List;
  * Project: mobile_prototype
  * Package: com.framgia.mobileprototype.data
  */
-public class Project extends BaseObservable implements Cloneable {
+public class Project extends BaseObservable implements Cloneable, Serializable {
     private static final String PORTRAIT = "portrait";
     private static final String LANDSCAPE = "landscape";
     private String mId;

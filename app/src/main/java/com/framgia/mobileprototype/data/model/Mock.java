@@ -5,6 +5,7 @@ import android.database.Cursor;
 import com.framgia.mobileprototype.data.source.mock.MockPersistenceContract;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -12,7 +13,7 @@ import java.util.List;
  * Project: mobile_prototype
  * Package: com.framgia.mobileprototype.data.model
  */
-public class Mock {
+public class Mock implements Serializable {
     private String mId;
     @SerializedName("client_id")
     private String mEntryId;
