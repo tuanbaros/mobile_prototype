@@ -17,6 +17,8 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -35,6 +37,7 @@ import com.framgia.mobileprototype.databinding.ActivityProjectsBinding;
 import com.framgia.mobileprototype.databinding.DialogAddProjectBinding;
 import com.framgia.mobileprototype.databinding.DialogEditProjectBinding;
 import com.framgia.mobileprototype.databinding.NavHeaderBinding;
+import com.framgia.mobileprototype.projectdetail.ProjectDetailActivity;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -178,6 +181,7 @@ public class ProjectsActivity extends PermissionActivity implements ProjectsCont
     public void projectsNotAvailable() {
         mIsLoading.set(false);
         mIsEmptyProject.set(true);
+        mProjectsAdapter.set(new ProjectsAdapter(this, null, mProjectsPresenter));
     }
 
     @Override
@@ -211,6 +215,7 @@ public class ProjectsActivity extends PermissionActivity implements ProjectsCont
     public void updateListProjects(Project project) {
         cancelCreateProjectDialog();
         mProjectsAdapter.get().updateData(project);
+        if (mIsEmptyProject.get()) mIsEmptyProject.set(false);
     }
 
     @Override
@@ -281,6 +286,11 @@ public class ProjectsActivity extends PermissionActivity implements ProjectsCont
         if (mProjectsAdapter.get().getItemCount() == 0) {
             mIsEmptyProject.set(true);
         }
+    }
+
+    @Override
+    public void showDetailProjectUi(Project project) {
+        startActivity(ProjectDetailActivity.getProjectDetailIntent(this, project));
     }
 
     @Override

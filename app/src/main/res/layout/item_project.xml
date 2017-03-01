@@ -24,7 +24,9 @@
         android:layout_gravity="center"
         android:layout_marginLeft="@dimen/dp_9"
         android:layout_marginRight="@dimen/dp_9"
-        android:layout_marginTop="@dimen/dp_9">
+        android:layout_marginTop="@dimen/dp_9"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:onClick="@{() -> handler.openDetailProject(project)}">
 
         <RelativeLayout
             android:layout_width="match_parent"

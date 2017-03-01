@@ -29,6 +29,7 @@ public interface ProjectsContract {
         void showUpdateProjectDialog(Project project);
         void showDeleteProjectDialog(Project project, int position);
         void onProjectRemoved(int position);
+        void showDetailProjectUi(Project project);
     }
 
     interface Presenter extends BasePresenter {
@@ -44,5 +45,6 @@ public interface ProjectsContract {
         void updateProject(Project project, boolean isPosterChanged);
         void requestDeleteProject(Project project, int position);
         void removeProject(Project project, int position);
+        void openDetailProject(Project project);
     }
 }

@@ -30,7 +30,7 @@ public class MockLocalDataSource extends DataHelper implements DataSource<Mock> 
 
     @Override
     public void getDatas(@NonNull GetListCallback getListCallback) {
-        // TODO: 22/02/2017 get all mocks 
+        // TODO: 22/02/2017 get all mocks
     }
 
     @Override

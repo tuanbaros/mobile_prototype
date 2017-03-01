@@ -149,6 +149,11 @@ public class ProjectsPresenter implements ProjectsContract.Presenter {
     }
 
     @Override
+    public void openDetailProject(Project project) {
+        mProjectsView.showDetailProjectUi(project);
+    }
+
+    @Override
     public void start() {
         try {
             mProjectsView.prepare();

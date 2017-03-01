@@ -2,12 +2,14 @@ package com.framgia.mobileprototype.data.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Created by tuannt on 22/02/2017.
  * Project: mobile_prototype
  * Package: com.framgia.mobileprototype.data.model
  */
-public class Element {
+public class Element implements Serializable {
     private String mId;
     @SerializedName("x")
     private int mX;
