@@ -17,8 +17,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.Toast;
 

@@ -23,7 +23,7 @@ public class ProjectDetailPresenter implements ProjectDetailContract.Presenter {
 
     @Override
     public void getMocks(String projectId) {
-        mMockRepository.getDatas(new DataSource.GetListCallback<Mock>() {
+        mMockRepository.getData(projectId, new DataSource.GetListCallback<Mock>() {
             @Override
             public void onSuccess(List<Mock> datas) {
                 mProjectDetailView.mocksLoaded(datas);

@@ -47,6 +47,7 @@
             <android.support.v7.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingTop="@dimen/dp_4"
                 app:adapter="@{activity.projectsAdapter}"
                 app:layoutManager="@{LayoutManagerUtil.linear()}"/>
 

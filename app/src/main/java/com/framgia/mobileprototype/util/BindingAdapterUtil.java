@@ -3,7 +3,6 @@ package com.framgia.mobileprototype.util;
 import android.databinding.BindingAdapter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerAdapter;
@@ -78,8 +77,8 @@ public class BindingAdapterUtil {
         }
         try {
             InputStream inputStream = view.getContext().getAssets().open(path);
-            Drawable drawable = Drawable.createFromStream(inputStream, null);
-            view.setImageDrawable(drawable);
+            view.setImageBitmap(decodeBitmapFromInputStream(inputStream,
+                Constant.DEFAULT_IMAGE_WIDTH, Constant.DEFAULT_IMAGE_HEIGHT));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             String filePath =
@@ -94,5 +93,31 @@ public class BindingAdapterUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private static int calculateInSize(
+        BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+        if (height > reqHeight || width > reqWidth) {
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+            while ((halfHeight / inSampleSize) >= reqHeight
+                && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+        return inSampleSize;
+    }
+
+    private static Bitmap decodeBitmapFromInputStream(InputStream inputStream,
+                                                      int reqWidth, int reqHeight) {
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeStream(inputStream, null, options);
+        options.inSampleSize = calculateInSize(options, reqWidth, reqHeight);
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeStream(inputStream, null, options);
     }
 }
