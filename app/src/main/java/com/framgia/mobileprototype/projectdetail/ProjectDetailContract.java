@@ -18,7 +18,12 @@ public interface ProjectDetailContract {
         void mocksNotAvailable();
         void showDeleteMockDialog();
         void showCreateMockDialog();
+        void cancelCreateMockDialog();
         void pickImage();
+        void showMockTitleEmpty();
+        void updateListMock(Mock mock);
+        String getMockImagePath();
+        void checkPermission();
     }
 
     interface Presenter extends BasePresenter {
@@ -26,5 +31,8 @@ public interface ProjectDetailContract {
         void openDeleteMockDialog(Mock mock);
         void chooseImage();
         void openCreateMockDialog();
+        void closeCreateMockDialog();
+        void saveMock(Mock mock);
+        void saveMockImage(String path, String filename);
     }
 }

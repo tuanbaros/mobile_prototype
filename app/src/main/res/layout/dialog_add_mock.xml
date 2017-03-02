@@ -85,7 +85,8 @@
                     android:text="@string/action_create_project"
                     android:layout_alignParentRight="true"
                     android:textColor="@color/colorPrimary"
-                    style="@style/Widget.AppCompat.Button.Borderless"/>
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:onClick="@{() -> presenter.saveMock(mock)}"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -93,7 +94,8 @@
                     android:text="@string/action_cancel_project"
                     android:layout_toLeftOf="@+id/text_create_project"
                     android:textColor="@color/colorPrimary"
-                    style="@style/Widget.AppCompat.Button.Borderless"/>
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:onClick="@{() -> presenter.closeCreateMockDialog()}"/>
 
             </RelativeLayout>
 

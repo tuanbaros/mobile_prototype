@@ -3,7 +3,6 @@ package com.framgia.mobileprototype.util;
 import android.databinding.BindingAdapter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Environment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -81,8 +80,7 @@ public class BindingAdapterUtil {
                 Constant.DEFAULT_IMAGE_WIDTH, Constant.DEFAULT_IMAGE_HEIGHT));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            String filePath =
-                Environment.getExternalStorageDirectory() + Constant.FILE_PATH + path;
+            String filePath = Constant.FILE_PATH + path;
             File imgFile = new File(filePath);
             if (imgFile.exists()) {
                 Bitmap bitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
