@@ -42,6 +42,11 @@ public class ProjectDetailPresenter implements ProjectDetailContract.Presenter {
     }
 
     @Override
+    public void chooseImage() {
+        mProjectDetailView.pickImage();
+    }
+
+    @Override
     public void openCreateMockDialog() {
         mProjectDetailView.showCreateMockDialog();
     }

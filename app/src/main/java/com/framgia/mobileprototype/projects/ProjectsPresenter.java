@@ -7,6 +7,7 @@ import com.framgia.mobileprototype.data.source.DataSource;
 import com.framgia.mobileprototype.data.source.element.ElementRepository;
 import com.framgia.mobileprototype.data.source.mock.MockRepository;
 import com.framgia.mobileprototype.data.source.project.ProjectRepository;
+import com.framgia.mobileprototype.util.ScreenSizeUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -78,6 +79,13 @@ public class ProjectsPresenter implements ProjectsContract.Presenter {
         if (project.getTitle() == null || project.getTitle().trim().equals("")) {
             mProjectsView.showErrorEmptyProjectName();
             return;
+        }
+        if (project.getOrientation().equals(Project.LANDSCAPE)) {
+            project.setWidth(ScreenSizeUtil.sHeight);
+            project.setHeight(ScreenSizeUtil.sWidth);
+        } else {
+            project.setWidth(ScreenSizeUtil.sWidth);
+            project.setHeight(ScreenSizeUtil.sHeight);
         }
         project.setPoster(project.getTitle() + Constant.DEFAULT_COMPRESS_FORMAT);
         long id = mProjectRepository.saveData(project);

@@ -1,12 +1,15 @@
 package com.framgia.mobileprototype.projectdetail;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.view.Window;
 
 import com.framgia.mobileprototype.BaseActivity;
 import com.framgia.mobileprototype.R;
@@ -15,6 +18,9 @@ import com.framgia.mobileprototype.data.model.Project;
 import com.framgia.mobileprototype.data.source.mock.MockLocalDataSource;
 import com.framgia.mobileprototype.data.source.mock.MockRepository;
 import com.framgia.mobileprototype.databinding.ActivityProjectDetailBinding;
+import com.framgia.mobileprototype.databinding.DialogAddMockBinding;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.List;
 
@@ -27,6 +33,8 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
     private ObservableBoolean mIsLoading = new ObservableBoolean();
     private ObservableBoolean mIsEmptyMock = new ObservableBoolean();
     private ObservableField<MockAdapter> mMockAdapter = new ObservableField<>();
+    private Dialog mCreateMockDialog;
+    private DialogAddMockBinding mAddMockBinding;
 
     public static Intent getProjectDetailIntent(Context context, Project project) {
         Intent intent = new Intent(context, ProjectDetailActivity.class);
@@ -73,7 +81,14 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
 
     @Override
     public void showCreateMockDialog() {
-        // TODO: 01/03/2017 show create mock dialog 
+        if (mCreateMockDialog == null) setUpCreateMockDialog();
+        mAddMockBinding.setMock(new Mock());
+        mCreateMockDialog.show();
+    }
+
+    @Override
+    public void pickImage() {
+        CropImage.startPickImageActivity(this);
     }
 
     @Override
@@ -81,6 +96,38 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
         getIntentData();
         setUpTitle();
         mProjectDetailPresenter.start();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE:
+                    Uri imageUri = CropImage.getPickImageResultUri(this, data);
+                    cropImage(imageUri);
+                    break;
+                case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
+                    CropImage.ActivityResult result = CropImage.getActivityResult(data);
+                    if (mCreateMockDialog == null) setUpCreateMockDialog();
+                    if (mProject.getOrientation().equals(Project.PORTRAIT)) {
+                        mAddMockBinding.imagePortraitMock.setImageURI(result.getUri());
+                    } else {
+                        mAddMockBinding.imageLandscapeMock.setImageURI(result.getUri());
+                    }
+                    mProjectDetailPresenter.openCreateMockDialog();
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    private void cropImage(Uri imageUri) {
+        CropImage.activity(imageUri)
+            .setGuidelines(CropImageView.Guidelines.ON)
+            .setAutoZoomEnabled(false)
+            .setAspectRatio(mProject.getWidth(), mProject.getHeight())
+            .start(this);
     }
 
     private void getIntentData() {
@@ -94,6 +141,17 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setTitle(mProject.getTitle());
         }
+    }
+
+    private void setUpCreateMockDialog() {
+        mAddMockBinding = DataBindingUtil.inflate(getLayoutInflater(),
+            R.layout.dialog_add_mock, null, false);
+        mAddMockBinding.setPresenter(mProjectDetailPresenter);
+        mAddMockBinding.setIsPortrait(mProject.isPortrait());
+        mCreateMockDialog = new Dialog(this);
+        mCreateMockDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mCreateMockDialog.setContentView(mAddMockBinding.getRoot());
+        mCreateMockDialog.setCanceledOnTouchOutside(false);
     }
 
     public ObservableBoolean getIsEmptyMock() {

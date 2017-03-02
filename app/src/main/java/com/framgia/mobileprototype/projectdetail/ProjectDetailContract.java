@@ -18,11 +18,13 @@ public interface ProjectDetailContract {
         void mocksNotAvailable();
         void showDeleteMockDialog();
         void showCreateMockDialog();
+        void pickImage();
     }
 
     interface Presenter extends BasePresenter {
         void getMocks(String projectId);
         void openDeleteMockDialog(Mock mock);
+        void chooseImage();
         void openCreateMockDialog();
     }
 }

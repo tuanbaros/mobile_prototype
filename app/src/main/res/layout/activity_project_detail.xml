@@ -76,7 +76,7 @@
             app:backgroundTint="@color/colorPrimary"
             app:srcCompat="@drawable/ic_plus"
             android:visibility="@{activity.isLoading ? View.GONE : View.VISIBLE}"
-            android:onClick="@{() -> presenter.openCreateMockDialog()}"
+            android:onClick="@{() -> presenter.chooseImage()}"
             app:layout_behavior="com.framgia.mobileprototype.ui.widget.ScrollAwareFabBehavior"/>
 
     </android.support.design.widget.CoordinatorLayout>

@@ -45,16 +45,15 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/image_mock"
                 android:layout_alignLeft="@+id/image_mock"
                 android:layout_alignRight="@+id/image_mock"
-                android:layout_below="@id/image_mock"
                 android:layout_marginBottom="@dimen/dp_9"
                 android:layout_marginTop="@dimen/dp_5"
-                android:ellipsize="end"
                 android:lines="1"
+                android:ellipsize="end"
                 android:text="@{mock.title}"
                 android:textColor="@android:color/black"/>
-
         </RelativeLayout>
     </android.support.v7.widget.CardView>
 </layout>

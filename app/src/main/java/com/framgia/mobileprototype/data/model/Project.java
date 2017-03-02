@@ -18,8 +18,8 @@ import java.util.List;
  * Package: com.framgia.mobileprototype.data
  */
 public class Project extends BaseObservable implements Cloneable, Serializable {
-    private static final String PORTRAIT = "portrait";
-    private static final String LANDSCAPE = "landscape";
+    public static final String PORTRAIT = "portrait";
+    public static final String LANDSCAPE = "landscape";
     private String mId;
     @SerializedName("title")
     private String mTitle;
