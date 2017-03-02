@@ -1,6 +1,7 @@
 package com.framgia.mobileprototype.util;
 
 import android.support.annotation.IntDef;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
@@ -29,6 +30,15 @@ public class LayoutManagerUtil {
             @Override
             public RecyclerView.LayoutManager create(RecyclerView recyclerView) {
                 return new LinearLayoutManager(recyclerView.getContext());
+            }
+        };
+    }
+
+    public static LayoutManagerFactory grid(final int spanCount) {
+        return new LayoutManagerFactory() {
+            @Override
+            public RecyclerView.LayoutManager create(RecyclerView recyclerView) {
+                return new GridLayoutManager(recyclerView.getContext(), spanCount);
             }
         };
     }

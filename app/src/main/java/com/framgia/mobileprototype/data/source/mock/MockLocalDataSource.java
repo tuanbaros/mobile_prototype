@@ -2,12 +2,16 @@ package com.framgia.mobileprototype.data.source.mock;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 
 import com.framgia.mobileprototype.data.model.Mock;
 import com.framgia.mobileprototype.data.source.DataHelper;
 import com.framgia.mobileprototype.data.source.DataSource;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by tuannt on 22/02/2017.
@@ -35,7 +39,23 @@ public class MockLocalDataSource extends DataHelper implements DataSource<Mock> 
 
     @Override
     public void getData(@NonNull String dataId, @NonNull GetListCallback getListCallback) {
-        // TODO: 22/02/2017 get mock detail 
+        List<Mock> mocks = null;
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        String whereClause = MockPersistenceContract.MockEntry.COLUMN_NAME_PROJECT_ID + "=?";
+        String[] whereArgs = {dataId};
+        Cursor cursor = sqLiteDatabase.query(
+            MockPersistenceContract.MockEntry.TABLE_NAME,
+            null, whereClause, whereArgs, null, null, null);
+        if (cursor != null && cursor.getCount() > 0) {
+            mocks = new ArrayList<>();
+            while (cursor.moveToNext()) {
+                mocks.add(new Mock(cursor));
+            }
+        }
+        if (cursor != null) cursor.close();
+        if (mocks == null) getListCallback.onError();
+        else getListCallback.onSuccess(mocks);
+        sqLiteDatabase.close();
     }
 
     @Override

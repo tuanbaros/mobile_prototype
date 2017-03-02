@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableBoolean;
+import android.databinding.ObservableField;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 
@@ -19,11 +20,13 @@ import java.util.List;
 
 public class ProjectDetailActivity extends BaseActivity implements ProjectDetailContract.View {
     public static final String EXTRA_PROJECT = "EXTRA_PROJECT";
+    public static final int NUMBER_COLUMN_GRID = 3;
     private Project mProject;
     private ProjectDetailContract.Presenter mProjectDetailPresenter;
     private ActivityProjectDetailBinding mProjectDetailBinding;
     private ObservableBoolean mIsLoading = new ObservableBoolean();
     private ObservableBoolean mIsEmptyMock = new ObservableBoolean();
+    private ObservableField<MockAdapter> mMockAdapter = new ObservableField<>();
 
     public static Intent getProjectDetailIntent(Context context, Project project) {
         Intent intent = new Intent(context, ProjectDetailActivity.class);
@@ -52,13 +55,15 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
 
     @Override
     public void mocksLoaded(List<Mock> mocks) {
-        // TODO: 01/03/2017 show list mock ui
+        mIsLoading.set(false);
+        mMockAdapter.set(new MockAdapter(this, mocks, mProjectDetailPresenter));
     }
 
     @Override
     public void mocksNotAvailable() {
         mIsLoading.set(false);
         mIsEmptyMock.set(true);
+        mMockAdapter.set(new MockAdapter(this, null, mProjectDetailPresenter));
     }
 
     @Override
@@ -97,5 +102,9 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
 
     public ObservableBoolean getIsLoading() {
         return mIsLoading;
+    }
+
+    public ObservableField<MockAdapter> getMockAdapter() {
+        return mMockAdapter;
     }
 }
