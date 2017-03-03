@@ -34,8 +34,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
-                app:popupTheme="@style/AppTheme.PopupOverlay"
-                app:actionBar="@{activity}"/>
+                app:actionBar="@{activity}"
+                app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
         </android.support.design.widget.AppBarLayout>
 
@@ -50,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:padding="@dimen/dp_4"
                 app:adapter="@{activity.mockAdapter}"
-                app:layoutManager="@{LayoutManagerUtil.grid(activity.NUMBER_COLUMN_GRID)}"/>
+                app:layoutManager="@{LayoutManagerUtil.grid(activity.numberColumns())}"/>
 
             <ProgressBar
                 android:layout_width="wrap_content"
@@ -74,11 +74,11 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/dp_16"
-            app:backgroundTint="@color/colorPrimary"
-            app:srcCompat="@drawable/ic_plus"
-            android:visibility="@{activity.isLoading ? View.GONE : View.VISIBLE}"
             android:onClick="@{() -> presenter.chooseImage()}"
-            app:layout_behavior="com.framgia.mobileprototype.ui.widget.ScrollAwareFabBehavior"/>
+            android:visibility="@{activity.isLoading ? View.GONE : View.VISIBLE}"
+            app:backgroundTint="@color/colorPrimary"
+            app:layout_behavior="com.framgia.mobileprototype.ui.widget.ScrollAwareFabBehavior"
+            app:srcCompat="@drawable/ic_plus"/>
 
     </android.support.design.widget.CoordinatorLayout>
 </layout>

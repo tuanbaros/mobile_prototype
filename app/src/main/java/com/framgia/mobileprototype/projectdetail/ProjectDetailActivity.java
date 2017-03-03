@@ -40,7 +40,8 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
     OnStartDragListener {
     public static final String EXTRA_PROJECT = "EXTRA_PROJECT";
     public static final int PERMISSION_REQUEST_CODE = 2;
-    public static final int NUMBER_COLUMN_GRID = 3;
+    public static final int NUMBER_COLUMN_GRID_PORTRAIT = 3;
+    public static final int NUMBER_COLUMN_GRID_LANDSCAPE = 2;
     private Project mProject;
     private ProjectDetailContract.Presenter mProjectDetailPresenter;
     private ActivityProjectDetailBinding mProjectDetailBinding;
@@ -81,7 +82,8 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
     @Override
     public void mocksLoaded(List<Mock> mocks) {
         mIsLoading.set(false);
-        mMockAdapter.set(new MockAdapter(this, mocks, mProjectDetailPresenter, this));
+        mMockAdapter.set(
+            new MockAdapter(this, mocks, mProjectDetailPresenter, this, mProject.isPortrait()));
         ItemTouchHelper.Callback callback = new ItemTouchCallbackHelper(mMockAdapter.get());
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(mProjectDetailBinding.recyclerView);
@@ -91,7 +93,8 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
     public void mocksNotAvailable() {
         mIsLoading.set(false);
         mIsEmptyMock.set(true);
-        mMockAdapter.set(new MockAdapter(this, null, mProjectDetailPresenter, this));
+        mMockAdapter.set(
+            new MockAdapter(this, null, mProjectDetailPresenter, this, mProject.isPortrait()));
     }
 
     @Override
@@ -266,5 +269,9 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
     @Override
     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
         mItemTouchHelper.startDrag(viewHolder);
+    }
+
+    public int numberColumns() {
+        return mProject.isPortrait() ? NUMBER_COLUMN_GRID_PORTRAIT : NUMBER_COLUMN_GRID_LANDSCAPE;
     }
 }
