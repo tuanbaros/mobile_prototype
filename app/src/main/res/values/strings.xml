@@ -39,4 +39,5 @@
     <string name="msg_empty_mock">Empty mock ^^</string>
     <string name="title_new_mock">New mock</string>
     <string name="title_edit_image">Edit</string>
+    <string name="error_empty_mock_name">Mock name is empty!</string>
 </resources>

@@ -4,7 +4,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 
 import com.framgia.mobileprototype.Constant;
@@ -146,7 +145,7 @@ public class ProjectLocalDataSource extends DataHelper implements DataSource<Pro
 
     private void deleteImage(String filename) {
         if (filename == null) return;
-        String filePath = Environment.getExternalStorageDirectory() + Constant.FILE_PATH + filename;
+        String filePath = Constant.FILE_PATH + filename;
         File file = new File(filePath);
         if (file.exists()) file.delete();
     }

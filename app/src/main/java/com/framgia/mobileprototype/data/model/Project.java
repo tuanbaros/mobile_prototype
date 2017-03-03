@@ -139,12 +139,14 @@ public class Project extends BaseObservable implements Cloneable, Serializable {
         mMocks = mocks;
     }
 
+    @Bindable
     public int getNumberMocks() {
         return mNumberMocks;
     }
 
     public void setNumberMocks(int numberMocks) {
         mNumberMocks = numberMocks;
+        notifyPropertyChanged(BR.numberMocks);
     }
 
     @Bindable

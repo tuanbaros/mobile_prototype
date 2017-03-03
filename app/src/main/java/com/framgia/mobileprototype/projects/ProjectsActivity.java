@@ -12,7 +12,6 @@ import android.databinding.ObservableField;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.DisplayMetrics;
 import android.view.MenuItem;
@@ -52,6 +51,7 @@ import java.util.List;
     Manifest.permission.CAMERA})
 public class ProjectsActivity extends PermissionActivity implements ProjectsContract.View {
     private static final String EXTRA_FIRST_OPEN_APP = "EXTRA_FIRST_OPEN_APP";
+    private static final int PROJECT_DETAIL_REQUEST_CODE = 1;
     private static final String SAMPLE_PROJECT_FILE_NAME = "sample_project.json";
     private ActivityProjectsBinding mProjectsBinding;
     private ObservableBoolean mIsDrawerOpen = new ObservableBoolean();
@@ -63,6 +63,7 @@ public class ProjectsActivity extends PermissionActivity implements ProjectsCont
     private Dialog mCreateProjectDialog, mEditProjectDialog;
     private DialogAddProjectBinding mAddProjectBinding;
     private DialogEditProjectBinding mEditProjectBinding;
+    private Project mProject;
 
     public static Intent getProjectsIntent(Context context, boolean isFirstOpenApp) {
         Intent intent = new Intent(context, ProjectsActivity.class);
@@ -236,8 +237,7 @@ public class ProjectsActivity extends PermissionActivity implements ProjectsCont
         imageView.buildDrawingCache();
         Bitmap bitmap = imageView.getDrawingCache();
         OutputStream fOut = null;
-        File root = new File(Environment.getExternalStorageDirectory()
-            + Constant.FILE_PATH);
+        File root = new File(Constant.FILE_PATH);
         File sdImageMainDirectory = new File(root, filename);
         try {
             fOut = new FileOutputStream(sdImageMainDirectory);
@@ -297,7 +297,10 @@ public class ProjectsActivity extends PermissionActivity implements ProjectsCont
 
     @Override
     public void showDetailProjectUi(Project project) {
-        startActivity(ProjectDetailActivity.getProjectDetailIntent(this, project));
+        mProject = project;
+        startActivityForResult(
+            ProjectDetailActivity.getProjectDetailIntent(this, project),
+            PROJECT_DETAIL_REQUEST_CODE);
     }
 
     @Override
@@ -305,8 +308,7 @@ public class ProjectsActivity extends PermissionActivity implements ProjectsCont
         setUpScreenSize();
         setUpDrawerListener();
         setUpNavigationHeader();
-        mProjectsPresenter.createAppStorageFolder(
-            Environment.getExternalStorageDirectory() + Constant.FILE_PATH);
+        mProjectsPresenter.createAppStorageFolder(Constant.FILE_PATH);
         mProjectsPresenter.start();
     }
 
@@ -328,6 +330,11 @@ public class ProjectsActivity extends PermissionActivity implements ProjectsCont
                         mEditProjectBinding.imageProjectPoster.setImageURI(result.getUri());
                         mEditProjectBinding.setIsPosterChanged(true);
                     }
+                    break;
+                case PROJECT_DETAIL_REQUEST_CODE:
+                    Project project =
+                        (Project) data.getSerializableExtra(ProjectDetailActivity.EXTRA_PROJECT);
+                    mProject.setNumberMocks(project.getNumberMocks());
                     break;
                 default:
                     break;
