@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.util.DisplayMetrics;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -36,6 +37,7 @@ import com.framgia.mobileprototype.databinding.DialogAddProjectBinding;
 import com.framgia.mobileprototype.databinding.DialogEditProjectBinding;
 import com.framgia.mobileprototype.databinding.NavHeaderBinding;
 import com.framgia.mobileprototype.projectdetail.ProjectDetailActivity;
+import com.framgia.mobileprototype.util.ScreenSizeUtil;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -128,6 +130,13 @@ public class ProjectsActivity extends PermissionActivity implements ProjectsCont
         mCreateProjectDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         mCreateProjectDialog.setContentView(mAddProjectBinding.getRoot());
         mCreateProjectDialog.setCanceledOnTouchOutside(false);
+    }
+
+    private void setUpScreenSize() {
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        ScreenSizeUtil.sWidth = metrics.widthPixels;
+        ScreenSizeUtil.sHeight = metrics.heightPixels;
     }
 
     public ObservableBoolean getIsDrawerOpen() {
@@ -293,6 +302,7 @@ public class ProjectsActivity extends PermissionActivity implements ProjectsCont
 
     @Override
     public void start() {
+        setUpScreenSize();
         setUpDrawerListener();
         setUpNavigationHeader();
         mProjectsPresenter.createAppStorageFolder(

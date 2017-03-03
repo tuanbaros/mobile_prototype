@@ -5,6 +5,7 @@ import com.framgia.mobileprototype.data.model.Project;
 import com.framgia.mobileprototype.data.source.element.ElementRepository;
 import com.framgia.mobileprototype.data.source.mock.MockRepository;
 import com.framgia.mobileprototype.data.source.project.ProjectRepository;
+import com.framgia.mobileprototype.util.ScreenSizeUtil;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
@@ -39,6 +40,13 @@ public class DataImport {
             String line;
             while ((line = reader.readLine()) != null) result.append(line);
             Project project = new Gson().fromJson(result.toString(), Project.class);
+            if (project.getOrientation().equals(Project.LANDSCAPE)) {
+                project.setWidth(ScreenSizeUtil.sHeight);
+                project.setHeight(ScreenSizeUtil.sWidth);
+            } else {
+                project.setWidth(ScreenSizeUtil.sWidth);
+                project.setHeight(ScreenSizeUtil.sHeight);
+            }
             long projectId = mProjectRepository.saveData(project);
             if (projectId == DataHelper.INSERT_ERROR) return;
             for (int i = 0; i < project.getMocks().size(); i++) {

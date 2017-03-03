@@ -1,7 +1,10 @@
 package com.framgia.mobileprototype.data.model;
 
 import android.database.Cursor;
+import android.databinding.BaseObservable;
+import android.databinding.Bindable;
 
+import com.framgia.mobileprototype.BR;
 import com.framgia.mobileprototype.data.source.mock.MockPersistenceContract;
 import com.google.gson.annotations.SerializedName;
 
@@ -13,7 +16,7 @@ import java.util.List;
  * Project: mobile_prototype
  * Package: com.framgia.mobileprototype.data.model
  */
-public class Mock implements Serializable {
+public class Mock extends BaseObservable implements Serializable {
     private String mId;
     @SerializedName("client_id")
     private String mEntryId;
@@ -42,6 +45,9 @@ public class Mock implements Serializable {
             MockPersistenceContract.MockEntry.COLUMN_NAME_PROJECT_ID));
     }
 
+    public Mock() {
+    }
+
     public String getEntryId() {
         return mEntryId;
     }
@@ -58,12 +64,14 @@ public class Mock implements Serializable {
         this.mId = id;
     }
 
+    @Bindable
     public String getImage() {
         return mImage;
     }
 
     public void setImage(String image) {
         this.mImage = image;
+        notifyPropertyChanged(BR.image);
     }
 
     public String getNote() {
@@ -82,12 +90,14 @@ public class Mock implements Serializable {
         this.mProjectId = projectId;
     }
 
+    @Bindable
     public String getTitle() {
         return mTitle;
     }
 
     public void setTitle(String title) {
         this.mTitle = title;
+        notifyPropertyChanged(BR.title);
     }
 
     public List<Element> getElements() {
