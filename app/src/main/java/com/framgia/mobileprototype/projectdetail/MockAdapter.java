@@ -28,14 +28,17 @@ public class MockAdapter extends RecyclerView.Adapter<MockAdapter.ViewHolder> im
     private LayoutInflater mLayoutInflater;
     private ProjectDetailContract.Presenter mListener;
     private final OnStartDragListener mDragStartListener;
+    private boolean mIsPortrait;
 
     public MockAdapter(Context context, List<Mock> mocks,
                        ProjectDetailContract.Presenter listener,
-                       OnStartDragListener onStartDragListener) {
+                       OnStartDragListener onStartDragListener,
+                       boolean isPortrait) {
         if (mocks != null) mMocks.addAll(mocks);
         mLayoutInflater = LayoutInflater.from(context);
         mListener = listener;
         mDragStartListener = onStartDragListener;
+        mIsPortrait = isPortrait;
     }
 
     public void updateData(Mock mock) {
@@ -67,6 +70,7 @@ public class MockAdapter extends RecyclerView.Adapter<MockAdapter.ViewHolder> im
             mMockItemActionHandler = new MockItemActionHandler(mListener);
             mItemMockBinding.setHandler(mMockItemActionHandler);
             mItemMockBinding.getRoot().setOnLongClickListener(this);
+            mItemMockBinding.setIsPortrait(mIsPortrait);
         }
 
         void bindData(Mock mock, int position) {
