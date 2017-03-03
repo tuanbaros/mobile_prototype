@@ -15,7 +15,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
-import android.view.MenuItem;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Window;
 import android.widget.Toast;
 
@@ -27,13 +28,16 @@ import com.framgia.mobileprototype.data.source.mock.MockLocalDataSource;
 import com.framgia.mobileprototype.data.source.mock.MockRepository;
 import com.framgia.mobileprototype.databinding.ActivityProjectDetailBinding;
 import com.framgia.mobileprototype.databinding.DialogAddMockBinding;
+import com.framgia.mobileprototype.helper.ItemTouchCallbackHelper;
+import com.framgia.mobileprototype.helper.OnStartDragListener;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProjectDetailActivity extends BaseActivity implements ProjectDetailContract.View {
+public class ProjectDetailActivity extends BaseActivity implements ProjectDetailContract.View,
+    OnStartDragListener {
     public static final String EXTRA_PROJECT = "EXTRA_PROJECT";
     public static final int PERMISSION_REQUEST_CODE = 2;
     public static final int NUMBER_COLUMN_GRID = 3;
@@ -47,6 +51,7 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
     private DialogAddMockBinding mAddMockBinding;
     private String mMockImagePath;
     private ArrayList<String> mDeniedPermissions = new ArrayList<>();
+    private ItemTouchHelper mItemTouchHelper;
 
     public static Intent getProjectDetailIntent(Context context, Project project) {
         Intent intent = new Intent(context, ProjectDetailActivity.class);
@@ -76,14 +81,17 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
     @Override
     public void mocksLoaded(List<Mock> mocks) {
         mIsLoading.set(false);
-        mMockAdapter.set(new MockAdapter(this, mocks, mProjectDetailPresenter));
+        mMockAdapter.set(new MockAdapter(this, mocks, mProjectDetailPresenter, this));
+        ItemTouchHelper.Callback callback = new ItemTouchCallbackHelper(mMockAdapter.get());
+        mItemTouchHelper = new ItemTouchHelper(callback);
+        mItemTouchHelper.attachToRecyclerView(mProjectDetailBinding.recyclerView);
     }
 
     @Override
     public void mocksNotAvailable() {
         mIsLoading.set(false);
         mIsEmptyMock.set(true);
-        mMockAdapter.set(new MockAdapter(this, null, mProjectDetailPresenter));
+        mMockAdapter.set(new MockAdapter(this, null, mProjectDetailPresenter, this));
     }
 
     @Override
@@ -201,14 +209,6 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem menuItem) {
-        if (menuItem.getItemId() == android.R.id.home) {
-            onBackPressed();
-        }
-        return super.onOptionsItemSelected(menuItem);
-    }
-
-    @Override
     public void onBackPressed() {
         if (mProject.getNumberMocks() != mMockAdapter.get().getItemCount()) {
             mProject.setNumberMocks(mMockAdapter.get().getItemCount());
@@ -261,5 +261,10 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
 
     public ObservableField<MockAdapter> getMockAdapter() {
         return mMockAdapter;
+    }
+
+    @Override
+    public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
+        mItemTouchHelper.startDrag(viewHolder);
     }
 }
