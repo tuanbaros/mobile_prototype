@@ -4,13 +4,17 @@ import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.framgia.mobileprototype.R;
 import com.framgia.mobileprototype.data.model.Mock;
 import com.framgia.mobileprototype.databinding.ItemMockBinding;
+import com.framgia.mobileprototype.helper.ItemAdapterTouchHelper;
+import com.framgia.mobileprototype.helper.OnStartDragListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -18,16 +22,20 @@ import java.util.List;
  * Project: mobile_prototype
  * Package: com.framgia.mobileprototype.projectdetail
  */
-public class MockAdapter extends RecyclerView.Adapter<MockAdapter.ViewHolder> {
+public class MockAdapter extends RecyclerView.Adapter<MockAdapter.ViewHolder> implements
+    ItemAdapterTouchHelper {
     private List<Mock> mMocks = new ArrayList<>();
     private LayoutInflater mLayoutInflater;
     private ProjectDetailContract.Presenter mListener;
+    private final OnStartDragListener mDragStartListener;
 
     public MockAdapter(Context context, List<Mock> mocks,
-                       ProjectDetailContract.Presenter listener) {
+                       ProjectDetailContract.Presenter listener,
+                       OnStartDragListener onStartDragListener) {
         if (mocks != null) mMocks.addAll(mocks);
         mLayoutInflater = LayoutInflater.from(context);
         mListener = listener;
+        mDragStartListener = onStartDragListener;
     }
 
     public void updateData(Mock mock) {
@@ -42,7 +50,14 @@ public class MockAdapter extends RecyclerView.Adapter<MockAdapter.ViewHolder> {
         notifyDataSetChanged();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder {
+    @Override
+    public boolean onItemMove(int fromPosition, int toPosition) {
+        Collections.swap(mMocks, fromPosition, toPosition);
+        notifyItemMoved(fromPosition, toPosition);
+        return true;
+    }
+
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
         private ItemMockBinding mItemMockBinding;
         private MockItemActionHandler mMockItemActionHandler;
 
@@ -51,6 +66,7 @@ public class MockAdapter extends RecyclerView.Adapter<MockAdapter.ViewHolder> {
             mItemMockBinding = itemMockBinding;
             mMockItemActionHandler = new MockItemActionHandler(mListener);
             mItemMockBinding.setHandler(mMockItemActionHandler);
+            mItemMockBinding.getRoot().setOnLongClickListener(this);
         }
 
         void bindData(Mock mock, int position) {
@@ -58,6 +74,12 @@ public class MockAdapter extends RecyclerView.Adapter<MockAdapter.ViewHolder> {
             mItemMockBinding.setMock(mock);
             mItemMockBinding.setPosition(position);
             mItemMockBinding.executePendingBindings();
+        }
+
+        @Override
+        public boolean onLongClick(View view) {
+            mDragStartListener.onStartDrag(this);
+            return true;
         }
     }
 
@@ -69,7 +91,7 @@ public class MockAdapter extends RecyclerView.Adapter<MockAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(MockAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(final MockAdapter.ViewHolder holder, final int position) {
         holder.bindData(mMocks.get(position), position);
     }
 

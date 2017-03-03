@@ -22,7 +22,7 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         if (menuItem.getItemId() == android.R.id.home) {
-            finish();
+            onBackPressed();
         }
         return super.onOptionsItemSelected(menuItem);
     }
