@@ -2,6 +2,7 @@ package com.framgia.mobileprototype.projectdetail;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.databinding.ObservableBoolean;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +30,7 @@ public class MockAdapter extends RecyclerView.Adapter<MockAdapter.ViewHolder> im
     private ProjectDetailContract.Presenter mListener;
     private final OnStartDragListener mDragStartListener;
     private boolean mIsPortrait;
+    private ObservableBoolean mIsRemoving = new ObservableBoolean();
 
     public MockAdapter(Context context, List<Mock> mocks,
                        ProjectDetailContract.Presenter listener,
@@ -53,6 +55,13 @@ public class MockAdapter extends RecyclerView.Adapter<MockAdapter.ViewHolder> im
         notifyDataSetChanged();
     }
 
+    public void removeMultipItem(ArrayList<Mock> mocks) {
+        for (Mock mock : mocks) {
+            mMocks.remove(mock);
+        }
+        notifyDataSetChanged();
+    }
+
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
         Collections.swap(mMocks, fromPosition, toPosition);
@@ -70,7 +79,7 @@ public class MockAdapter extends RecyclerView.Adapter<MockAdapter.ViewHolder> im
             mMockItemActionHandler = new MockItemActionHandler(mListener);
             mItemMockBinding.setHandler(mMockItemActionHandler);
             mItemMockBinding.getRoot().setOnLongClickListener(this);
-            mItemMockBinding.setIsPortrait(mIsPortrait);
+            mItemMockBinding.setAdapter(MockAdapter.this);
         }
 
         void bindData(Mock mock, int position) {
@@ -97,10 +106,29 @@ public class MockAdapter extends RecyclerView.Adapter<MockAdapter.ViewHolder> im
     @Override
     public void onBindViewHolder(final MockAdapter.ViewHolder holder, final int position) {
         holder.bindData(mMocks.get(position), position);
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                mDragStartListener.onStartDrag(holder);
+                return false;
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
         return null != mMocks ? mMocks.size() : 0;
+    }
+
+    public ObservableBoolean getIsRemoving() {
+        return mIsRemoving;
+    }
+
+    public void setIsRemoving(boolean isRemoving) {
+        mIsRemoving.set(isRemoving);
+    }
+
+    public boolean isPortrait() {
+        return mIsPortrait;
     }
 }
