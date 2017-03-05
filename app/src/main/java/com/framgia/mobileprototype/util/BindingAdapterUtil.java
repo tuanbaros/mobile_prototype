@@ -1,9 +1,8 @@
 package com.framgia.mobileprototype.util;
 
 import android.databinding.BindingAdapter;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -15,13 +14,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.signature.StringSignature;
 import com.framgia.mobileprototype.Constant;
 import com.framgia.mobileprototype.R;
 
 import java.io.File;
-import java.io.InputStream;
 
 /**
  * Created by tuannt on 21/02/2017.
@@ -85,5 +82,12 @@ public class BindingAdapterUtil {
             .load(Uri.parse(Constant.ASSET_PATH + path))
             .error(R.mipmap.ic_launcher)
             .into(view);
+    }
+
+    @BindingAdapter({"navListener"})
+    public static void setListener(final NavigationView view,
+                                   NavigationView.OnNavigationItemSelectedListener listener) {
+        view.setCheckedItem(R.id.nav_project);
+        view.setNavigationItemSelectedListener(listener);
     }
 }

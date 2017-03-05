@@ -9,9 +9,12 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
+import android.databinding.ObservableInt;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.DisplayMetrics;
 import android.view.MenuItem;
@@ -24,6 +27,7 @@ import com.framgia.mobileprototype.Constant;
 import com.framgia.mobileprototype.PermissionActivity;
 import com.framgia.mobileprototype.R;
 import com.framgia.mobileprototype.RegisterPermission;
+import com.framgia.mobileprototype.about.AboutActivity;
 import com.framgia.mobileprototype.data.model.Project;
 import com.framgia.mobileprototype.data.source.element.ElementLocalDataSource;
 import com.framgia.mobileprototype.data.source.element.ElementRepository;
@@ -35,6 +39,7 @@ import com.framgia.mobileprototype.databinding.ActivityProjectsBinding;
 import com.framgia.mobileprototype.databinding.DialogAddProjectBinding;
 import com.framgia.mobileprototype.databinding.DialogEditProjectBinding;
 import com.framgia.mobileprototype.databinding.NavHeaderBinding;
+import com.framgia.mobileprototype.introduction.IntroductionActivity;
 import com.framgia.mobileprototype.projectdetail.ProjectDetailActivity;
 import com.framgia.mobileprototype.util.ScreenSizeUtil;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -49,7 +54,9 @@ import java.util.List;
 @RegisterPermission(permissions = {
     Manifest.permission.WRITE_EXTERNAL_STORAGE,
     Manifest.permission.CAMERA})
-public class ProjectsActivity extends PermissionActivity implements ProjectsContract.View {
+public class ProjectsActivity extends PermissionActivity implements
+    ProjectsContract.View,
+    NavigationView.OnNavigationItemSelectedListener {
     private static final String EXTRA_FIRST_OPEN_APP = "EXTRA_FIRST_OPEN_APP";
     private static final int PROJECT_DETAIL_REQUEST_CODE = 1;
     private static final String SAMPLE_PROJECT_FILE_NAME = "sample_project.json";
@@ -64,6 +71,8 @@ public class ProjectsActivity extends PermissionActivity implements ProjectsCont
     private DialogAddProjectBinding mAddProjectBinding;
     private DialogEditProjectBinding mEditProjectBinding;
     private Project mProject;
+    private ObservableInt mNumberProjects = new ObservableInt();
+    private ObservableInt mNumberMocks = new ObservableInt();
 
     public static Intent getProjectsIntent(Context context, boolean isFirstOpenApp) {
         Intent intent = new Intent(context, ProjectsActivity.class);
@@ -82,6 +91,7 @@ public class ProjectsActivity extends PermissionActivity implements ProjectsCont
             MockRepository.getInstance(MockLocalDataSource.getInstance(this)),
             ElementRepository.getInstance(ElementLocalDataSource.getInstance(this)));
         mProjectsBinding.setPresenter(mProjectsPresenter);
+        mProjectsBinding.setListener(this);
         start();
     }
 
@@ -110,6 +120,7 @@ public class ProjectsActivity extends PermissionActivity implements ProjectsCont
 
     private void setUpNavigationHeader() {
         NavHeaderBinding navHeaderBinding = NavHeaderBinding.inflate(getLayoutInflater());
+        navHeaderBinding.setActivity(this);
         mProjectsBinding.navView.addHeaderView(navHeaderBinding.getRoot());
     }
 
@@ -180,9 +191,15 @@ public class ProjectsActivity extends PermissionActivity implements ProjectsCont
     }
 
     @Override
-    public void projectsLoaded(List<Project> projects) {
+    public void projectsLoaded(final List<Project> projects) {
         mIsLoading.set(false);
         mProjectsAdapter.set(new ProjectsAdapter(this, projects, mProjectsPresenter));
+        mNumberProjects.set(projects.size());
+        int count = 0;
+        for (Project project : projects) {
+            count += project.getNumberMocks();
+        }
+        mNumberMocks.set(count);
     }
 
     @Override
@@ -224,6 +241,7 @@ public class ProjectsActivity extends PermissionActivity implements ProjectsCont
         cancelCreateProjectDialog();
         mProjectsAdapter.get().updateData(project);
         if (mIsEmptyProject.get()) mIsEmptyProject.set(false);
+        mNumberProjects.set(mNumberProjects.get() + 1);
     }
 
     @Override
@@ -293,6 +311,7 @@ public class ProjectsActivity extends PermissionActivity implements ProjectsCont
         if (mProjectsAdapter.get().getItemCount() == 0) {
             mIsEmptyProject.set(true);
         }
+        mNumberProjects.set(mNumberProjects.get() - 1);
     }
 
     @Override
@@ -334,6 +353,8 @@ public class ProjectsActivity extends PermissionActivity implements ProjectsCont
                 case PROJECT_DETAIL_REQUEST_CODE:
                     Project project =
                         (Project) data.getSerializableExtra(ProjectDetailActivity.EXTRA_PROJECT);
+                    mNumberMocks.set(
+                        mNumberMocks.get() - mProject.getNumberMocks() + project.getNumberMocks());
                     mProject.setNumberMocks(project.getNumberMocks());
                     break;
                 default:
@@ -348,5 +369,41 @@ public class ProjectsActivity extends PermissionActivity implements ProjectsCont
             .setAutoZoomEnabled(false)
             .setAspectRatio(100, 100)
             .start(this);
+    }
+
+    public ObservableInt getNumberMocks() {
+        return mNumberMocks;
+    }
+
+    public ObservableInt getNumberProjects() {
+        return mNumberProjects;
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        mIsDrawerOpen.set(false);
+        switch (menuItem.getItemId()) {
+            case R.id.nav_project:
+                break;
+            case R.id.nav_introduction:
+                startActivity(
+                    IntroductionActivity.getIntroductionIntent(this, true));
+                break;
+            case R.id.nav_about:
+                startActivity(new Intent(this, AboutActivity.class));
+                break;
+            case R.id.nav_rate:
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse
+                        (Constant.BASE_MARKET_SCHEMA + getPackageName())));
+                } catch (android.content.ActivityNotFoundException anfe) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse
+                        (Constant.BASE_MARKET_URL + getPackageName())));
+                }
+                break;
+            default:
+                break;
+        }
+        return false;
     }
 }

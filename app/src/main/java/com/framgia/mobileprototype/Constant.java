@@ -15,4 +15,6 @@ public class Constant {
     public static final int DEFAULT_IMAGE_WIDTH = 100;
     public static final int DEFAULT_IMAGE_HEIGHT = 150;
     public static final String ASSET_PATH = "file:///android_asset/";
+    public static final String BASE_MARKET_SCHEMA = "market://details?id=";
+    public static final String BASE_MARKET_URL = "https://play.google.com/store/apps/details?id=";
 }
