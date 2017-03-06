@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.framgia.mobileprototype.R;
+import com.framgia.mobileprototype.data.model.Element;
 import com.framgia.mobileprototype.mockdetail.MockDetailContract;
 
 /**
@@ -89,6 +90,7 @@ public class ElementView extends RelativeLayout implements View.OnTouchListener 
     }
 
     public void setLinkTo(String mockEntryId) {
+        ((Element) this.getTag(R.string.title_element)).setLinkTo(mockEntryId);
         this.getChildAt(NUMBER_DOT_CONTROL).setBackgroundResource(R.drawable.link_to_selector);
         for (int j = 0; j < NUMBER_DOT_CONTROL; j++) {
             this.getChildAt(j).setBackgroundResource(R.drawable.link_to_resize);

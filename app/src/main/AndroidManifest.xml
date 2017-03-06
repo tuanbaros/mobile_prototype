@@ -31,6 +31,9 @@
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".about.AboutActivity"/>
         <activity android:name=".mockdetail.MockDetailActivity"/>
+        <activity
+            android:name=".linkto.LinkToActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

@@ -18,9 +18,11 @@ import com.framgia.mobileprototype.BaseActivity;
 import com.framgia.mobileprototype.R;
 import com.framgia.mobileprototype.data.model.Element;
 import com.framgia.mobileprototype.data.model.Mock;
+import com.framgia.mobileprototype.data.model.Project;
 import com.framgia.mobileprototype.data.source.element.ElementLocalDataSource;
 import com.framgia.mobileprototype.data.source.element.ElementRepository;
 import com.framgia.mobileprototype.databinding.ActivityMockDetailBinding;
+import com.framgia.mobileprototype.linkto.LinkToActivity;
 import com.framgia.mobileprototype.ui.widget.CustomRelativeLayout;
 import com.framgia.mobileprototype.ui.widget.ElementView;
 
@@ -30,18 +32,21 @@ import java.util.List;
 public class MockDetailActivity extends BaseActivity
     implements MockDetailContract.View {
     public static final String EXTRA_MOCK = "EXTRA_MOCK";
-    public static final String EXTRA_ORIENTATION = "EXTRA_ORIENTATION";
+    public static final String EXTRA_PROJECT = "EXTRA_PROJECT";
+    public static final int LINKTO_REQUEST_CODE = 3;
     private ActivityMockDetailBinding mMockDetailBinding;
     private MockDetailContract.Presenter mMockDetailPresenter;
     private Mock mMock;
     private ObservableBoolean mIsLoading = new ObservableBoolean();
     private MenuItem mRemoveItem, mLinkToItem;
+    private Menu mMenu;
+    private Project mProject;
     private CustomRelativeLayout mCustomRelativeLayout;
 
-    public static Intent getMockDetailIntent(Context context, Mock mock, String orientation) {
+    public static Intent getMockDetailIntent(Context context, Mock mock, Project project) {
         Intent intent = new Intent(context, MockDetailActivity.class);
         intent.putExtra(EXTRA_MOCK, mock);
-        intent.putExtra(EXTRA_ORIENTATION, orientation);
+        intent.putExtra(EXTRA_PROJECT, project);
         return intent;
     }
 
@@ -157,6 +162,7 @@ public class MockDetailActivity extends BaseActivity
 
     private void getIntentData() {
         mMock = (Mock) getIntent().getSerializableExtra(EXTRA_MOCK);
+        mProject = (Project) getIntent().getSerializableExtra(EXTRA_PROJECT);
     }
 
     private void setUpView() {
@@ -188,9 +194,7 @@ public class MockDetailActivity extends BaseActivity
                 mCustomRelativeLayout.removeView(elementView);
                 mMockDetailPresenter.deleteElement(
                     (Element) elementView.getTag(R.string.title_element));
-                break;
-            case R.id.action_link:
-                ((ElementView) mCustomRelativeLayout.getTag()).setLinkTo("");
+                hideElementOption();
                 break;
             case R.id.action_save:
                 mCustomRelativeLayout.setEnabled(false);
@@ -199,11 +203,27 @@ public class MockDetailActivity extends BaseActivity
                     child.setEnabled(false);
                 }
                 mMockDetailPresenter.getAllElementInMock();
+                hideElementOption();
+                break;
+            case R.id.action_link:
+                startActivityForResult(
+                    LinkToActivity.getLinkToIntent(this, mProject), LINKTO_REQUEST_CODE);
                 break;
             default:
                 break;
         }
-        hideElementOption();
         return super.onOptionsItemSelected(menuItem);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == LINKTO_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+            String linkTo = data.getStringExtra(LinkToActivity.EXTRA_MOCK_ENTRYID);
+            ElementView elementView = (ElementView) mCustomRelativeLayout.getTag();
+            elementView.setLinkTo(linkTo);
+            Element element = (Element) elementView.getTag(R.string.title_element);
+            mMockDetailPresenter.saveElement(element);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
