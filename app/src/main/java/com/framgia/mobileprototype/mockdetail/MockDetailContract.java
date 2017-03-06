@@ -18,10 +18,15 @@ public interface MockDetailContract {
         void elementsNotAvailable();
         void showElementOption();
         void hideElementOption();
+        void getAllElementView();
+        void onSaveElementDone();
     }
 
     interface Presenter extends BasePresenter {
         void getElements(String mockId);
         void openElementOption();
+        void getAllElementInMock();
+        void saveAllElement(List<Element> elements);
+        long saveElement(Element element);
     }
 }

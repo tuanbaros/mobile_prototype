@@ -64,8 +64,9 @@ public class ElementLocalDataSource extends DataHelper implements DataSource<Ele
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         sqLiteDatabase.beginTransaction();
         try {
-            elementId = sqLiteDatabase.insert(
-                ElementPersistenceContract.ElementEntry.TABLE_NAME, null, getContentValues(data));
+            elementId = sqLiteDatabase.insertWithOnConflict(
+                ElementPersistenceContract.ElementEntry.TABLE_NAME, null, getContentValues(data),
+                SQLiteDatabase.CONFLICT_IGNORE);
             sqLiteDatabase.setTransactionSuccessful();
         } catch (Exception e) {
             e.printStackTrace();
@@ -78,8 +79,23 @@ public class ElementLocalDataSource extends DataHelper implements DataSource<Ele
 
     @Override
     public long updateData(Element data) {
-        // TODO: 22/02/2017 update element
-        return 0;
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        sqLiteDatabase.beginTransaction();
+        String whereClause = ElementPersistenceContract.ElementEntry._ID + "=?";
+        String[] whereArgs = {String.valueOf(data.getId())};
+        long changeRows = 0;
+        try {
+            changeRows = sqLiteDatabase.updateWithOnConflict(ElementPersistenceContract.ElementEntry
+                    .TABLE_NAME, getContentValues(data), whereClause, whereArgs,
+                SQLiteDatabase.CONFLICT_IGNORE);
+            sqLiteDatabase.setTransactionSuccessful();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            sqLiteDatabase.endTransaction();
+            sqLiteDatabase.close();
+        }
+        return changeRows;
     }
 
     @Override
@@ -89,6 +105,9 @@ public class ElementLocalDataSource extends DataHelper implements DataSource<Ele
 
     private ContentValues getContentValues(Element element) {
         ContentValues contentValues = new ContentValues();
+        if (element.getId() > 0) {
+            contentValues.put(ElementPersistenceContract.ElementEntry._ID, element.getId());
+        }
         contentValues.put(
             ElementPersistenceContract.ElementEntry.COLUMN_NAME_X, element.getX());
         contentValues.put(

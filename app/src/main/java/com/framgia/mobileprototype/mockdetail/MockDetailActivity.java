@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.framgia.mobileprototype.BaseActivity;
 import com.framgia.mobileprototype.R;
@@ -21,6 +22,7 @@ import com.framgia.mobileprototype.databinding.ActivityMockDetailBinding;
 import com.framgia.mobileprototype.ui.widget.CustomRelativeLayout;
 import com.framgia.mobileprototype.ui.widget.ElementView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MockDetailActivity extends BaseActivity
@@ -89,6 +91,40 @@ public class MockDetailActivity extends BaseActivity
     }
 
     @Override
+    public void getAllElementView() {
+        CustomRelativeLayout customRelativeLayout = mMockDetailBinding.relativeLayout;
+        if (customRelativeLayout.getChildCount() < 2) {
+            Toast.makeText(this, R.string.msg_empty_element, Toast.LENGTH_SHORT).show();
+            customRelativeLayout.setEnabled(true);
+        } else {
+            List<Element> elements = new ArrayList<>();
+            for (int i = 1; i < customRelativeLayout.getChildCount(); i++) {
+                ElementView elementView = (ElementView) customRelativeLayout.getChildAt(i);
+                Element element = (Element) elementView.getTag(R.string.title_element);
+                element.setMockId(mMock.getId());
+                element.setX((int) elementView.getX());
+                element.setY((int) elementView.getY());
+                element.setWidth(elementView.getWidth());
+                element.setHeight(elementView.getHeight());
+                if (elementView.getTag() != null) {
+                    element.setLinkTo((String) elementView.getTag());
+                }
+                elements.add(element);
+            }
+            mMockDetailPresenter.saveAllElement(elements);
+        }
+    }
+
+    @Override
+    public void onSaveElementDone() {
+        mCustomRelativeLayout.setEnabled(true);
+        for (int i = 0; i < mCustomRelativeLayout.getChildCount(); i++) {
+            View child = mCustomRelativeLayout.getChildAt(i);
+            child.setEnabled(true);
+        }
+    }
+
+    @Override
     public void start() {
         getIntentData();
         setUpTitle();
@@ -136,6 +172,14 @@ public class MockDetailActivity extends BaseActivity
                 break;
             case R.id.action_link:
                 ((ElementView) mCustomRelativeLayout.getTag()).setLinkTo("");
+                break;
+            case R.id.action_save:
+                mCustomRelativeLayout.setEnabled(false);
+                for (int i = 0; i < mCustomRelativeLayout.getChildCount(); i++) {
+                    View child = mCustomRelativeLayout.getChildAt(i);
+                    child.setEnabled(false);
+                }
+                mMockDetailPresenter.getAllElementInMock();
                 break;
             default:
                 break;

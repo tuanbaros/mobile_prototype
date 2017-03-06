@@ -51,7 +51,8 @@ public class DataHelper extends SQLiteOpenHelper {
             ElementPersistenceContract.ElementEntry.COLUMN_NAME_HEIGHT + INTEGER_TYPE + COMMA_SEP +
             ElementPersistenceContract.ElementEntry.COLUMN_NAME_LINK_TO + TEXT_TYPE + COMMA_SEP +
             ElementPersistenceContract.ElementEntry.COLUMN_NAME_TRANSITION + TEXT_TYPE + COMMA_SEP +
-            ElementPersistenceContract.ElementEntry.COLUMN_NAME_MOCK_ID + TEXT_TYPE +
+            ElementPersistenceContract.ElementEntry.COLUMN_NAME_MOCK_ID + TEXT_TYPE + COMMA_SEP +
+            " UNIQUE (" + ProjectPersistenceContract.ProjectEntry._ID + ")" +
             " )";
     private static final String SQL_DROP_PROJECT_ENTRIES =
         "DROP TABLE IF EXISTS " + ProjectPersistenceContract.ProjectEntry.TABLE_NAME;
