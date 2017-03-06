@@ -1,5 +1,7 @@
 package com.framgia.mobileprototype.introduction;
 
+import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
@@ -16,6 +18,7 @@ import com.framgia.mobileprototype.projects.ProjectsActivity;
 
 public class IntroductionActivity extends AppCompatActivity implements
     IntroductionContract.View, ViewPager.OnPageChangeListener {
+    public static final String EXTRA_APP_OPENED = "EXTRA_APP_OPENED";
     private static final String PREF_NAME = "PREF_NAME";
     private static final int DOT_COUNT = 4;
     private static final int MARGIN_TOP = 0;
@@ -28,6 +31,13 @@ public class IntroductionActivity extends AppCompatActivity implements
     private ImageView[] mDots;
     private ObservableField<ViewPagerAdapter> mViewPagerAdapter = new ObservableField<>();
     private boolean mIsFirstOpenApp;
+    private boolean mIsStartFromMain;
+
+    public static Intent getIntroductionIntent(Context context, boolean isStartFromMain) {
+        Intent intent = new Intent(context, IntroductionActivity.class);
+        intent.putExtra(EXTRA_APP_OPENED, isStartFromMain);
+        return intent;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +48,12 @@ public class IntroductionActivity extends AppCompatActivity implements
         mIntroductionBinding.setIntroductionActivity(this);
         mIntroductionBinding.setPresenter(mIntroductionPresenter);
         mIntroductionBinding.setListener(this);
-        mIntroductionPresenter.checkFirstOpenApp(
-            getSharedPreferences(PREF_NAME, MODE_PRIVATE));
+        mIsStartFromMain = getIntent().getBooleanExtra(EXTRA_APP_OPENED, false);
+        if (!mIsStartFromMain) {
+            mIntroductionPresenter.checkFirstOpenApp(getSharedPreferences(PREF_NAME, MODE_PRIVATE));
+        } else {
+            setUpView();
+        }
     }
 
     private void setUpView() {
@@ -74,7 +88,9 @@ public class IntroductionActivity extends AppCompatActivity implements
 
     @Override
     public void showProjectsScreenUi() {
-        startActivity(ProjectsActivity.getProjectsIntent(this, mIsFirstOpenApp));
+        if (!mIsStartFromMain) {
+            startActivity(ProjectsActivity.getProjectsIntent(this, mIsFirstOpenApp));
+        }
         finish();
     }
 
