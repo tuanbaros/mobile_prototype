@@ -45,4 +45,6 @@
     <string name="title_delete_mock">Delete mocks</string>
     <string name="msg_delete_mocks">Delete all mocks chosen!</string>
     <string name="msg_number_mock_selected">%d mocks selected</string>
+    <string name="action_delete_element">Delete</string>
+    <string name="action_link_to">Link To</string>
 </resources>

@@ -57,7 +57,7 @@ public class MockDetailActivity extends BaseActivity implements MockDetailContra
     }
 
     private void setUpElement(List<Element> elements) {
-        // TODO: 07/03/2017 show element in mock layout 
+        // TODO: 07/03/2017 show element in mock layout
     }
 
     @Override
