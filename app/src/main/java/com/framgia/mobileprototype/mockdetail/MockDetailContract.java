@@ -28,5 +28,6 @@ public interface MockDetailContract {
         void getAllElementInMock();
         void saveAllElement(List<Element> elements);
         long saveElement(Element element);
+        void deleteElement(Element element);
     }
 }

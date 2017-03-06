@@ -44,6 +44,8 @@ public class Element implements Serializable {
             ElementPersistenceContract.ElementEntry.COLUMN_NAME_HEIGHT));
         mTransition = cursor.getString(cursor.getColumnIndexOrThrow(
             ElementPersistenceContract.ElementEntry.COLUMN_NAME_TRANSITION));
+        mLinkTo = cursor.getString(cursor.getColumnIndexOrThrow(
+            ElementPersistenceContract.ElementEntry.COLUMN_NAME_LINK_TO));
     }
 
     public int getId() {

@@ -61,6 +61,11 @@ public class MockDetailPresenter implements MockDetailContract.Presenter {
     }
 
     @Override
+    public void deleteElement(Element element) {
+        mElementRepository.deleteData(element);
+    }
+
+    @Override
     public void start() {
         mMockDetailView.onPrepare();
     }
