@@ -17,6 +17,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.signature.StringSignature;
 import com.framgia.mobileprototype.Constant;
 import com.framgia.mobileprototype.R;
+import com.framgia.mobileprototype.mockdetail.MockDetailContract;
+import com.framgia.mobileprototype.ui.widget.CustomRelativeLayout;
 
 import java.io.File;
 
@@ -89,5 +91,11 @@ public class BindingAdapterUtil {
                                    NavigationView.OnNavigationItemSelectedListener listener) {
         view.setCheckedItem(R.id.nav_project);
         view.setNavigationItemSelectedListener(listener);
+    }
+
+    @BindingAdapter({"touchHandler"})
+    public static void setTouchHandler(CustomRelativeLayout view,
+                                       MockDetailContract.Presenter listener) {
+        view.setPresenter(listener);
     }
 }

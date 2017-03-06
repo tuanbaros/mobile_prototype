@@ -6,6 +6,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.framgia.mobileprototype.R;
+import com.framgia.mobileprototype.mockdetail.MockDetailContract;
+
 /**
  * Created by tuannt on 07/03/2017.
  * Project: mobile_prototype
@@ -15,6 +18,7 @@ public class ElementView extends RelativeLayout implements View.OnTouchListener 
     private int mXDelta;
     private int mYDelta;
     private static final int NUMBER_DOT_CONTROL = 4;
+    private MockDetailContract.Presenter mPresenter;
 
     public ElementView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -23,7 +27,7 @@ public class ElementView extends RelativeLayout implements View.OnTouchListener 
 
     @Override
     public boolean onTouch(View view, MotionEvent event) {
-        RelativeLayout parentView = (RelativeLayout) view.getParent().getParent();
+        RelativeLayout parentView = (RelativeLayout) view.getParent();
         hideAnotherElement();
         showControlView();
         view.bringToFront();
@@ -55,14 +59,15 @@ public class ElementView extends RelativeLayout implements View.OnTouchListener 
                 break;
         }
         parentView.invalidate();
+        if (mPresenter != null) mPresenter.openElementOption();
+        parentView.setTag(view);
         return true;
     }
 
     private void hideAnotherElement() {
-        RelativeLayout parentView = (RelativeLayout) this.getParent().getParent();
+        RelativeLayout parentView = (RelativeLayout) this.getParent();
         for (int i = 1; i < parentView.getChildCount(); i++) {
-            RelativeLayout relativeLayout = (RelativeLayout) parentView.getChildAt(i);
-            ElementView elementView = (ElementView) relativeLayout.getChildAt(0);
+            ElementView elementView = (ElementView) parentView.getChildAt(i);
             for (int j = 0; j < NUMBER_DOT_CONTROL; j++) {
                 elementView.getChildAt(j).setVisibility(GONE);
             }
@@ -72,6 +77,21 @@ public class ElementView extends RelativeLayout implements View.OnTouchListener 
     private void showControlView() {
         for (int j = 0; j < NUMBER_DOT_CONTROL; j++) {
             this.getChildAt(j).setVisibility(VISIBLE);
+        }
+    }
+
+    public void setPresenter(MockDetailContract.Presenter presenter) {
+        mPresenter = presenter;
+    }
+
+    public MockDetailContract.Presenter getPresenter() {
+        return mPresenter;
+    }
+
+    public void setLinkTo(String mockEntryId) {
+        this.getChildAt(NUMBER_DOT_CONTROL).setBackgroundResource(R.drawable.link_to_selector);
+        for (int j = 0; j < NUMBER_DOT_CONTROL; j++) {
+            this.getChildAt(j).setBackgroundResource(R.drawable.link_to_resize);
         }
     }
 }
