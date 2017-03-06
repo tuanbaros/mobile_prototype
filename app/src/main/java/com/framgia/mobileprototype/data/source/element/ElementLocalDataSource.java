@@ -2,12 +2,16 @@ package com.framgia.mobileprototype.data.source.element;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 
 import com.framgia.mobileprototype.data.model.Element;
 import com.framgia.mobileprototype.data.source.DataHelper;
 import com.framgia.mobileprototype.data.source.DataSource;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by tuannt on 22/02/2017.
@@ -35,7 +39,23 @@ public class ElementLocalDataSource extends DataHelper implements DataSource<Ele
 
     @Override
     public void getData(@NonNull String dataId, @NonNull GetListCallback getListCallback) {
-        // TODO: 22/02/2017 get element detail 
+        List<Element> elements = null;
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        String whereClause = ElementPersistenceContract.ElementEntry.COLUMN_NAME_MOCK_ID + "=?";
+        String[] whereArgs = {dataId};
+        Cursor cursor = sqLiteDatabase.query(
+            ElementPersistenceContract.ElementEntry.TABLE_NAME,
+            null, whereClause, whereArgs, null, null, null);
+        if (cursor != null && cursor.getCount() > 0) {
+            elements = new ArrayList<>();
+            while (cursor.moveToNext()) {
+                elements.add(new Element(cursor));
+            }
+        }
+        if (cursor != null) cursor.close();
+        if (elements == null) getListCallback.onError();
+        else getListCallback.onSuccess(elements);
+        sqLiteDatabase.close();
     }
 
     @Override

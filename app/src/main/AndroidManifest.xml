@@ -30,6 +30,7 @@
             android:name=".projectdetail.ProjectDetailActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".about.AboutActivity"/>
+        <activity android:name=".mockdetail.MockDetailActivity"/>
     </application>
 
 </manifest>

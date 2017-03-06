@@ -28,6 +28,7 @@ public interface ProjectDetailContract {
         void emptyMockToRemove();
         void removeMockFromAdapter(ArrayList<Mock> mocks);
         void showNumberMockToRemove(int numberMocks);
+        void showMockDetailUi(Mock mock);
     }
 
     interface Presenter extends BasePresenter {
@@ -43,5 +44,6 @@ public interface ProjectDetailContract {
         void deleteMocks();
         void checkAction(boolean isRemoving);
         void clearAllMocksFromRemoveList();
+        void openMockDetail(Mock mock);
     }
 }
