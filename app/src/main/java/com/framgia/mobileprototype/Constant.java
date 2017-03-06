@@ -14,4 +14,5 @@ public class Constant {
     public static final String DEFAULT_COMPRESS_FORMAT = ".png";
     public static final int DEFAULT_IMAGE_WIDTH = 100;
     public static final int DEFAULT_IMAGE_HEIGHT = 150;
+    public static final String ASSET_PATH = "file:///android_asset/";
 }

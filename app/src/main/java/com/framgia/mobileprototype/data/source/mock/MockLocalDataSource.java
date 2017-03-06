@@ -6,10 +6,13 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 
+import com.framgia.mobileprototype.Constant;
 import com.framgia.mobileprototype.data.model.Mock;
 import com.framgia.mobileprototype.data.source.DataHelper;
 import com.framgia.mobileprototype.data.source.DataSource;
+import com.framgia.mobileprototype.data.source.element.ElementPersistenceContract;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -84,7 +87,36 @@ public class MockLocalDataSource extends DataHelper implements DataSource<Mock> 
 
     @Override
     public void deleteData(Mock data) {
-        // TODO: 22/02/2017 delete mock 
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        sqLiteDatabase.beginTransaction();
+        String whereClause = MockPersistenceContract.MockEntry._ID + "=?";
+        String[] whereArgs = {data.getId()};
+        try {
+            sqLiteDatabase.delete(
+                MockPersistenceContract.MockEntry.TABLE_NAME, whereClause, whereArgs);
+            removeAllElementInMock(sqLiteDatabase, data.getId());
+            sqLiteDatabase.setTransactionSuccessful();
+            deleteImage(data.getImage());
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            sqLiteDatabase.endTransaction();
+            sqLiteDatabase.close();
+        }
+    }
+
+    private void deleteImage(String filename) {
+        if (filename == null) return;
+        String filePath = Constant.FILE_PATH + filename;
+        File file = new File(filePath);
+        if (file.exists()) file.delete();
+    }
+
+    private void removeAllElementInMock(SQLiteDatabase sqLiteDatabase, String mockId) {
+        String whereClause = ElementPersistenceContract.ElementEntry.COLUMN_NAME_MOCK_ID + "=?";
+        String[] whereArgs = {mockId};
+        sqLiteDatabase.delete(
+            ElementPersistenceContract.ElementEntry.TABLE_NAME, whereClause, whereArgs);
     }
 
     private ContentValues getContentValues(Mock mock) {

@@ -29,6 +29,7 @@ public class Mock extends BaseObservable implements Serializable {
     private String mProjectId;
     @SerializedName("elements")
     private List<Element> mElements;
+    private boolean mCheckToDelete;
 
     public Mock(Cursor cursor) {
         mId = cursor.getString(cursor.getColumnIndexOrThrow(
@@ -106,5 +107,15 @@ public class Mock extends BaseObservable implements Serializable {
 
     public void setElements(List<Element> elements) {
         this.mElements = elements;
+    }
+
+    @Bindable
+    public boolean isCheckToDelete() {
+        return mCheckToDelete;
+    }
+
+    public void setCheckToDelete(boolean checkToDelete) {
+        this.mCheckToDelete = checkToDelete;
+        notifyPropertyChanged(BR.checkToDelete);
     }
 }

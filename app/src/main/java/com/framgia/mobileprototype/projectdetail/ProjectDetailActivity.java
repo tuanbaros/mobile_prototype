@@ -1,10 +1,13 @@
 package com.framgia.mobileprototype.projectdetail;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
@@ -17,6 +20,9 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.Window;
 import android.widget.Toast;
 
@@ -42,6 +48,7 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
     public static final int PERMISSION_REQUEST_CODE = 2;
     public static final int NUMBER_COLUMN_GRID_PORTRAIT = 3;
     public static final int NUMBER_COLUMN_GRID_LANDSCAPE = 2;
+    private static final int DEFAULT_NUMBER_MOCKS_TO_REMOVE = 0;
     private Project mProject;
     private ProjectDetailContract.Presenter mProjectDetailPresenter;
     private ActivityProjectDetailBinding mProjectDetailBinding;
@@ -53,6 +60,7 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
     private String mMockImagePath;
     private ArrayList<String> mDeniedPermissions = new ArrayList<>();
     private ItemTouchHelper mItemTouchHelper;
+    private ObservableBoolean mIsRemoving = new ObservableBoolean();
 
     public static Intent getProjectDetailIntent(Context context, Project project) {
         Intent intent = new Intent(context, ProjectDetailActivity.class);
@@ -99,7 +107,17 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
 
     @Override
     public void showDeleteMockDialog() {
-        // TODO: 01/03/2017 show Delete dialog 
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
+            .setTitle(R.string.title_delete_mock)
+            .setMessage(R.string.msg_delete_mocks)
+            .setPositiveButton(R.string.action_yes, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    mProjectDetailPresenter.deleteMocks();
+                }
+            })
+            .setNegativeButton(R.string.action_no, null);
+        builder.create().show();
     }
 
     @Override
@@ -163,6 +181,29 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
     }
 
     @Override
+    public void emptyMockToRemove() {
+        Toast.makeText(this, R.string.msg_empty_mocks_to_remove, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void removeMockFromAdapter(ArrayList<Mock> mocks) {
+        mMockAdapter.get().removeMultipItem(mocks);
+        mMockAdapter.get().setIsRemoving(false);
+        mIsRemoving.set(false);
+        setUpTitle();
+        if (mMockAdapter.get().getItemCount() == 0) mIsEmptyMock.set(true);
+    }
+
+    @Override
+    public void showNumberMockToRemove(int numberMocks) {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null && isRemoving()) {
+            Resources res = getResources();
+            actionBar.setTitle(res.getString(R.string.msg_number_mock_selected, numberMocks));
+        }
+    }
+
+    @Override
     public void start() {
         getIntentData();
         setUpTitle();
@@ -199,7 +240,7 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
                                            @NonNull String permissions[],
                                            @NonNull int[] grantResults) {
         switch (requestCode) {
-            case PERMISSION_REQUEST_CODE: {
+            case PERMISSION_REQUEST_CODE:
                 if (grantResults.length > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED
                     && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
@@ -207,12 +248,22 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
                 } else {
                     Toast.makeText(this, R.string.msg_grant_permission, Toast.LENGTH_LONG).show();
                 }
-            }
+                break;
+            default:
+                break;
         }
     }
 
     @Override
     public void onBackPressed() {
+        if (mMockAdapter.get().getIsRemoving().get()) {
+            mMockAdapter.get().setIsRemoving(false);
+            mIsRemoving.set(false);
+            mProjectDetailPresenter.clearAllMocksFromRemoveList();
+            mMockAdapter.get().notifyDataSetChanged();
+            setUpTitle();
+            return;
+        }
         if (mProject.getNumberMocks() != mMockAdapter.get().getItemCount()) {
             mProject.setNumberMocks(mMockAdapter.get().getItemCount());
             Intent intent = new Intent();
@@ -235,12 +286,10 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
     }
 
     private void setUpTitle() {
-        setSupportActionBar(mProjectDetailBinding.toolBar);
         ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle(mProject.getTitle());
-        }
+        if (actionBar == null) setSupportActionBar(mProjectDetailBinding.toolBar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(mProject.getTitle());
     }
 
     private void setUpCreateMockDialog() {
@@ -266,6 +315,14 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
         return mMockAdapter;
     }
 
+    public ObservableBoolean getIsRemoving() {
+        return mIsRemoving;
+    }
+
+    public void setIsRemoving(ObservableBoolean isRemoving) {
+        this.mIsRemoving = isRemoving;
+    }
+
     @Override
     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
         mItemTouchHelper.startDrag(viewHolder);
@@ -273,5 +330,33 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
 
     public int numberColumns() {
         return mProject.isPortrait() ? NUMBER_COLUMN_GRID_PORTRAIT : NUMBER_COLUMN_GRID_LANDSCAPE;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.activity_project_detail, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+            case R.id.action_remove:
+                mMockAdapter.get().setIsRemoving(true);
+                mIsRemoving.set(true);
+                showNumberMockToRemove(DEFAULT_NUMBER_MOCKS_TO_REMOVE);
+                break;
+            default:
+                break;
+        }
+        return false;
+    }
+
+    public boolean isRemoving() {
+        return mIsRemoving.get();
     }
 }

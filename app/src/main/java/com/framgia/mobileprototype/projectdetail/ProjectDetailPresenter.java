@@ -1,7 +1,5 @@
 package com.framgia.mobileprototype.projectdetail;
 
-import android.text.TextUtils;
-
 import com.framgia.mobileprototype.Constant;
 import com.framgia.mobileprototype.data.model.Mock;
 import com.framgia.mobileprototype.data.source.DataSource;
@@ -14,6 +12,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,6 +25,7 @@ public class ProjectDetailPresenter implements ProjectDetailContract.Presenter {
     private MockRepository mMockRepository;
     public static final int NUMBER_BIT_RANDOM = 130;
     public static final int BASE_RANDOM = 32;
+    private ArrayList<Mock> mRemoveMocks = new ArrayList<>();
 
     public ProjectDetailPresenter(MockRepository mockRepository,
                                   ProjectDetailContract.View projectDetailView) {
@@ -49,7 +49,11 @@ public class ProjectDetailPresenter implements ProjectDetailContract.Presenter {
     }
 
     @Override
-    public void openDeleteMockDialog(Mock mock) {
+    public void openDeleteMockDialog() {
+        if (mRemoveMocks.size() == 0) {
+            mProjectDetailView.emptyMockToRemove();
+            return;
+        }
         mProjectDetailView.showDeleteMockDialog();
     }
 
@@ -70,7 +74,7 @@ public class ProjectDetailPresenter implements ProjectDetailContract.Presenter {
 
     @Override
     public void saveMock(Mock mock) {
-        if (TextUtils.isEmpty(mock.getTitle().trim())) {
+        if (mock.getTitle() == null || mock.getTitle().trim().equals("")) {
             mProjectDetailView.showMockTitleEmpty();
             return;
         }
@@ -107,6 +111,41 @@ public class ProjectDetailPresenter implements ProjectDetailContract.Presenter {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public void addMockToRemoveList(Mock mock) {
+        mRemoveMocks.add(mock);
+        mProjectDetailView.showNumberMockToRemove(mRemoveMocks.size());
+    }
+
+    @Override
+    public void clearMockFromRemoveList(Mock mock) {
+        mRemoveMocks.remove(mock);
+        mProjectDetailView.showNumberMockToRemove(mRemoveMocks.size());
+    }
+
+    @Override
+    public void deleteMocks() {
+        for (Mock mock : mRemoveMocks) {
+            mMockRepository.deleteData(mock);
+        }
+        mProjectDetailView.removeMockFromAdapter(mRemoveMocks);
+        mRemoveMocks.clear();
+    }
+
+    @Override
+    public void checkAction(boolean isRemoving) {
+        if (isRemoving) openDeleteMockDialog();
+        else chooseImage();
+    }
+
+    @Override
+    public void clearAllMocksFromRemoveList() {
+        for (Mock mock : mRemoveMocks) {
+            mock.setCheckToDelete(false);
+        }
+        mRemoveMocks.clear();
     }
 
     @Override

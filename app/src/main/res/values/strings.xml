@@ -40,4 +40,9 @@
     <string name="title_new_mock">New mock</string>
     <string name="title_edit_image">Edit</string>
     <string name="error_empty_mock_name">Mock name is empty!</string>
+    <string name="action_remove_mock">Delete</string>
+    <string name="msg_empty_mocks_to_remove">Empty mocks to delete!</string>
+    <string name="title_delete_mock">Delete mocks</string>
+    <string name="msg_delete_mocks">Delete all mocks chosen!</string>
+    <string name="msg_number_mock_selected">%d mocks selected</string>
 </resources>

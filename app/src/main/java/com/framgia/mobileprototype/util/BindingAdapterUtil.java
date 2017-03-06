@@ -3,6 +3,7 @@ package com.framgia.mobileprototype.util;
 import android.databinding.BindingAdapter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -13,12 +14,13 @@ import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.signature.StringSignature;
 import com.framgia.mobileprototype.Constant;
 import com.framgia.mobileprototype.R;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -70,52 +72,18 @@ public class BindingAdapterUtil {
 
     @BindingAdapter({"imageUrl"})
     public static void loadImage(ImageView view, String path) {
-        if (path == null) {
-            view.setImageResource(R.mipmap.ic_launcher);
+        String filePath = Constant.FILE_PATH + path;
+        File imgFile = new File(filePath);
+        if (imgFile.exists()) {
+            Glide.with(view.getContext())
+                .load(imgFile)
+                .signature(new StringSignature(imgFile.getName() + imgFile.lastModified()))
+                .into(view);
             return;
         }
-        try {
-            InputStream inputStream = view.getContext().getAssets().open(path);
-            view.setImageBitmap(decodeBitmapFromInputStream(inputStream,
-                Constant.DEFAULT_IMAGE_WIDTH, Constant.DEFAULT_IMAGE_HEIGHT));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            String filePath = Constant.FILE_PATH + path;
-            File imgFile = new File(filePath);
-            if (imgFile.exists()) {
-                Bitmap bitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                view.setImageBitmap(bitmap);
-            } else {
-                view.setImageResource(R.mipmap.ic_launcher);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static int calculateInSize(
-        BitmapFactory.Options options, int reqWidth, int reqHeight) {
-        final int height = options.outHeight;
-        final int width = options.outWidth;
-        int inSampleSize = 1;
-        if (height > reqHeight || width > reqWidth) {
-            final int halfHeight = height / 2;
-            final int halfWidth = width / 2;
-            while ((halfHeight / inSampleSize) >= reqHeight
-                && (halfWidth / inSampleSize) >= reqWidth) {
-                inSampleSize *= 2;
-            }
-        }
-        return inSampleSize;
-    }
-
-    private static Bitmap decodeBitmapFromInputStream(InputStream inputStream,
-                                                      int reqWidth, int reqHeight) {
-        final BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        BitmapFactory.decodeStream(inputStream, null, options);
-        options.inSampleSize = calculateInSize(options, reqWidth, reqHeight);
-        options.inJustDecodeBounds = false;
-        return BitmapFactory.decodeStream(inputStream, null, options);
+        Glide.with(view.getContext())
+            .load(Uri.parse(Constant.ASSET_PATH + path))
+            .error(R.mipmap.ic_launcher)
+            .into(view);
     }
 }
