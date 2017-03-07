@@ -15,8 +15,14 @@ public class MockItemActionHandler {
     }
 
     public void completeChanged(Mock mock, boolean isRemoving) {
+        if (mListener == null) return;
         mock.setCheckToDelete(isRemoving);
         if (isRemoving) mListener.addMockToRemoveList(mock);
         else mListener.clearMockFromRemoveList(mock);
+    }
+
+    public void openMockDetail(Mock mock) {
+        if (mListener == null) return;
+        mListener.openMockDetail(mock);
     }
 }

@@ -29,8 +29,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="@dimen/dp_4"
-        android:clickable="true"
-        android:foreground="?android:attr/selectableItemBackground">
+        android:foreground="?android:attr/selectableItemBackground"
+        android:onClick="@{() -> handler.openMockDetail(mock)}">
 
         <LinearLayout
             android:layout_width="match_parent"

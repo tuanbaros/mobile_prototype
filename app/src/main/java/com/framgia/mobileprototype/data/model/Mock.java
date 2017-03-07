@@ -101,12 +101,14 @@ public class Mock extends BaseObservable implements Serializable {
         notifyPropertyChanged(BR.title);
     }
 
+    @Bindable
     public List<Element> getElements() {
         return mElements;
     }
 
     public void setElements(List<Element> elements) {
         this.mElements = elements;
+        notifyPropertyChanged(BR.elements);
     }
 
     @Bindable

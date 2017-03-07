@@ -1,5 +1,8 @@
 package com.framgia.mobileprototype.data.model;
 
+import android.database.Cursor;
+
+import com.framgia.mobileprototype.data.source.element.ElementPersistenceContract;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -24,6 +27,24 @@ public class Element implements Serializable {
     @SerializedName("transition")
     private String mTransition;
     private String mMockId;
+
+    public Element() {
+    }
+
+    public Element(Cursor cursor) {
+        mId = cursor.getString(cursor.getColumnIndexOrThrow(
+            ElementPersistenceContract.ElementEntry._ID));
+        mX = cursor.getInt(cursor.getColumnIndexOrThrow(
+            ElementPersistenceContract.ElementEntry.COLUMN_NAME_X));
+        mY = cursor.getInt(cursor.getColumnIndexOrThrow(
+            ElementPersistenceContract.ElementEntry.COLUMN_NAME_Y));
+        mWidth = cursor.getInt(cursor.getColumnIndexOrThrow(
+            ElementPersistenceContract.ElementEntry.COLUMN_NAME_WIDTH));
+        mHeight = cursor.getInt(cursor.getColumnIndexOrThrow(
+            ElementPersistenceContract.ElementEntry.COLUMN_NAME_HEIGHT));
+        mTransition = cursor.getString(cursor.getColumnIndexOrThrow(
+            ElementPersistenceContract.ElementEntry.COLUMN_NAME_TRANSITION));
+    }
 
     public String getId() {
         return mId;

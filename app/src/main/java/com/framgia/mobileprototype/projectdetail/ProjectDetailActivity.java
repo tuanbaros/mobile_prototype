@@ -36,6 +36,7 @@ import com.framgia.mobileprototype.databinding.ActivityProjectDetailBinding;
 import com.framgia.mobileprototype.databinding.DialogAddMockBinding;
 import com.framgia.mobileprototype.helper.ItemTouchCallbackHelper;
 import com.framgia.mobileprototype.helper.OnStartDragListener;
+import com.framgia.mobileprototype.mockdetail.MockDetailActivity;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
@@ -201,6 +202,12 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
             Resources res = getResources();
             actionBar.setTitle(res.getString(R.string.msg_number_mock_selected, numberMocks));
         }
+    }
+
+    @Override
+    public void showMockDetailUi(Mock mock) {
+        startActivity(
+            MockDetailActivity.getMockDetailIntent(this, mock, mProject.getOrientation()));
     }
 
     @Override

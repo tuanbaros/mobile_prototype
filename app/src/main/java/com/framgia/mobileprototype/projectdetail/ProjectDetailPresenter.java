@@ -149,6 +149,11 @@ public class ProjectDetailPresenter implements ProjectDetailContract.Presenter {
     }
 
     @Override
+    public void openMockDetail(Mock mock) {
+        mProjectDetailView.showMockDetailUi(mock);
+    }
+
+    @Override
     public void start() {
         mProjectDetailView.onPrepare();
     }
