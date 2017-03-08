@@ -131,4 +131,8 @@ public class MockAdapter extends RecyclerView.Adapter<MockAdapter.ViewHolder> im
     public boolean isPortrait() {
         return mIsPortrait;
     }
+
+    public Mock getFirtItem() {
+        return mMocks.get(0);
+    }
 }

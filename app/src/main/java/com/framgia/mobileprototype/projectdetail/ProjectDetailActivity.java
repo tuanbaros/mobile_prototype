@@ -35,6 +35,7 @@ import com.framgia.mobileprototype.data.source.mock.MockLocalDataSource;
 import com.framgia.mobileprototype.data.source.mock.MockRepository;
 import com.framgia.mobileprototype.databinding.ActivityProjectDetailBinding;
 import com.framgia.mobileprototype.databinding.DialogAddMockBinding;
+import com.framgia.mobileprototype.demo.DemoActivity;
 import com.framgia.mobileprototype.helper.ItemTouchCallbackHelper;
 import com.framgia.mobileprototype.helper.OnStartDragListener;
 import com.framgia.mobileprototype.mockdetail.MockDetailActivity;
@@ -356,6 +357,11 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
                 mMockAdapter.get().setIsRemoving(true);
                 mIsRemoving.set(true);
                 showNumberMockToRemove(DEFAULT_NUMBER_MOCKS_TO_REMOVE);
+                break;
+            case R.id.action_play:
+                startActivity(
+                    DemoActivity
+                        .getDemoIntent(this, mMockAdapter.get().getFirtItem().getEntryId()));
                 break;
             default:
                 break;

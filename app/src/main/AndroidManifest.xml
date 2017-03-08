@@ -34,6 +34,9 @@
         <activity
             android:name=".linkto.LinkToActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".demo.DemoActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

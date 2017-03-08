@@ -8,4 +8,6 @@ package com.framgia.mobileprototype.util;
 public class ScreenSizeUtil {
     public static int sWidth;
     public static int sHeight;
+    public static float sScaleWidth;
+    public static float sScaleHeight;
 }

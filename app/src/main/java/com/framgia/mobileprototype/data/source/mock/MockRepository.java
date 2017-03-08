@@ -3,14 +3,13 @@ package com.framgia.mobileprototype.data.source.mock;
 import android.support.annotation.NonNull;
 
 import com.framgia.mobileprototype.data.model.Mock;
-import com.framgia.mobileprototype.data.source.DataSource;
 
 /**
  * Created by tuannt on 22/02/2017.
  * Project: mobile_prototype
  * Package: com.framgia.mobileprototype.data.source.mock
  */
-public class MockRepository implements DataSource<Mock> {
+public class MockRepository implements MockDataSource {
     private static MockRepository sMockRepository;
     private MockLocalDataSource mMockLocalDataSource;
 
@@ -48,5 +47,10 @@ public class MockRepository implements DataSource<Mock> {
     @Override
     public void deleteData(Mock data) {
         mMockLocalDataSource.deleteData(data);
+    }
+
+    @Override
+    public void getMockByEntryId(String mockEntryId, GetCallback getCallback) {
+        mMockLocalDataSource.getMockByEntryId(mockEntryId, getCallback);
     }
 }

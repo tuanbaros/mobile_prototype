@@ -15,8 +15,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.DisplayMetrics;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -405,5 +407,31 @@ public class ProjectsActivity extends PermissionActivity implements
                 break;
         }
         return false;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            int actionBarHeight = actionBar.getHeight();
+            int statusBarHeight = getStatusBarHeight();
+            int paddingDistance = 2 * (int) getResources().getDimension(R.dimen.dp_16);
+            int childWidth = ScreenSizeUtil.sWidth - (paddingDistance);
+            int childHeight =
+                ScreenSizeUtil.sHeight - actionBarHeight - statusBarHeight - paddingDistance;
+            ScreenSizeUtil.sScaleWidth = (float) ScreenSizeUtil.sWidth / childWidth;
+            ScreenSizeUtil.sScaleHeight = (float) ScreenSizeUtil.sHeight / childHeight;
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier(
+            Constant.STATUS_BAR_HEIGHT, Constant.DIMEN, Constant.ANDROID);
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
     }
 }
