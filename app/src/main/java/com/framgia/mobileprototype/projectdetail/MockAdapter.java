@@ -15,7 +15,6 @@ import com.framgia.mobileprototype.helper.ItemAdapterTouchHelper;
 import com.framgia.mobileprototype.helper.OnStartDragListener;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -31,12 +30,16 @@ public class MockAdapter extends RecyclerView.Adapter<MockAdapter.ViewHolder> im
     private final OnStartDragListener mDragStartListener;
     private boolean mIsPortrait;
     private ObservableBoolean mIsRemoving = new ObservableBoolean();
+    private Mock mFirsItem, mTemp;
 
     public MockAdapter(Context context, List<Mock> mocks,
                        ProjectDetailContract.Presenter listener,
                        OnStartDragListener onStartDragListener,
                        boolean isPortrait) {
-        if (mocks != null) mMocks.addAll(mocks);
+        if (mocks != null) {
+            mMocks.addAll(mocks);
+            mFirsItem = mMocks.get(0);
+        }
         mLayoutInflater = LayoutInflater.from(context);
         mListener = listener;
         mDragStartListener = onStartDragListener;
@@ -48,6 +51,7 @@ public class MockAdapter extends RecyclerView.Adapter<MockAdapter.ViewHolder> im
             mMocks.add(mock);
             notifyDataSetChanged();
         }
+        if (mFirsItem == null) mFirsItem = mMocks.get(0);
     }
 
     public void removeItem(int position) {
@@ -58,14 +62,16 @@ public class MockAdapter extends RecyclerView.Adapter<MockAdapter.ViewHolder> im
     public void removeMultipItem(ArrayList<Mock> mocks) {
         for (Mock mock : mocks) {
             mMocks.remove(mock);
+            if (mFirsItem == mock) mFirsItem = null;
         }
         notifyDataSetChanged();
+        if (mMocks.size() > 0 && mFirsItem == null) mFirsItem = mMocks.get(0);
     }
 
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
-        Collections.swap(mMocks, fromPosition, toPosition);
         notifyItemMoved(fromPosition, toPosition);
+        if (toPosition == 0) mFirsItem = mTemp;
         return true;
     }
 
@@ -91,6 +97,7 @@ public class MockAdapter extends RecyclerView.Adapter<MockAdapter.ViewHolder> im
 
         @Override
         public boolean onLongClick(View view) {
+            mTemp = mItemMockBinding.getMock();
             mDragStartListener.onStartDrag(this);
             return true;
         }
@@ -104,15 +111,8 @@ public class MockAdapter extends RecyclerView.Adapter<MockAdapter.ViewHolder> im
     }
 
     @Override
-    public void onBindViewHolder(final MockAdapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(final MockAdapter.ViewHolder holder, int position) {
         holder.bindData(mMocks.get(position), position);
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                mDragStartListener.onStartDrag(holder);
-                return false;
-            }
-        });
     }
 
     @Override
@@ -133,6 +133,6 @@ public class MockAdapter extends RecyclerView.Adapter<MockAdapter.ViewHolder> im
     }
 
     public Mock getFirtItem() {
-        return mMocks.get(0);
+        return mFirsItem;
     }
 }
