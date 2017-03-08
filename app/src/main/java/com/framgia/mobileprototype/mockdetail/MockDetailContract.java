@@ -16,9 +16,12 @@ public interface MockDetailContract {
         void onPrepare();
         void elementsLoaded(List<Element> elements);
         void elementsNotAvailable();
+        void showElementOption();
+        void hideElementOption();
     }
 
     interface Presenter extends BasePresenter {
         void getElements(String mockId);
+        void openElementOption();
     }
 }

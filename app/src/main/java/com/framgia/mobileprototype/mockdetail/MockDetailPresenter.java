@@ -37,6 +37,11 @@ public class MockDetailPresenter implements MockDetailContract.Presenter {
     }
 
     @Override
+    public void openElementOption() {
+        mMockDetailView.showElementOption();
+    }
+
+    @Override
     public void start() {
         mMockDetailView.onPrepare();
     }
