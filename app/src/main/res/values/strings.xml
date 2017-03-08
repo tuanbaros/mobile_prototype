@@ -51,4 +51,5 @@
     <string name="msg_empty_element">Empty Element!</string>
     <string name="title_link_to">linkto</string>
     <string name="title_element">element</string>
+    <string name="action_play">Play</string>
 </resources>

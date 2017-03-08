@@ -9,7 +9,6 @@ import android.support.annotation.NonNull;
 import com.framgia.mobileprototype.Constant;
 import com.framgia.mobileprototype.data.model.Mock;
 import com.framgia.mobileprototype.data.source.DataHelper;
-import com.framgia.mobileprototype.data.source.DataSource;
 import com.framgia.mobileprototype.data.source.element.ElementPersistenceContract;
 
 import java.io.File;
@@ -21,7 +20,7 @@ import java.util.List;
  * Project: mobile_prototype
  * Package: com.framgia.mobileprototype.data.source.mock
  */
-public class MockLocalDataSource extends DataHelper implements DataSource<Mock> {
+public class MockLocalDataSource extends DataHelper implements MockDataSource {
     private static MockLocalDataSource sMockLocalDataSource;
 
     private MockLocalDataSource(Context context) {
@@ -132,5 +131,23 @@ public class MockLocalDataSource extends DataHelper implements DataSource<Mock> 
         contentValues.put(
             MockPersistenceContract.MockEntry.COLUMN_NAME_PROJECT_ID, mock.getProjectId());
         return contentValues;
+    }
+
+    @Override
+    public void getMockByEntryId(String mockEntryId, GetCallback getCallback) {
+        Mock mock = null;
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        String whereClause = MockPersistenceContract.MockEntry.COLUMN_NAME_ENTRY_ID + "=?";
+        String[] whereArgs = {mockEntryId};
+        Cursor cursor = sqLiteDatabase.query(
+            MockPersistenceContract.MockEntry.TABLE_NAME,
+            null, whereClause, whereArgs, null, null, null);
+        if (cursor != null && cursor.getCount() > 0 && cursor.moveToFirst()) {
+            mock = new Mock(cursor);
+        }
+        if (cursor != null) cursor.close();
+        if (mock == null) getCallback.onMockNotAvailable();
+        else getCallback.onMockLoaded(mock);
+        sqLiteDatabase.close();
     }
 }

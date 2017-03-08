@@ -6,6 +6,7 @@
     <data>
 
         <import type="android.view.View"/>
+
         <import type="com.framgia.mobileprototype.Constant"/>
 
         <import type="com.framgia.mobileprototype.util.LayoutManagerUtil"/>

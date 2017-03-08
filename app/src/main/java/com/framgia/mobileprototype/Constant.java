@@ -19,4 +19,8 @@ public class Constant {
     public static final String BASE_MARKET_URL = "https://play.google.com/store/apps/details?id=";
     public static final int NUMBER_COLUMN_GRID_PORTRAIT = 3;
     public static final int NUMBER_COLUMN_GRID_LANDSCAPE = 2;
+    public static final String ANDROID = "android";
+    public static final String DIMEN = "dimen";
+    public static final String STATUS_BAR_HEIGHT = "status_bar_height";
+    public static final String LINK_TO_BACK = "back";
 }

@@ -39,7 +39,6 @@ public class MockDetailActivity extends BaseActivity
     private Mock mMock;
     private ObservableBoolean mIsLoading = new ObservableBoolean();
     private MenuItem mRemoveItem, mLinkToItem;
-    private Menu mMenu;
     private Project mProject;
     private CustomRelativeLayout mCustomRelativeLayout;
 
@@ -196,15 +195,6 @@ public class MockDetailActivity extends BaseActivity
                     (Element) elementView.getTag(R.string.title_element));
                 hideElementOption();
                 break;
-            case R.id.action_save:
-                mCustomRelativeLayout.setEnabled(false);
-                for (int i = 0; i < mCustomRelativeLayout.getChildCount(); i++) {
-                    View child = mCustomRelativeLayout.getChildAt(i);
-                    child.setEnabled(false);
-                }
-                mMockDetailPresenter.getAllElementInMock();
-                hideElementOption();
-                break;
             case R.id.action_link:
                 startActivityForResult(
                     LinkToActivity.getLinkToIntent(this, mProject), LINKTO_REQUEST_CODE);
@@ -213,6 +203,22 @@ public class MockDetailActivity extends BaseActivity
                 break;
         }
         return super.onOptionsItemSelected(menuItem);
+    }
+
+    private void saveElement() {
+        mCustomRelativeLayout.setEnabled(false);
+        for (int i = 0; i < mCustomRelativeLayout.getChildCount(); i++) {
+            View child = mCustomRelativeLayout.getChildAt(i);
+            child.setEnabled(false);
+        }
+        mMockDetailPresenter.getAllElementInMock();
+        hideElementOption();
+    }
+
+    @Override
+    public void onBackPressed() {
+        saveElement();
+        super.onBackPressed();
     }
 
     @Override
