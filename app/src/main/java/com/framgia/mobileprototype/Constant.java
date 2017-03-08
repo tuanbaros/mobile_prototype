@@ -17,4 +17,6 @@ public class Constant {
     public static final String ASSET_PATH = "file:///android_asset/";
     public static final String BASE_MARKET_SCHEMA = "market://details?id=";
     public static final String BASE_MARKET_URL = "https://play.google.com/store/apps/details?id=";
+    public static final int NUMBER_COLUMN_GRID_PORTRAIT = 3;
+    public static final int NUMBER_COLUMN_GRID_LANDSCAPE = 2;
 }

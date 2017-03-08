@@ -27,6 +27,7 @@ import android.view.Window;
 import android.widget.Toast;
 
 import com.framgia.mobileprototype.BaseActivity;
+import com.framgia.mobileprototype.Constant;
 import com.framgia.mobileprototype.R;
 import com.framgia.mobileprototype.data.model.Mock;
 import com.framgia.mobileprototype.data.model.Project;
@@ -47,8 +48,6 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
     OnStartDragListener {
     public static final String EXTRA_PROJECT = "EXTRA_PROJECT";
     public static final int PERMISSION_REQUEST_CODE = 2;
-    public static final int NUMBER_COLUMN_GRID_PORTRAIT = 3;
-    public static final int NUMBER_COLUMN_GRID_LANDSCAPE = 2;
     private static final int DEFAULT_NUMBER_MOCKS_TO_REMOVE = 0;
     private Project mProject;
     private ProjectDetailContract.Presenter mProjectDetailPresenter;
@@ -207,7 +206,7 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
     @Override
     public void showMockDetailUi(Mock mock) {
         startActivity(
-            MockDetailActivity.getMockDetailIntent(this, mock, mProject.getOrientation()));
+            MockDetailActivity.getMockDetailIntent(this, mock, mProject));
     }
 
     @Override
@@ -336,7 +335,8 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
     }
 
     public int numberColumns() {
-        return mProject.isPortrait() ? NUMBER_COLUMN_GRID_PORTRAIT : NUMBER_COLUMN_GRID_LANDSCAPE;
+        return mProject.isPortrait() ? Constant.NUMBER_COLUMN_GRID_PORTRAIT :
+            Constant.NUMBER_COLUMN_GRID_LANDSCAPE;
     }
 
     @Override
