@@ -1,5 +1,6 @@
 package com.framgia.mobileprototype.data.source;
 
+import com.framgia.mobileprototype.data.model.Element;
 import com.framgia.mobileprototype.data.model.Mock;
 import com.framgia.mobileprototype.data.model.Project;
 import com.framgia.mobileprototype.data.source.element.ElementRepository;
@@ -40,6 +41,8 @@ public class DataImport {
             String line;
             while ((line = reader.readLine()) != null) result.append(line);
             Project project = new Gson().fromJson(result.toString(), Project.class);
+            float scaleWidth = (float) ScreenSizeUtil.sChildWidth / project.getWidth();
+            float scaleHeight = (float) ScreenSizeUtil.sChildHeight / project.getHeight();
             if (project.getOrientation().equals(Project.LANDSCAPE)) {
                 project.setWidth(ScreenSizeUtil.sHeight);
                 project.setHeight(ScreenSizeUtil.sWidth);
@@ -55,7 +58,12 @@ public class DataImport {
                 long mockId = mMockRepository.saveData(mock);
                 if (mockId == DataHelper.INSERT_ERROR) continue;
                 for (int j = 0; j < mock.getElements().size(); j++) {
-                    mock.getElements().get(j).setMockId(String.valueOf(mockId));
+                    Element element = mock.getElements().get(j);
+                    element.setMockId(String.valueOf(mockId));
+                    element.setX((int) (element.getX() * scaleWidth));
+                    element.setY((int) (element.getY() * scaleHeight));
+                    element.setWidth((int) (element.getWidth() * scaleWidth));
+                    element.setHeight((int) (element.getHeight() * scaleHeight));
                     mElementRepository.saveData(mock.getElements().get(j));
                 }
             }

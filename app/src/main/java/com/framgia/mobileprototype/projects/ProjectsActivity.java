@@ -25,6 +25,7 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.framgia.mobileprototype.Constant;
 import com.framgia.mobileprototype.PermissionActivity;
 import com.framgia.mobileprototype.R;
@@ -330,7 +331,6 @@ public class ProjectsActivity extends PermissionActivity implements
         setUpDrawerListener();
         setUpNavigationHeader();
         mProjectsPresenter.createAppStorageFolder(Constant.FILE_PATH);
-        mProjectsPresenter.start();
     }
 
     @Override
@@ -344,11 +344,13 @@ public class ProjectsActivity extends PermissionActivity implements
                 case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
                     CropImage.ActivityResult result = CropImage.getActivityResult(data);
                     if (mAddProjectBinding != null && mCreateProjectDialog.isShowing()) {
-                        mAddProjectBinding.imageProjectPoster.setImageURI(result.getUri());
+                        Glide.with(this)
+                            .load(result.getUri()).into(mAddProjectBinding.imageProjectPoster);
                         mAddProjectBinding.setIsPosterChanged(true);
                     }
                     if (mEditProjectBinding != null && mEditProjectDialog.isShowing()) {
-                        mEditProjectBinding.imageProjectPoster.setImageURI(result.getUri());
+                        Glide.with(this)
+                            .load(result.getUri()).into(mEditProjectBinding.imageProjectPoster);
                         mEditProjectBinding.setIsPosterChanged(true);
                     }
                     break;
@@ -416,12 +418,15 @@ public class ProjectsActivity extends PermissionActivity implements
             int actionBarHeight = actionBar.getHeight();
             int statusBarHeight = getStatusBarHeight();
             int paddingDistance = 2 * (int) getResources().getDimension(R.dimen.dp_16);
-            int childWidth = ScreenSizeUtil.sWidth - (paddingDistance);
-            int childHeight =
+            ScreenSizeUtil.sChildWidth = ScreenSizeUtil.sWidth - (paddingDistance);
+            ScreenSizeUtil.sChildHeight =
                 ScreenSizeUtil.sHeight - actionBarHeight - statusBarHeight - paddingDistance;
-            ScreenSizeUtil.sScaleWidth = (float) ScreenSizeUtil.sWidth / childWidth;
-            ScreenSizeUtil.sScaleHeight = (float) ScreenSizeUtil.sHeight / childHeight;
+            ScreenSizeUtil.sScaleWidth =
+                (float) ScreenSizeUtil.sWidth / ScreenSizeUtil.sChildWidth;
+            ScreenSizeUtil.sScaleHeight =
+                (float) ScreenSizeUtil.sHeight / ScreenSizeUtil.sChildHeight;
         }
+        mProjectsPresenter.start();
         return super.onPrepareOptionsMenu(menu);
     }
 

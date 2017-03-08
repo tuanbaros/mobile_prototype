@@ -26,6 +26,7 @@ import android.view.MenuItem;
 import android.view.Window;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.framgia.mobileprototype.BaseActivity;
 import com.framgia.mobileprototype.Constant;
 import com.framgia.mobileprototype.R;
@@ -229,9 +230,11 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
                     CropImage.ActivityResult result = CropImage.getActivityResult(data);
                     if (mCreateMockDialog == null) setUpCreateMockDialog();
                     if (mProject.getOrientation().equals(Project.PORTRAIT)) {
-                        mAddMockBinding.imagePortraitMock.setImageURI(result.getUri());
+                        Glide.with(this).
+                            load(result.getUri()).into(mAddMockBinding.imagePortraitMock);
                     } else {
-                        mAddMockBinding.imageLandscapeMock.setImageURI(result.getUri());
+                        Glide.with(this).
+                            load(result.getUri()).into(mAddMockBinding.imageLandscapeMock);
                     }
                     mProjectDetailPresenter.openCreateMockDialog();
                     mMockImagePath = result.getUri().getPath();
