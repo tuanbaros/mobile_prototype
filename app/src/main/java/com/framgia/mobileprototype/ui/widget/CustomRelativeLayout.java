@@ -57,7 +57,7 @@ public class CustomRelativeLayout extends RelativeLayout implements View.OnTouch
         return true;
     }
 
-    private void hideControlOfChildView() {
+    public void hideControlOfChildView() {
         for (int i = 1; i < this.getChildCount(); i++) {
             ElementView elementView = (ElementView) this.getChildAt(i);
             for (int j = 0; j < NUMBER_DOT_CONTROL; j++) {

@@ -6,10 +6,12 @@ import android.databinding.DataBindingUtil;
 import android.databinding.ObservableBoolean;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.framgia.mobileprototype.BaseActivity;
@@ -70,7 +72,21 @@ public class MockDetailActivity extends BaseActivity
     }
 
     private void setUpElement(List<Element> elements) {
-        // TODO: 07/03/2017 show element in mock layout
+        for (Element element : elements) {
+            ElementView elementView =
+                (ElementView) View.inflate(getBaseContext(), R.layout.element, null);
+            elementView.setTag(R.string.title_element, element);
+            RelativeLayout.LayoutParams params =
+                new RelativeLayout.LayoutParams(element.getWidth(), element.getHeight());
+            params.leftMargin = element.getX();
+            params.topMargin = element.getY();
+            elementView.setLayoutParams(params);
+            elementView.setPresenter(mMockDetailPresenter);
+            if (!TextUtils.isEmpty(element.getLinkTo()))
+                elementView.setLinkTo(element.getLinkTo());
+            mCustomRelativeLayout.addView(elementView);
+        }
+        mCustomRelativeLayout.hideControlOfChildView();
     }
 
     @Override
@@ -92,14 +108,13 @@ public class MockDetailActivity extends BaseActivity
 
     @Override
     public void getAllElementView() {
-        CustomRelativeLayout customRelativeLayout = mMockDetailBinding.relativeLayout;
-        if (customRelativeLayout.getChildCount() < 2) {
+        if (mCustomRelativeLayout.getChildCount() < 2) {
             Toast.makeText(this, R.string.msg_empty_element, Toast.LENGTH_SHORT).show();
-            customRelativeLayout.setEnabled(true);
+            mCustomRelativeLayout.setEnabled(true);
         } else {
             List<Element> elements = new ArrayList<>();
-            for (int i = 1; i < customRelativeLayout.getChildCount(); i++) {
-                ElementView elementView = (ElementView) customRelativeLayout.getChildAt(i);
+            for (int i = 1; i < mCustomRelativeLayout.getChildCount(); i++) {
+                ElementView elementView = (ElementView) mCustomRelativeLayout.getChildAt(i);
                 Element element = (Element) elementView.getTag(R.string.title_element);
                 element.setMockId(mMock.getId());
                 element.setX((int) elementView.getX());
@@ -122,6 +137,7 @@ public class MockDetailActivity extends BaseActivity
             View child = mCustomRelativeLayout.getChildAt(i);
             child.setEnabled(true);
         }
+        mCustomRelativeLayout.hideControlOfChildView();
     }
 
     @Override
@@ -168,7 +184,10 @@ public class MockDetailActivity extends BaseActivity
                 onBackPressed();
                 break;
             case R.id.action_remove:
-                mCustomRelativeLayout.removeView((View) mCustomRelativeLayout.getTag());
+                ElementView elementView = (ElementView) mCustomRelativeLayout.getTag();
+                mCustomRelativeLayout.removeView(elementView);
+                mMockDetailPresenter.deleteElement(
+                    (Element) elementView.getTag(R.string.title_element));
                 break;
             case R.id.action_link:
                 ((ElementView) mCustomRelativeLayout.getTag()).setLinkTo("");

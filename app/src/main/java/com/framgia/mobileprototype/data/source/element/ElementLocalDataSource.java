@@ -100,7 +100,20 @@ public class ElementLocalDataSource extends DataHelper implements DataSource<Ele
 
     @Override
     public void deleteData(Element data) {
-        // TODO: 22/02/2017 delete element 
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        sqLiteDatabase.beginTransaction();
+        String whereClause = ElementPersistenceContract.ElementEntry._ID + "=?";
+        String[] whereArgs = {String.valueOf(data.getId())};
+        try {
+            sqLiteDatabase.delete(ElementPersistenceContract.ElementEntry
+                .TABLE_NAME, whereClause, whereArgs);
+            sqLiteDatabase.setTransactionSuccessful();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            sqLiteDatabase.endTransaction();
+            sqLiteDatabase.close();
+        }
     }
 
     private ContentValues getContentValues(Element element) {
