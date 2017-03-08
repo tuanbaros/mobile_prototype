@@ -44,4 +44,9 @@ public class LinkToPresenter implements LinkToContract.Presenter {
     public void chooseMock(Mock mock) {
         mLinkToView.saveLinkTo(mock);
     }
+
+    @Override
+    public void linkToBack() {
+        mLinkToView.saveLinkToBack();
+    }
 }

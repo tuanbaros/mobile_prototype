@@ -52,4 +52,5 @@
     <string name="title_link_to">linkto</string>
     <string name="title_element">element</string>
     <string name="action_play">Play</string>
+    <string name="action_link_to_back">Link to back</string>
 </resources>

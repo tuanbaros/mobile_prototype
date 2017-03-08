@@ -84,6 +84,7 @@ public class ProjectDetailPresenter implements ProjectDetailContract.Presenter {
         mock.setImage(entryId + Constant.DEFAULT_COMPRESS_FORMAT);
         long id = mMockRepository.saveData(mock);
         if (id < 1) return;
+        mock.setId(String.valueOf(id));
         saveMockImage(mProjectDetailView.getMockImagePath(), mock.getImage());
         mProjectDetailView.updateListMock(mock);
     }

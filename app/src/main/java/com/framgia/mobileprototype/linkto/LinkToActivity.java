@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 
 import com.framgia.mobileprototype.BaseActivity;
+import com.framgia.mobileprototype.Constant;
 import com.framgia.mobileprototype.R;
 import com.framgia.mobileprototype.data.model.Mock;
 import com.framgia.mobileprototype.data.model.Project;
@@ -82,6 +83,14 @@ public class LinkToActivity extends BaseActivity implements LinkToContract.View 
     public void saveLinkTo(Mock mock) {
         Intent intent = new Intent();
         intent.putExtra(EXTRA_MOCK_ENTRYID, mock.getEntryId());
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
+    @Override
+    public void saveLinkToBack() {
+        Intent intent = new Intent();
+        intent.putExtra(EXTRA_MOCK_ENTRYID, Constant.LINK_TO_BACK);
         setResult(RESULT_OK, intent);
         finish();
     }

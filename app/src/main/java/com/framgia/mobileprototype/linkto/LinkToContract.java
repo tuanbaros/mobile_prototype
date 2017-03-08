@@ -16,10 +16,12 @@ public interface LinkToContract {
         void mockLoaded(List<Mock> mocks);
         void mockNotAvailable();
         void saveLinkTo(Mock mock);
+        void saveLinkToBack();
     }
 
     interface Presenter extends BasePresenter {
         void getMocks(String projectId);
         void chooseMock(Mock mock);
+        void linkToBack();
     }
 }
