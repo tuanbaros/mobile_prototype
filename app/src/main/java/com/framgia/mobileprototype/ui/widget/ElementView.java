@@ -93,5 +93,6 @@ public class ElementView extends RelativeLayout implements View.OnTouchListener 
         for (int j = 0; j < NUMBER_DOT_CONTROL; j++) {
             this.getChildAt(j).setBackgroundResource(R.drawable.link_to_resize);
         }
+        this.setTag(R.string.title_link_to, mockEntryId);
     }
 }

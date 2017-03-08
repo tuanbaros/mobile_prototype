@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.framgia.mobileprototype.R;
+import com.framgia.mobileprototype.data.model.Element;
 import com.framgia.mobileprototype.mockdetail.MockDetailContract;
 
 /**
@@ -46,6 +47,9 @@ public class CustomRelativeLayout extends RelativeLayout implements View.OnTouch
             if (top > maxTop) params.topMargin = maxTop;
             elementView.setLayoutParams(params);
             hideControlOfChildView();
+            Element element = new Element();
+            element.setId((int) mPresenter.saveElement(element));
+            elementView.setTag(R.string.title_element, element);
             this.addView(elementView);
             this.setTag(elementView);
             if (mPresenter != null) mPresenter.openElementOption();

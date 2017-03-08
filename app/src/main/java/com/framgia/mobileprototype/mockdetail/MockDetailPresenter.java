@@ -42,6 +42,25 @@ public class MockDetailPresenter implements MockDetailContract.Presenter {
     }
 
     @Override
+    public void getAllElementInMock() {
+        mMockDetailView.getAllElementView();
+    }
+
+    @Override
+    public void saveAllElement(List<Element> elements) {
+        for (Element element : elements) {
+            long elementId = mElementRepository.saveData(element);
+            if (elementId < 1) mElementRepository.updateData(element);
+        }
+        mMockDetailView.onSaveElementDone();
+    }
+
+    @Override
+    public long saveElement(Element element) {
+        return mElementRepository.saveData(element);
+    }
+
+    @Override
     public void start() {
         mMockDetailView.onPrepare();
     }

@@ -13,7 +13,7 @@ import java.io.Serializable;
  * Package: com.framgia.mobileprototype.data.model
  */
 public class Element implements Serializable {
-    private String mId;
+    private int mId;
     @SerializedName("x")
     private int mX;
     @SerializedName("y")
@@ -32,7 +32,7 @@ public class Element implements Serializable {
     }
 
     public Element(Cursor cursor) {
-        mId = cursor.getString(cursor.getColumnIndexOrThrow(
+        mId = cursor.getInt(cursor.getColumnIndexOrThrow(
             ElementPersistenceContract.ElementEntry._ID));
         mX = cursor.getInt(cursor.getColumnIndexOrThrow(
             ElementPersistenceContract.ElementEntry.COLUMN_NAME_X));
@@ -46,11 +46,11 @@ public class Element implements Serializable {
             ElementPersistenceContract.ElementEntry.COLUMN_NAME_TRANSITION));
     }
 
-    public String getId() {
+    public int getId() {
         return mId;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.mId = id;
     }
 

@@ -47,4 +47,8 @@
     <string name="msg_number_mock_selected">%d mocks selected</string>
     <string name="action_delete_element">Delete</string>
     <string name="action_link_to">Link To</string>
+    <string name="action_save">Save</string>
+    <string name="msg_empty_element">Empty Element!</string>
+    <string name="title_link_to">linkto</string>
+    <string name="title_element">element</string>
 </resources>
