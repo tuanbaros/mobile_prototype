@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
-import com.framgia.mobileprototype.Constant;
 import com.framgia.mobileprototype.R;
 import com.framgia.mobileprototype.data.model.Element;
 import com.framgia.mobileprototype.data.model.Mock;
@@ -115,8 +114,8 @@ public class DemoActivity extends AppCompatActivity
     @Override
     public void onClick(View view) {
         String linkTo = (String) view.getTag(R.string.title_link_to);
-        if (Constant.LINK_TO_BACK.equals(linkTo)) finish();
-        else startActivity(DemoActivity.getDemoIntent(this, linkTo));
+        clearAllElement();
+        startActivity(DemoActivity.getDemoIntent(this, linkTo));
     }
 
     private void showHightlight() {
@@ -157,5 +156,17 @@ public class DemoActivity extends AppCompatActivity
             showHightlight();
         }
         return false;
+    }
+
+    private void clearAllElement() {
+        RelativeLayout relativeLayout = (RelativeLayout) mDemoBinding.getRoot();
+        relativeLayout.removeViews(1, relativeLayout.getChildCount() - 1);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        mMockEntryId = intent.getStringExtra(EXTRA_MOCK_ENTRY_ID);
+        mDemoPresenter.getMock(mMockEntryId);
     }
 }

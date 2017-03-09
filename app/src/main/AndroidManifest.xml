@@ -36,6 +36,7 @@
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".demo.DemoActivity"
+            android:launchMode="singleTask"
             android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 

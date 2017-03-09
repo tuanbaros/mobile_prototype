@@ -10,4 +10,6 @@ public class ScreenSizeUtil {
     public static int sHeight;
     public static float sScaleWidth;
     public static float sScaleHeight;
+    public static int sChildWidth;
+    public static int sChildHeight;
 }

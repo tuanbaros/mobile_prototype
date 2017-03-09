@@ -22,5 +22,4 @@ public class Constant {
     public static final String ANDROID = "android";
     public static final String DIMEN = "dimen";
     public static final String STATUS_BAR_HEIGHT = "status_bar_height";
-    public static final String LINK_TO_BACK = "back";
 }
