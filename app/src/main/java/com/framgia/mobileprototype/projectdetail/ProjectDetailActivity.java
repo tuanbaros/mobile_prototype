@@ -362,9 +362,12 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
                 showNumberMockToRemove(DEFAULT_NUMBER_MOCKS_TO_REMOVE);
                 break;
             case R.id.action_play:
-                startActivity(
-                    DemoActivity
-                        .getDemoIntent(this, mMockAdapter.get().getFirtItem().getEntryId()));
+                Mock mock = mMockAdapter.get().getFirtItem();
+                if (mock == null) {
+                    Toast.makeText(this, R.string.msg_empty_mock, Toast.LENGTH_LONG).show();
+                    return false;
+                }
+                startActivity(DemoActivity.getDemoIntent(this, mock.getEntryId()));
                 break;
             default:
                 break;
