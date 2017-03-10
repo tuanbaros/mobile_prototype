@@ -28,7 +28,7 @@ public interface ProjectsContract {
         void pickPoster();
         void showUpdateProjectDialog(Project project);
         void showDeleteProjectDialog(Project project, int position);
-        void onProjectRemoved(int position);
+        void onProjectRemoved(int position, int numberMockRemoved);
         void showDetailProjectUi(Project project);
     }
 

@@ -146,7 +146,7 @@ public class DemoActivity extends AppCompatActivity
         RelativeLayout relativeLayout = (RelativeLayout) mDemoBinding.getRoot();
         for (int i = 1; i < relativeLayout.getChildCount(); i++) {
             View view = relativeLayout.getChildAt(i);
-            view.setBackground(null);
+            view.setBackgroundDrawable(null);
         }
     }
 
