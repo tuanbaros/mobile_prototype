@@ -309,12 +309,13 @@ public class ProjectsActivity extends PermissionActivity implements
     }
 
     @Override
-    public void onProjectRemoved(int position) {
+    public void onProjectRemoved(int position, int numberMockRemoved) {
         mProjectsAdapter.get().removeItem(position);
         if (mProjectsAdapter.get().getItemCount() == 0) {
             mIsEmptyProject.set(true);
         }
         mNumberProjects.set(mNumberProjects.get() - 1);
+        mNumberMocks.set(mNumberMocks.get() - numberMockRemoved);
     }
 
     @Override

@@ -153,7 +153,7 @@ public class ProjectsPresenter implements ProjectsContract.Presenter {
     @Override
     public void removeProject(Project project, int position) {
         mProjectRepository.deleteData(project);
-        mProjectsView.onProjectRemoved(position);
+        mProjectsView.onProjectRemoved(position, project.getNumberMocks());
     }
 
     @Override
