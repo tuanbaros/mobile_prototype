@@ -15,8 +15,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.SearchView;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -311,7 +313,7 @@ public class ProjectsActivity extends PermissionActivity implements
     @Override
     public void onProjectRemoved(int position, int numberMockRemoved) {
         mProjectsAdapter.get().removeItem(position);
-        if (mProjectsAdapter.get().getItemCount() == 0) {
+        if (mProjectsAdapter.get().getRealItemCount() == 0) {
             mIsEmptyProject.set(true);
         }
         mNumberProjects.set(mNumberProjects.get() - 1);
@@ -439,5 +441,25 @@ public class ProjectsActivity extends PermissionActivity implements
             result = getResources().getDimensionPixelSize(resourceId);
         }
         return result;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_projects, menu);
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                mProjectsAdapter.get().filter(newText);
+                return true;
+            }
+        });
+        return super.onCreateOptionsMenu(menu);
     }
 }

@@ -20,12 +20,16 @@ import java.util.List;
  */
 public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.ViewHolder> {
     private List<Project> mProjects = new ArrayList<>();
+    private List<Project> mProjectsCopy = new ArrayList<>();
     private LayoutInflater mLayoutInflater;
     private ProjectsContract.Presenter mListener;
 
     ProjectsAdapter(Context context, List<Project> projects,
                     ProjectsContract.Presenter listener) {
-        if (projects != null) mProjects.addAll(projects);
+        if (projects != null) {
+            mProjects.addAll(projects);
+            mProjectsCopy.addAll(projects);
+        }
         mLayoutInflater = LayoutInflater.from(context);
         mListener = listener;
     }
@@ -33,12 +37,14 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.ViewHo
     void updateData(Project project) {
         if (project != null) {
             mProjects.add(0, project);
+            mProjectsCopy.add(0, project);
             notifyDataSetChanged();
         }
     }
 
     void removeItem(int position) {
         mProjects.remove(position);
+        mProjectsCopy.remove(position);
         notifyDataSetChanged();
     }
 
@@ -76,5 +82,24 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.ViewHo
     @Override
     public int getItemCount() {
         return null != mProjects ? mProjects.size() : 0;
+    }
+
+    public int getRealItemCount() {
+        return null != mProjectsCopy ? mProjectsCopy.size() : 0;
+    }
+
+    public void filter(String text) {
+        mProjects.clear();
+        if (text.trim().equals("") || text.isEmpty()) {
+            mProjects.addAll(mProjectsCopy);
+        } else {
+            text = text.toLowerCase();
+            for (Project item : mProjectsCopy) {
+                if (item.getTitle().toLowerCase().contains(text)) {
+                    mProjects.add(item);
+                }
+            }
+        }
+        notifyDataSetChanged();
     }
 }
