@@ -26,6 +26,7 @@ public class ProjectDetailPresenter implements ProjectDetailContract.Presenter {
     public static final int NUMBER_BIT_RANDOM = 130;
     public static final int BASE_RANDOM = 32;
     private ArrayList<Mock> mRemoveMocks = new ArrayList<>();
+    private Mock mMockCopy;
 
     public ProjectDetailPresenter(MockRepository mockRepository,
                                   ProjectDetailContract.View projectDetailView) {
@@ -91,6 +92,7 @@ public class ProjectDetailPresenter implements ProjectDetailContract.Presenter {
 
     @Override
     public void saveMockImage(String path, String filename) {
+        if (path == null) return;
         String destinationFilename = Constant.FILE_PATH + filename;
         BufferedInputStream bis = null;
         BufferedOutputStream bos = null;
@@ -112,6 +114,7 @@ public class ProjectDetailPresenter implements ProjectDetailContract.Presenter {
                 e.printStackTrace();
             }
         }
+        mProjectDetailView.setDefaultImagePath();
     }
 
     @Override
@@ -152,6 +155,36 @@ public class ProjectDetailPresenter implements ProjectDetailContract.Presenter {
     @Override
     public void openMockDetail(Mock mock) {
         mProjectDetailView.showMockDetailUi(mock);
+    }
+
+    @Override
+    public void openEditMockDialog(Mock mock) {
+        try {
+            mMockCopy = (Mock) mock.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        mProjectDetailView.showEditMockDialog(mock);
+    }
+
+    @Override
+    public void closeEditMockDialog(Mock mock) {
+        mock.setTitle(mMockCopy.getTitle());
+        mock.setImage(mock.getImage());
+        mProjectDetailView.cancelEditMockDialog();
+    }
+
+    @Override
+    public void updateMock(Mock mock) {
+        if (mock.getTitle() == null || mock.getTitle().trim().equals("")) {
+            mProjectDetailView.showMockTitleEmpty();
+            return;
+        }
+        long id = mMockRepository.updateData(mock);
+        if (id < 1) return;
+        saveMockImage(mProjectDetailView.getMockImagePath(), mock.getImage());
+        mock.setImage(mock.getImage());
+        mProjectDetailView.cancelEditMockDialog();
     }
 
     @Override

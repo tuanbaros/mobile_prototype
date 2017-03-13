@@ -53,4 +53,5 @@
     <string name="title_element">element</string>
     <string name="action_play">Play</string>
     <string name="action_search">Search</string>
+    <string name="title_edit_mock">Edit mock</string>
 </resources>

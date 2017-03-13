@@ -45,8 +45,8 @@
                 android:layout_marginRight="@dimen/dp_5"
                 android:layout_marginTop="@dimen/dp_5"
                 android:scaleType="fitXY"
-                app:imageUrl="@{mock.image}"
-                android:visibility="@{adapter.portrait ? View.VISIBLE : View.GONE}"/>
+                android:visibility="@{adapter.portrait ? View.VISIBLE : View.GONE}"
+                app:imageUrl="@{mock.image}"/>
 
             <ImageView
                 android:layout_width="match_parent"
@@ -55,22 +55,23 @@
                 android:layout_marginRight="@dimen/dp_5"
                 android:layout_marginTop="@dimen/dp_5"
                 android:scaleType="fitXY"
-                app:imageUrl="@{mock.image}"
-                android:visibility="@{adapter.portrait ? View.GONE : View.VISIBLE}"/>
+                android:visibility="@{adapter.portrait ? View.GONE : View.VISIBLE}"
+                app:imageUrl="@{mock.image}"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <TextView
+                    android:id="@+id/text_mock_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/dp_9"
-                    android:layout_marginTop="@dimen/dp_5"
-                    android:layout_marginLeft="@dimen/dp_5"
                     android:layout_alignParentLeft="true"
-                    android:lines="1"
+                    android:layout_marginBottom="@dimen/dp_9"
+                    android:layout_marginLeft="@dimen/dp_5"
+                    android:layout_marginTop="@dimen/dp_5"
                     android:ellipsize="end"
+                    android:lines="1"
                     android:text="@{mock.title}"
                     android:textColor="@android:color/black"/>
 
@@ -78,11 +79,22 @@
                     android:id="@+id/checkbox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:buttonTint="@color/colorPrimaryDark"
-                    android:visibility="@{adapter.isRemoving ? View.VISIBLE : View.GONE}"
-                    android:onCheckedChanged="@{(cb, isChecked) -> handler.completeChanged(mock, isChecked)}"
                     android:layout_alignParentRight="true"
-                    android:checked="@{mock.checkToDelete}"/>
+                    android:checked="@{mock.checkToDelete}"
+                    android:onCheckedChanged="@{(cb, isChecked) -> handler.completeChanged(mock, isChecked)}"
+                    android:visibility="@{adapter.isRemoving ? View.VISIBLE : View.GONE}"
+                    app:buttonTint="@color/colorPrimaryDark"/>
+
+                <ImageView
+                    android:id="@+id/image_edit_mock"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignBottom="@+id/text_mock_title"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignTop="@+id/text_mock_title"
+                    android:onClick="@{() -> handler.editMock(mock)}"
+                    android:src="@drawable/ic_edit_mock"
+                    android:visibility="@{adapter.isRemoving ? View.GONE : View.VISIBLE}"/>
 
             </RelativeLayout>
         </LinearLayout>

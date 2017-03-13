@@ -80,8 +80,25 @@ public class MockLocalDataSource extends DataHelper implements MockDataSource {
 
     @Override
     public long updateData(Mock data) {
-        // TODO: 22/02/2017 update mock
-        return 0;
+        long numberRowChange = INSERT_ERROR;
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        String whereClause = MockPersistenceContract.MockEntry._ID + "=?";
+        String[] whereArgs = {data.getId()};
+        sqLiteDatabase.beginTransaction();
+        try {
+            numberRowChange = sqLiteDatabase.update(
+                MockPersistenceContract.MockEntry.TABLE_NAME,
+                getContentValues(data),
+                whereClause,
+                whereArgs);
+            sqLiteDatabase.setTransactionSuccessful();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            sqLiteDatabase.endTransaction();
+            sqLiteDatabase.close();
+        }
+        return numberRowChange;
     }
 
     @Override

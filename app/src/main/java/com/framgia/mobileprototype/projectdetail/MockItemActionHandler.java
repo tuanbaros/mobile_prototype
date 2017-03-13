@@ -25,4 +25,9 @@ public class MockItemActionHandler {
         if (mListener == null) return;
         mListener.openMockDetail(mock);
     }
+
+    public void editMock(Mock mock) {
+        if (mListener == null) return;
+        mListener.openEditMockDialog(mock);
+    }
 }
