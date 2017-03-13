@@ -14,6 +14,7 @@ import android.databinding.ObservableField;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -38,6 +39,7 @@ import com.framgia.mobileprototype.data.source.mock.MockRepository;
 import com.framgia.mobileprototype.databinding.ActivityProjectDetailBinding;
 import com.framgia.mobileprototype.databinding.DialogAddMockBinding;
 import com.framgia.mobileprototype.databinding.DialogEditMockBinding;
+import com.framgia.mobileprototype.databinding.DialogPickImageBinding;
 import com.framgia.mobileprototype.demo.DemoActivity;
 import com.framgia.mobileprototype.helper.ItemTouchCallbackHelper;
 import com.framgia.mobileprototype.helper.OnStartDragListener;
@@ -45,6 +47,8 @@ import com.framgia.mobileprototype.mockdetail.MockDetailActivity;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,6 +56,8 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
     OnStartDragListener {
     public static final String EXTRA_PROJECT = "EXTRA_PROJECT";
     public static final int PERMISSION_REQUEST_CODE = 2;
+    public static final int CAMERA_REQUEST_CODE = 3;
+    public static final int GALLERY_REQUEST_CODE = 4;
     private static final int DEFAULT_NUMBER_MOCKS_TO_REMOVE = 0;
     private Project mProject;
     private ProjectDetailContract.Presenter mProjectDetailPresenter;
@@ -59,7 +65,7 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
     private ObservableBoolean mIsLoading = new ObservableBoolean();
     private ObservableBoolean mIsEmptyMock = new ObservableBoolean();
     private ObservableField<MockAdapter> mMockAdapter = new ObservableField<>();
-    private Dialog mCreateMockDialog, mEditMockDialog;
+    private Dialog mCreateMockDialog, mEditMockDialog, mPickImageDialog;
     private DialogAddMockBinding mAddMockBinding;
     private DialogEditMockBinding mEditMockBinding;
     private String mMockImagePath;
@@ -140,7 +146,17 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
 
     @Override
     public void pickImage() {
-        CropImage.startPickImageActivity(this);
+        if (mPickImageDialog == null) setUpPickImageDialog();
+        mPickImageDialog.show();
+    }
+
+    private void setUpPickImageDialog() {
+        DialogPickImageBinding mPickImageBinding = DataBindingUtil.inflate(getLayoutInflater(),
+            R.layout.dialog_pick_image, null, false);
+        mPickImageBinding.setPresenter(mProjectDetailPresenter);
+        mPickImageDialog = new Dialog(this);
+        mPickImageDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mPickImageDialog.setContentView(mPickImageBinding.getRoot());
     }
 
     @Override
@@ -234,6 +250,23 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
     }
 
     @Override
+    public void openCamera() {
+        mPickImageDialog.cancel();
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT,
+            Uri.fromFile(new File(Constant.FILE_TEMP)));
+        startActivityForResult(intent, CAMERA_REQUEST_CODE);
+    }
+
+    @Override
+    public void openGallery() {
+        mPickImageDialog.cancel();
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType(Constant.IMAGE_RECENT_PATH);
+        startActivityForResult(intent, GALLERY_REQUEST_CODE);
+    }
+
+    @Override
     public void start() {
         getIntentData();
         setUpTitle();
@@ -244,9 +277,21 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
-                case CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE:
-                    Uri imageUri = CropImage.getPickImageResultUri(this, data);
-                    cropImage(imageUri);
+                case CAMERA_REQUEST_CODE:
+                    File file = new File(Constant.FILE_TEMP);
+                    Uri cameraResultUri = null;
+                    try {
+                        cameraResultUri = Uri.parse(MediaStore.Images.Media
+                            .insertImage(getContentResolver(), file.getAbsolutePath(), null, null));
+                        file.delete();
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    }
+                    if (cameraResultUri != null) cropImage(cameraResultUri);
+                    break;
+                case GALLERY_REQUEST_CODE:
+                    Uri galleryResultUri = data.getData();
+                    cropImage(galleryResultUri);
                     break;
                 case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
                     CropImage.ActivityResult result = CropImage.getActivityResult(data);

@@ -188,6 +188,16 @@ public class ProjectDetailPresenter implements ProjectDetailContract.Presenter {
     }
 
     @Override
+    public void takePhoto() {
+        mProjectDetailView.openCamera();
+    }
+
+    @Override
+    public void importFromGallery() {
+        mProjectDetailView.openGallery();
+    }
+
+    @Override
     public void start() {
         mProjectDetailView.onPrepare();
     }
