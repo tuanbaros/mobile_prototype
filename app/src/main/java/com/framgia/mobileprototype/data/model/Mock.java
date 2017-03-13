@@ -16,7 +16,7 @@ import java.util.List;
  * Project: mobile_prototype
  * Package: com.framgia.mobileprototype.data.model
  */
-public class Mock extends BaseObservable implements Serializable {
+public class Mock extends BaseObservable implements Cloneable, Serializable {
     private String mId;
     @SerializedName("client_id")
     private String mEntryId;
@@ -119,5 +119,10 @@ public class Mock extends BaseObservable implements Serializable {
     public void setCheckToDelete(boolean checkToDelete) {
         this.mCheckToDelete = checkToDelete;
         notifyPropertyChanged(BR.checkToDelete);
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

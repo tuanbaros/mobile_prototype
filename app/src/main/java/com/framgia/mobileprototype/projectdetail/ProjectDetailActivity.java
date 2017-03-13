@@ -24,6 +24,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -36,6 +37,7 @@ import com.framgia.mobileprototype.data.source.mock.MockLocalDataSource;
 import com.framgia.mobileprototype.data.source.mock.MockRepository;
 import com.framgia.mobileprototype.databinding.ActivityProjectDetailBinding;
 import com.framgia.mobileprototype.databinding.DialogAddMockBinding;
+import com.framgia.mobileprototype.databinding.DialogEditMockBinding;
 import com.framgia.mobileprototype.demo.DemoActivity;
 import com.framgia.mobileprototype.helper.ItemTouchCallbackHelper;
 import com.framgia.mobileprototype.helper.OnStartDragListener;
@@ -57,8 +59,9 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
     private ObservableBoolean mIsLoading = new ObservableBoolean();
     private ObservableBoolean mIsEmptyMock = new ObservableBoolean();
     private ObservableField<MockAdapter> mMockAdapter = new ObservableField<>();
-    private Dialog mCreateMockDialog;
+    private Dialog mCreateMockDialog, mEditMockDialog;
     private DialogAddMockBinding mAddMockBinding;
+    private DialogEditMockBinding mEditMockBinding;
     private String mMockImagePath;
     private ArrayList<String> mDeniedPermissions = new ArrayList<>();
     private ItemTouchHelper mItemTouchHelper;
@@ -158,6 +161,11 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
     }
 
     @Override
+    public void setDefaultImagePath() {
+        mMockImagePath = null;
+    }
+
+    @Override
     public void checkPermission() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             pickImage();
@@ -212,6 +220,20 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
     }
 
     @Override
+    public void showEditMockDialog(Mock mock) {
+        if (mEditMockDialog == null) setUpEditMockDialog();
+        mEditMockBinding.setMock(mock);
+        mEditMockDialog.show();
+    }
+
+    @Override
+    public void cancelEditMockDialog() {
+        if (mEditMockDialog != null && mEditMockDialog.isShowing()) {
+            mEditMockDialog.cancel();
+        }
+    }
+
+    @Override
     public void start() {
         getIntentData();
         setUpTitle();
@@ -228,16 +250,20 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
                     break;
                 case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
                     CropImage.ActivityResult result = CropImage.getActivityResult(data);
-                    if (mCreateMockDialog == null) setUpCreateMockDialog();
-                    if (mProject.getOrientation().equals(Project.PORTRAIT)) {
-                        Glide.with(this).
-                            load(result.getUri()).into(mAddMockBinding.imagePortraitMock);
-                    } else {
-                        Glide.with(this).
-                            load(result.getUri()).into(mAddMockBinding.imageLandscapeMock);
-                    }
-                    mProjectDetailPresenter.openCreateMockDialog();
                     mMockImagePath = result.getUri().getPath();
+                    ImageView imageView;
+                    if (mEditMockDialog != null && mEditMockDialog.isShowing()) {
+                        imageView = mProject.isPortrait() ?
+                            mEditMockBinding.imagePortraitMock :
+                            mEditMockBinding.imageLandscapeMock;
+                        Glide.with(this).load(result.getUri()).into(imageView);
+                        return;
+                    }
+                    if (mCreateMockDialog == null) setUpCreateMockDialog();
+                    imageView = mProject.isPortrait() ?
+                        mAddMockBinding.imagePortraitMock : mAddMockBinding.imageLandscapeMock;
+                    Glide.with(this).load(result.getUri()).into(imageView);
+                    mProjectDetailPresenter.openCreateMockDialog();
                     break;
                 default:
                     break;
@@ -311,6 +337,17 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
         mCreateMockDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         mCreateMockDialog.setContentView(mAddMockBinding.getRoot());
         mCreateMockDialog.setCanceledOnTouchOutside(false);
+    }
+
+    private void setUpEditMockDialog() {
+        mEditMockBinding = DataBindingUtil.inflate(getLayoutInflater(),
+            R.layout.dialog_edit_mock, null, false);
+        mEditMockBinding.setPresenter(mProjectDetailPresenter);
+        mEditMockBinding.setIsPortrait(mProject.isPortrait());
+        mEditMockDialog = new Dialog(this);
+        mEditMockDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mEditMockDialog.setContentView(mEditMockBinding.getRoot());
+        mEditMockDialog.setCanceledOnTouchOutside(false);
     }
 
     public ObservableBoolean getIsEmptyMock() {

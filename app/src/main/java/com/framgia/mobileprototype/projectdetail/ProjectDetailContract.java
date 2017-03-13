@@ -24,11 +24,14 @@ public interface ProjectDetailContract {
         void showMockTitleEmpty();
         void updateListMock(Mock mock);
         String getMockImagePath();
+        void setDefaultImagePath();
         void checkPermission();
         void emptyMockToRemove();
         void removeMockFromAdapter(ArrayList<Mock> mocks);
         void showNumberMockToRemove(int numberMocks);
         void showMockDetailUi(Mock mock);
+        void showEditMockDialog(Mock mock);
+        void cancelEditMockDialog();
     }
 
     interface Presenter extends BasePresenter {
@@ -45,5 +48,8 @@ public interface ProjectDetailContract {
         void checkAction(boolean isRemoving);
         void clearAllMocksFromRemoveList();
         void openMockDetail(Mock mock);
+        void openEditMockDialog(Mock mock);
+        void closeEditMockDialog(Mock mock);
+        void updateMock(Mock mock);
     }
 }
