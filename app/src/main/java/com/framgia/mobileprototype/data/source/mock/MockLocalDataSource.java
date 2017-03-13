@@ -94,6 +94,7 @@ public class MockLocalDataSource extends DataHelper implements MockDataSource {
             sqLiteDatabase.delete(
                 MockPersistenceContract.MockEntry.TABLE_NAME, whereClause, whereArgs);
             removeAllElementInMock(sqLiteDatabase, data.getId());
+            removeAllElementRelateMock(sqLiteDatabase, data.getEntryId());
             sqLiteDatabase.setTransactionSuccessful();
             deleteImage(data.getImage());
         } catch (Exception e) {
@@ -114,6 +115,13 @@ public class MockLocalDataSource extends DataHelper implements MockDataSource {
     private void removeAllElementInMock(SQLiteDatabase sqLiteDatabase, String mockId) {
         String whereClause = ElementPersistenceContract.ElementEntry.COLUMN_NAME_MOCK_ID + "=?";
         String[] whereArgs = {mockId};
+        sqLiteDatabase.delete(
+            ElementPersistenceContract.ElementEntry.TABLE_NAME, whereClause, whereArgs);
+    }
+
+    private void removeAllElementRelateMock(SQLiteDatabase sqLiteDatabase, String mockEntryId) {
+        String whereClause = ElementPersistenceContract.ElementEntry.COLUMN_NAME_LINK_TO + "=?";
+        String[] whereArgs = {mockEntryId};
         sqLiteDatabase.delete(
             ElementPersistenceContract.ElementEntry.TABLE_NAME, whereClause, whereArgs);
     }
