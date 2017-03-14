@@ -54,4 +54,7 @@
     <string name="action_play">Play</string>
     <string name="action_search">Search</string>
     <string name="title_edit_mock">Edit mock</string>
+    <string name="action_drawing">Drawing</string>
+    <string name="action_take_photos">Take photos</string>
+    <string name="action_import_from_gallery">Import from albums</string>
 </resources>

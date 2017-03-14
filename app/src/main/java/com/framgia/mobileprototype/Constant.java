@@ -10,6 +10,8 @@ import android.os.Environment;
 public class Constant {
     public static final String FILE_PATH =
         Environment.getExternalStorageDirectory() + "/MobilePrototype/";
+    public static final String FILE_TEMP =
+        Environment.getExternalStorageDirectory() + "/temp";
     public static final String PACKAGE = "package:";
     public static final String DEFAULT_COMPRESS_FORMAT = ".png";
     public static final int DEFAULT_IMAGE_WIDTH = 100;
@@ -22,4 +24,5 @@ public class Constant {
     public static final String ANDROID = "android";
     public static final String DIMEN = "dimen";
     public static final String STATUS_BAR_HEIGHT = "status_bar_height";
+    public static final String IMAGE_RECENT_PATH = "image/*";
 }

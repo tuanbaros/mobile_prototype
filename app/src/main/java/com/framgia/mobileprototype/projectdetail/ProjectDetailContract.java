@@ -32,6 +32,8 @@ public interface ProjectDetailContract {
         void showMockDetailUi(Mock mock);
         void showEditMockDialog(Mock mock);
         void cancelEditMockDialog();
+        void openCamera();
+        void openGallery();
     }
 
     interface Presenter extends BasePresenter {
@@ -51,5 +53,7 @@ public interface ProjectDetailContract {
         void openEditMockDialog(Mock mock);
         void closeEditMockDialog(Mock mock);
         void updateMock(Mock mock);
+        void takePhoto();
+        void importFromGallery();
     }
 }
