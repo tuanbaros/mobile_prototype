@@ -15,6 +15,7 @@
 
         <TextView
             style="@style/PickImageTextView"
+            android:onClick="@{() -> presenter.openDrawPanel()}"
             android:text="@string/action_drawing"/>
 
         <TextView

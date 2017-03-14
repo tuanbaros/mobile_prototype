@@ -41,6 +41,7 @@ import com.framgia.mobileprototype.databinding.DialogAddMockBinding;
 import com.framgia.mobileprototype.databinding.DialogEditMockBinding;
 import com.framgia.mobileprototype.databinding.DialogPickImageBinding;
 import com.framgia.mobileprototype.demo.DemoActivity;
+import com.framgia.mobileprototype.draw.DrawActivity;
 import com.framgia.mobileprototype.helper.ItemTouchCallbackHelper;
 import com.framgia.mobileprototype.helper.OnStartDragListener;
 import com.framgia.mobileprototype.mockdetail.MockDetailActivity;
@@ -58,6 +59,7 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
     public static final int PERMISSION_REQUEST_CODE = 2;
     public static final int CAMERA_REQUEST_CODE = 3;
     public static final int GALLERY_REQUEST_CODE = 4;
+    public static final int DRAW_REQUEST_CODE = 5;
     private static final int DEFAULT_NUMBER_MOCKS_TO_REMOVE = 0;
     private Project mProject;
     private ProjectDetailContract.Presenter mProjectDetailPresenter;
@@ -267,6 +269,12 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
     }
 
     @Override
+    public void showDrawUi() {
+        mPickImageDialog.cancel();
+        startActivityForResult(new Intent(this, DrawActivity.class), DRAW_REQUEST_CODE);
+    }
+
+    @Override
     public void start() {
         getIntentData();
         setUpTitle();
@@ -278,15 +286,7 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case CAMERA_REQUEST_CODE:
-                    File file = new File(Constant.FILE_TEMP);
-                    Uri cameraResultUri = null;
-                    try {
-                        cameraResultUri = Uri.parse(MediaStore.Images.Media
-                            .insertImage(getContentResolver(), file.getAbsolutePath(), null, null));
-                        file.delete();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    }
+                    Uri cameraResultUri = getUriFromFile(Constant.FILE_PATH);
                     if (cameraResultUri != null) cropImage(cameraResultUri);
                     break;
                 case GALLERY_REQUEST_CODE:
@@ -309,6 +309,10 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
                         mAddMockBinding.imagePortraitMock : mAddMockBinding.imageLandscapeMock;
                     Glide.with(this).load(result.getUri()).into(imageView);
                     mProjectDetailPresenter.openCreateMockDialog();
+                    break;
+                case DRAW_REQUEST_CODE:
+                    Uri drawUri = getUriFromFile(data.getStringExtra(DrawActivity.EXTRA_DRAW));
+                    if (drawUri != null) cropImage(drawUri);
                     break;
                 default:
                     break;
@@ -393,6 +397,19 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
         mEditMockDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         mEditMockDialog.setContentView(mEditMockBinding.getRoot());
         mEditMockDialog.setCanceledOnTouchOutside(false);
+    }
+
+    private Uri getUriFromFile(String filePath) {
+        File file = new File(filePath);
+        Uri uri = null;
+        try {
+            uri = Uri.parse(MediaStore.Images.Media
+                .insertImage(getContentResolver(), file.getAbsolutePath(), null, null));
+            file.delete();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return uri;
     }
 
     public ObservableBoolean getIsEmptyMock() {
