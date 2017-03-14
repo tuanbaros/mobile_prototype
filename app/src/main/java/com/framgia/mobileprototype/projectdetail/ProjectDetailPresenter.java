@@ -198,6 +198,11 @@ public class ProjectDetailPresenter implements ProjectDetailContract.Presenter {
     }
 
     @Override
+    public void openDrawPanel() {
+        mProjectDetailView.showDrawUi();
+    }
+
+    @Override
     public void start() {
         mProjectDetailView.onPrepare();
     }

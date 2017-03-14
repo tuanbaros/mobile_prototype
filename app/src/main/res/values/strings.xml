@@ -57,4 +57,7 @@
     <string name="action_drawing">Drawing</string>
     <string name="action_take_photos">Take photos</string>
     <string name="action_import_from_gallery">Import from albums</string>
+    <string name="title_draw">Draw</string>
+    <string name="action_color">Color</string>
+    <string name="action_undo">Undo</string>
 </resources>
