@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer-array name="icon_gestures">
+        <item>@drawable/ic_gesture_tap</item>
+        <item>@drawable/ic_gesture_swipe_top</item>
+        <item>@drawable/ic_gesture_swipe_down</item>
+        <item>@drawable/ic_gesture_swipe_left</item>
+        <item>@drawable/ic_gesture_swipe_right</item>
+        <item>@drawable/ic_gesture_zoom_in</item>
+        <item>@drawable/ic_gesture_zoom_out</item>
+        <item>@drawable/ic_gesture_double_tap</item>
+    </integer-array>
+
+    <string-array name="title_gesture_list">
+        <item>@string/title_gesture_tap</item>
+        <item>@string/title_gesture_swipeup</item>
+        <item>@string/title_gesture_swipedown</item>
+        <item>@string/title_gesture_swipeleft</item>
+        <item>@string/title_gesture_swiperight</item>
+        <item>@string/title_gesture_zoomin</item>
+        <item>@string/title_gesture_zoomout</item>
+        <item>@string/title_gesture_doubletap</item>
+    </string-array>
+</resources>

@@ -1,9 +1,11 @@
 package com.framgia.mobileprototype.mockdetail;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableBoolean;
+import android.databinding.ObservableField;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
@@ -11,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -22,6 +25,7 @@ import com.framgia.mobileprototype.data.model.Project;
 import com.framgia.mobileprototype.data.source.element.ElementLocalDataSource;
 import com.framgia.mobileprototype.data.source.element.ElementRepository;
 import com.framgia.mobileprototype.databinding.ActivityMockDetailBinding;
+import com.framgia.mobileprototype.databinding.DialogChoiceGestureBinding;
 import com.framgia.mobileprototype.linkto.LinkToActivity;
 import com.framgia.mobileprototype.ui.widget.CustomRelativeLayout;
 import com.framgia.mobileprototype.ui.widget.ElementView;
@@ -41,6 +45,9 @@ public class MockDetailActivity extends BaseActivity
     private MenuItem mRemoveItem, mLinkToItem, mGestureItem;
     private Project mProject;
     private CustomRelativeLayout mCustomRelativeLayout;
+    private ObservableField<GestureAdapter> mGestureAdapter = new ObservableField<>();
+    private DialogChoiceGestureBinding mDialogChoiceGestureBinding;
+    private Dialog mGestureDialog;
 
     public static Intent getMockDetailIntent(Context context, Mock mock, Project project) {
         Intent intent = new Intent(context, MockDetailActivity.class);
@@ -86,6 +93,7 @@ public class MockDetailActivity extends BaseActivity
             params.topMargin = element.getY();
             elementView.setLayoutParams(params);
             elementView.setPresenter(mMockDetailPresenter);
+            elementView.setGesture(element.getGesture());
             if (!TextUtils.isEmpty(element.getLinkTo()))
                 elementView.setLinkTo(element.getLinkTo());
             mCustomRelativeLayout.addView(elementView);
@@ -147,6 +155,19 @@ public class MockDetailActivity extends BaseActivity
     }
 
     @Override
+    public void showElementGesture(String gesture) {
+        ElementView elementView = (ElementView) mCustomRelativeLayout.getTag();
+        elementView.setGesture(gesture);
+    }
+
+    @Override
+    public void hideGestureDialog() {
+        if (mGestureDialog != null && mGestureDialog.isShowing()) {
+            mGestureDialog.cancel();
+        }
+    }
+
+    @Override
     public void start() {
         getIntentData();
         setUpTitle();
@@ -203,12 +224,29 @@ public class MockDetailActivity extends BaseActivity
                     LinkToActivity.getLinkToIntent(this, mProject), LINKTO_REQUEST_CODE);
                 break;
             case R.id.action_gesture:
-                // TODO: 15/03/2017 show dialog choice gesture
+                showGestureDialog();
                 break;
             default:
                 break;
         }
         return super.onOptionsItemSelected(menuItem);
+    }
+
+    private void setUpGestureDialog() {
+        mDialogChoiceGestureBinding = DataBindingUtil.inflate(getLayoutInflater(),
+            R.layout.dialog_choice_gesture, null, false);
+        mGestureDialog = new Dialog(this);
+        mDialogChoiceGestureBinding.setActivity(this);
+        mGestureDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mGestureDialog.setContentView(mDialogChoiceGestureBinding.getRoot());
+    }
+
+    private void showGestureDialog() {
+        if (mGestureDialog == null) setUpGestureDialog();
+        ElementView elementView = (ElementView) mCustomRelativeLayout.getTag();
+        Element element = (Element) elementView.getTag(R.string.title_element);
+        mGestureAdapter.set(new GestureAdapter(this, element.getGesture(), mMockDetailPresenter));
+        mGestureDialog.show();
     }
 
     private void saveElement() {
@@ -237,5 +275,9 @@ public class MockDetailActivity extends BaseActivity
             mMockDetailPresenter.saveElement(element);
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public ObservableField<GestureAdapter> getGestureAdapter() {
+        return mGestureAdapter;
     }
 }

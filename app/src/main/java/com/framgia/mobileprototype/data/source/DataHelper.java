@@ -50,6 +50,7 @@ public class DataHelper extends SQLiteOpenHelper {
             ElementPersistenceContract.ElementEntry.COLUMN_NAME_WIDTH + INTEGER_TYPE + COMMA_SEP +
             ElementPersistenceContract.ElementEntry.COLUMN_NAME_HEIGHT + INTEGER_TYPE + COMMA_SEP +
             ElementPersistenceContract.ElementEntry.COLUMN_NAME_LINK_TO + TEXT_TYPE + COMMA_SEP +
+            ElementPersistenceContract.ElementEntry.COLUMN_NAME_GESTURE + TEXT_TYPE + COMMA_SEP +
             ElementPersistenceContract.ElementEntry.COLUMN_NAME_TRANSITION + TEXT_TYPE + COMMA_SEP +
             ElementPersistenceContract.ElementEntry.COLUMN_NAME_MOCK_ID + TEXT_TYPE + COMMA_SEP +
             " UNIQUE (" + ProjectPersistenceContract.ProjectEntry._ID + ")" +

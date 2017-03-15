@@ -49,6 +49,7 @@ public class CustomRelativeLayout extends RelativeLayout implements View.OnTouch
             hideControlOfChildView();
             Element element = new Element();
             element.setId((int) mPresenter.saveElement(element));
+            element.setGesture(getResources().getString(R.string.title_gesture_tap));
             elementView.setTag(R.string.title_element, element);
             this.addView(elementView);
             this.setTag(elementView);

@@ -20,6 +20,8 @@ public interface MockDetailContract {
         void hideElementOption();
         void getAllElementView();
         void onSaveElementDone();
+        void showElementGesture(String gesture);
+        void hideGestureDialog();
     }
 
     interface Presenter extends BasePresenter {
@@ -29,5 +31,6 @@ public interface MockDetailContract {
         void saveAllElement(List<Element> elements);
         long saveElement(Element element);
         void deleteElement(Element element);
+        void setElementGesture(String gesture);
     }
 }

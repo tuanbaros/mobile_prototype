@@ -66,6 +66,12 @@ public class MockDetailPresenter implements MockDetailContract.Presenter {
     }
 
     @Override
+    public void setElementGesture(String gesture) {
+        mMockDetailView.hideGestureDialog();
+        mMockDetailView.showElementGesture(gesture);
+    }
+
+    @Override
     public void start() {
         mMockDetailView.onPrepare();
     }

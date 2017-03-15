@@ -20,6 +20,7 @@ public final class ElementPersistenceContract {
         public static final String COLUMN_NAME_HEIGHT = "height";
         public static final String COLUMN_NAME_LINK_TO = "link_to";
         public static final String COLUMN_NAME_TRANSITION = "transition";
+        public static final String COLUMN_NAME_GESTURE = "gesture";
         public static final String COLUMN_NAME_MOCK_ID = "mock_id";
     }
 }
