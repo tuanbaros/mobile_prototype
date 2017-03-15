@@ -26,6 +26,8 @@ public class Element implements Serializable {
     private String mLinkTo;
     @SerializedName("transition")
     private String mTransition;
+    @SerializedName("gesture")
+    private String mGesture;
     private String mMockId;
 
     public Element() {
@@ -46,6 +48,8 @@ public class Element implements Serializable {
             ElementPersistenceContract.ElementEntry.COLUMN_NAME_TRANSITION));
         mLinkTo = cursor.getString(cursor.getColumnIndexOrThrow(
             ElementPersistenceContract.ElementEntry.COLUMN_NAME_LINK_TO));
+        mGesture = cursor.getString(cursor.getColumnIndexOrThrow(
+            ElementPersistenceContract.ElementEntry.COLUMN_NAME_GESTURE));
     }
 
     public int getId() {
@@ -110,5 +114,13 @@ public class Element implements Serializable {
 
     public void setHeight(int height) {
         this.mHeight = height;
+    }
+
+    public String getGesture() {
+        return mGesture;
+    }
+
+    public void setGesture(String gesture) {
+        mGesture = gesture;
     }
 }

@@ -138,6 +138,8 @@ public class ElementLocalDataSource extends DataHelper implements DataSource<Ele
             element.getTransition());
         contentValues.put(
             ElementPersistenceContract.ElementEntry.COLUMN_NAME_MOCK_ID, element.getMockId());
+        contentValues.put(
+            ElementPersistenceContract.ElementEntry.COLUMN_NAME_GESTURE, element.getGesture());
         return contentValues;
     }
 }

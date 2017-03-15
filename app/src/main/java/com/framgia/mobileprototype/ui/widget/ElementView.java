@@ -1,9 +1,11 @@
 package com.framgia.mobileprototype.ui.widget;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.framgia.mobileprototype.R;
@@ -96,5 +98,44 @@ public class ElementView extends RelativeLayout implements View.OnTouchListener 
             this.getChildAt(j).setBackgroundResource(R.drawable.link_to_resize);
         }
         this.setTag(R.string.title_link_to, mockEntryId);
+    }
+
+    public void setGesture(String gesture) {
+        Element element = (Element) getTag(R.string.title_element);
+        if (gesture == null) {
+            gesture = getResources().getString(R.string.title_gesture_tap);
+        }
+        element.setGesture(gesture);
+        ImageView imageView = (ImageView) getChildAt(getChildCount() - 1);
+        imageView.setImageResource(getIconResource(gesture));
+    }
+
+    private int getIconResource(String gesture) {
+        Resources resources = getResources();
+        if (gesture.equals(resources.getString(R.string.title_gesture_tap))) {
+            return R.drawable.ic_gesture_tap;
+        }
+        if (gesture.equals(resources.getString(R.string.title_gesture_swipeup))) {
+            return R.drawable.ic_gesture_swipe_top;
+        }
+        if (gesture.equals(resources.getString(R.string.title_gesture_swipedown))) {
+            return R.drawable.ic_gesture_swipe_down;
+        }
+        if (gesture.equals(resources.getString(R.string.title_gesture_swipeleft))) {
+            return R.drawable.ic_gesture_swipe_left;
+        }
+        if (gesture.equals(resources.getString(R.string.title_gesture_swiperight))) {
+            return R.drawable.ic_gesture_swipe_right;
+        }
+        if (gesture.equals(resources.getString(R.string.title_gesture_zoomin))) {
+            return R.drawable.ic_gesture_zoom_in;
+        }
+        if (gesture.equals(resources.getString(R.string.title_gesture_zoomout))) {
+            return R.drawable.ic_gesture_zoom_out;
+        }
+        if (gesture.equals(resources.getString(R.string.title_gesture_doubletap))) {
+            return R.drawable.ic_gesture_double_tap;
+        }
+        return R.drawable.ic_gesture_tap;
     }
 }
