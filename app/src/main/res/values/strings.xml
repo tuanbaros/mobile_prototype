@@ -60,4 +60,5 @@
     <string name="title_draw">Draw</string>
     <string name="action_color">Color</string>
     <string name="action_undo">Undo</string>
+    <string name="action_gesture">Gesture</string>
 </resources>

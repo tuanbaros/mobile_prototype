@@ -38,7 +38,7 @@ public class MockDetailActivity extends BaseActivity
     private MockDetailContract.Presenter mMockDetailPresenter;
     private Mock mMock;
     private ObservableBoolean mIsLoading = new ObservableBoolean();
-    private MenuItem mRemoveItem, mLinkToItem;
+    private MenuItem mRemoveItem, mLinkToItem, mGestureItem;
     private Project mProject;
     private CustomRelativeLayout mCustomRelativeLayout;
 
@@ -102,12 +102,14 @@ public class MockDetailActivity extends BaseActivity
     public void showElementOption() {
         mLinkToItem.setVisible(true);
         mRemoveItem.setVisible(true);
+        mGestureItem.setVisible(true);
     }
 
     @Override
     public void hideElementOption() {
         mLinkToItem.setVisible(false);
         mRemoveItem.setVisible(false);
+        mGestureItem.setVisible(false);
     }
 
     @Override
@@ -178,6 +180,7 @@ public class MockDetailActivity extends BaseActivity
         inflater.inflate(R.menu.activity_mock_detail, menu);
         mLinkToItem = menu.findItem(R.id.action_link);
         mRemoveItem = menu.findItem(R.id.action_remove);
+        mGestureItem = menu.findItem(R.id.action_gesture);
         hideElementOption();
         return true;
     }
@@ -198,6 +201,9 @@ public class MockDetailActivity extends BaseActivity
             case R.id.action_link:
                 startActivityForResult(
                     LinkToActivity.getLinkToIntent(this, mProject), LINKTO_REQUEST_CODE);
+                break;
+            case R.id.action_gesture:
+                // TODO: 15/03/2017 show dialog choice gesture
                 break;
             default:
                 break;
