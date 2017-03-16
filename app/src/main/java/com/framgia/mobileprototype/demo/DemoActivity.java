@@ -21,12 +21,13 @@ import com.framgia.mobileprototype.data.source.element.ElementRepository;
 import com.framgia.mobileprototype.data.source.mock.MockLocalDataSource;
 import com.framgia.mobileprototype.data.source.mock.MockRepository;
 import com.framgia.mobileprototype.databinding.ActivityDemoBinding;
+import com.framgia.mobileprototype.ui.widget.DemoView;
 import com.framgia.mobileprototype.util.ScreenSizeUtil;
 
 import java.util.List;
 
 public class DemoActivity extends AppCompatActivity
-    implements DemoContract.View, View.OnClickListener, View.OnTouchListener {
+    implements DemoContract.View, View.OnTouchListener {
     public static final String EXTRA_MOCK_ENTRY_ID = "EXTRA_MOCK_ENTRY_ID";
     private ObservableField<Mock> mMock = new ObservableField<>();
     private ActivityDemoBinding mDemoBinding;
@@ -77,7 +78,7 @@ public class DemoActivity extends AppCompatActivity
         RelativeLayout relativeLayout = (RelativeLayout) mDemoBinding.getRoot();
         for (Element element : elements) {
             if (TextUtils.isEmpty(element.getLinkTo())) continue;
-            View view = new View(this);
+            DemoView view = new DemoView(this, element.getGesture(), mDemoPresenter);
             int width = (int) (element.getWidth() * ScreenSizeUtil.sScaleWidth);
             int height = (int) (element.getHeight() * ScreenSizeUtil.sScaleHeight);
             int paddingSize = (int) getResources().getDimension(R.dimen.dp_8);
@@ -88,7 +89,6 @@ public class DemoActivity extends AppCompatActivity
             params.topMargin = (int) (element.getY() * ScreenSizeUtil.sScaleHeight) + paddingSize;
             view.setLayoutParams(params);
             view.setTag(R.string.title_link_to, element.getLinkTo());
-            view.setOnClickListener(this);
             relativeLayout.addView(view);
         }
         relativeLayout.setOnTouchListener(this);
@@ -112,8 +112,7 @@ public class DemoActivity extends AppCompatActivity
     }
 
     @Override
-    public void onClick(View view) {
-        String linkTo = (String) view.getTag(R.string.title_link_to);
+    public void showNextScreen(String linkTo) {
         clearAllElement();
         startActivity(DemoActivity.getDemoIntent(this, linkTo));
     }
