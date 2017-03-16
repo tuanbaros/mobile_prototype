@@ -18,10 +18,12 @@ public interface DemoContract {
         void onElementError();
         void onMockLoaded(Mock mock);
         void onMockError();
+        void showNextScreen(String linkTo);
     }
 
     interface Presenter extends BasePresenter {
         void getElements(String mockId);
         void getMock(String mockEntryId);
+        void openNextScreen(String linkTo);
     }
 }

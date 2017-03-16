@@ -1,5 +1,6 @@
 package com.framgia.mobileprototype.data.source;
 
+import com.framgia.mobileprototype.Constant;
 import com.framgia.mobileprototype.data.model.Element;
 import com.framgia.mobileprototype.data.model.Mock;
 import com.framgia.mobileprototype.data.model.Project;
@@ -59,6 +60,9 @@ public class DataImport {
                 if (mockId == DataHelper.INSERT_ERROR) continue;
                 for (int j = 0; j < mock.getElements().size(); j++) {
                     Element element = mock.getElements().get(j);
+                    if (element.getGesture() == null) {
+                        element.setGesture(Constant.DEFAULT_GESTURE);
+                    }
                     element.setMockId(String.valueOf(mockId));
                     element.setX((int) (element.getX() * scaleWidth));
                     element.setY((int) (element.getY() * scaleHeight));

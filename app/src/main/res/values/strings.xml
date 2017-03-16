@@ -69,4 +69,5 @@
     <string name="title_gesture_zoomin">Zoom In</string>
     <string name="title_gesture_zoomout">Zoom Out</string>
     <string name="title_gesture_doubletap">Double Tap</string>
+    <string name="msg_please_action">Please %s</string>
 </resources>
