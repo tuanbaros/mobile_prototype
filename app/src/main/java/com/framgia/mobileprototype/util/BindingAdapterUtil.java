@@ -1,5 +1,7 @@
 package com.framgia.mobileprototype.util;
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.databinding.BindingAdapter;
 import android.net.Uri;
 import android.support.design.widget.NavigationView;
@@ -10,6 +12,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -97,5 +101,30 @@ public class BindingAdapterUtil {
     public static void setTouchHandler(CustomRelativeLayout view,
                                        MockDetailContract.Presenter listener) {
         view.setPresenter(listener);
+    }
+
+    @BindingAdapter({"hidden", "animation"})
+    public static void setAnimation(TextView chosen, TextView normal, String animation) {
+        Context context = chosen.getContext();
+        Resources resources = chosen.getResources();
+        if (animation.equals(resources.getString(R.string.title_transition_default))) {
+            chosen.setVisibility(View.VISIBLE);
+            return;
+        }
+        if (animation.equals(resources.getString(R.string.title_transition_fade))) {
+            chosen.startAnimation(AnimationUtils.loadAnimation(context, R.anim.fade_in));
+            chosen.setVisibility(View.VISIBLE);
+            return;
+        }
+        if (animation.equals(resources.getString(R.string.title_transition_slide_left))) {
+            chosen.startAnimation(AnimationUtils.loadAnimation(context, R.anim.slide_left));
+            chosen.setVisibility(View.VISIBLE);
+            return;
+        }
+        if (animation.equals(resources.getString(R.string.title_transition_slide_right))) {
+            chosen.startAnimation(AnimationUtils.loadAnimation(context, R.anim.slide_right));
+            chosen.setVisibility(View.VISIBLE);
+            return;
+        }
     }
 }

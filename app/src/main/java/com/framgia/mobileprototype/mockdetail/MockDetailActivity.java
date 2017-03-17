@@ -270,10 +270,11 @@ public class MockDetailActivity extends BaseActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == LINKTO_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
-            String linkTo = data.getStringExtra(LinkToActivity.EXTRA_MOCK_ENTRYID);
+            Element extra = (Element) data.getSerializableExtra(LinkToActivity.EXTRA_ELEMENT);
             ElementView elementView = (ElementView) mCustomRelativeLayout.getTag();
-            elementView.setLinkTo(linkTo);
+            elementView.setLinkTo(extra.getLinkTo());
             Element element = (Element) elementView.getTag(R.string.title_element);
+            element.setTransition(extra.getTransition());
             mMockDetailPresenter.saveElement(element);
         }
         super.onActivityResult(requestCode, resultCode, data);

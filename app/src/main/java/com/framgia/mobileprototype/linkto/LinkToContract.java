@@ -16,7 +16,7 @@ public interface LinkToContract {
     interface View extends BaseView {
         void mockLoaded(List<Mock> mocks);
         void mockNotAvailable();
-        void saveLinkTo(Mock mock);
+        void saveLinkTo();
     }
 
     interface Presenter extends BasePresenter {
