@@ -70,4 +70,15 @@
     <string name="title_gesture_zoomout">Zoom Out</string>
     <string name="title_gesture_doubletap">Double Tap</string>
     <string name="msg_please_action">Please %s</string>
+    <string name="title_link_to_screen">Link to screen</string>
+    <string name="title_editing">Editing</string>
+    <string name="title_transition">Transition</string>
+    <string name="title_transition_fade_in">Fade in</string>
+    <string name="title_transition_fade_out">Fade out</string>
+    <string name="title_transition_push_up">Push up</string>
+    <string name="title_transition_push_down">Push down</string>
+    <string name="title_transition_push_left">Push left</string>
+    <string name="title_transition_push_right">Push right</string>
+    <string name="title_transition_slide_left">Slide left</string>
+    <string name="title_transition_slide_right">Slide right</string>
 </resources>

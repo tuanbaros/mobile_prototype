@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBar;
 
 import com.framgia.mobileprototype.BaseActivity;
 import com.framgia.mobileprototype.R;
+import com.framgia.mobileprototype.data.model.Element;
 import com.framgia.mobileprototype.data.model.Mock;
 import com.framgia.mobileprototype.data.model.Project;
 import com.framgia.mobileprototype.data.source.mock.MockLocalDataSource;
@@ -20,16 +21,20 @@ import java.util.List;
 
 public class LinkToActivity extends BaseActivity implements LinkToContract.View {
     public static final String EXTRA_PROJECT = "EXTRA_PROJECT";
+    public static final String EXTRA_ELEMENT = "EXTRA_ELEMENT";
     public static final String EXTRA_MOCK_ENTRYID = "EXTRA_MOCK_ENTRYID";
     private ActivityLinkToBinding mLinkToBinding;
     private LinkToContract.Presenter mLinkToPresenter;
     private ObservableBoolean mIsLoading = new ObservableBoolean();
     private Project mProject;
+    private Element mElement;
     private ObservableField<LinkToAdapter> mLinkToAdapter = new ObservableField<>();
+    private ObservableField<TransitionAdapter> mTransitionAdapter = new ObservableField<>();
 
-    public static Intent getLinkToIntent(Context context, Project project) {
+    public static Intent getLinkToIntent(Context context, Project project, Element element) {
         Intent intent = new Intent(context, LinkToActivity.class);
         intent.putExtra(EXTRA_PROJECT, project);
+        intent.putExtra(EXTRA_ELEMENT, element);
         return intent;
     }
 
@@ -60,6 +65,7 @@ public class LinkToActivity extends BaseActivity implements LinkToContract.View 
 
     private void getIntentData() {
         mProject = (Project) getIntent().getSerializableExtra(EXTRA_PROJECT);
+        mElement = (Element) getIntent().getSerializableExtra(EXTRA_ELEMENT);
     }
 
     public ObservableBoolean getIsLoading() {
@@ -69,13 +75,14 @@ public class LinkToActivity extends BaseActivity implements LinkToContract.View 
     @Override
     public void mockLoaded(List<Mock> mocks) {
         mIsLoading.set(false);
-        mLinkToAdapter.set(new LinkToAdapter(this, mocks, mLinkToPresenter));
+        mLinkToAdapter.set(new LinkToAdapter(this, mocks, mElement, mLinkToPresenter));
+        mTransitionAdapter.set(new TransitionAdapter(this, mElement, mLinkToPresenter));
     }
 
     @Override
     public void mockNotAvailable() {
         mIsLoading.set(false);
-        mLinkToAdapter.set(new LinkToAdapter(this, null, mLinkToPresenter));
+        mLinkToAdapter.set(new LinkToAdapter(this, null, mElement, mLinkToPresenter));
     }
 
     @Override
@@ -88,5 +95,9 @@ public class LinkToActivity extends BaseActivity implements LinkToContract.View 
 
     public ObservableField<LinkToAdapter> getLinkToAdapter() {
         return mLinkToAdapter;
+    }
+
+    public ObservableField<TransitionAdapter> getTransitionAdapter() {
+        return mTransitionAdapter;
     }
 }

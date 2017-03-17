@@ -23,7 +23,7 @@
           "w": 758,
           "h": 162,
           "link_to": "wyWPbmOIm8tsXTOfvTV1DWwG",
-          "transition": "fade"
+          "transition": "Default"
         },
         {
           "x": 33,
@@ -31,7 +31,7 @@
           "w": 169,
           "h": 153,
           "link_to": "ETNaAidKe7VAY24dAINYXacQ",
-          "transition": "scale-up"
+          "transition": "Default"
         },
         {
           "x": 202,
@@ -39,7 +39,7 @@
           "w": 125,
           "h": 150,
           "link_to": "0pBQFNA6OHJJwrZMxhEO2oEF",
-          "transition": "push"
+          "transition": "Default"
         }
       ]
     },
@@ -55,7 +55,7 @@
           "w": 144,
           "h": 150,
           "link_to": "HO9n7RnMNlZplLOMgsGw7ki3",
-          "transition": "fade"
+          "transition": "Default"
         },
         {
           "x": 0,
@@ -63,7 +63,7 @@
           "w": 172,
           "h": 164,
           "link_to": "HO9n7RnMNlZplLOMgsGw7ki3",
-          "transition": "scale-up"
+          "transition": "Default"
         }
       ]
     },
@@ -79,7 +79,7 @@
           "w": 147,
           "h": 152,
           "link_to": "HO9n7RnMNlZplLOMgsGw7ki3",
-          "transition": "scale-up"
+          "transition": "Default"
         },
         {
           "x": 0,
@@ -87,7 +87,7 @@
           "w": 168,
           "h": 154,
           "link_to": "wyWPbmOIm8tsXTOfvTV1DWwG",
-          "transition": "fade"
+          "transition": "Default"
         }
       ]
     },
@@ -111,7 +111,7 @@
           "w": 123,
           "h": 150,
           "link_to": "6HERj31oIzph1gT4CeCuoT4U",
-          "transition": "fade"
+          "transition": "Default"
         }
       ]
     },
@@ -135,7 +135,7 @@
           "w": 758,
           "h": 161,
           "link_to": "wyWPbmOIm8tsXTOfvTV1DWwG",
-          "transition": "fade"
+          "transition": "Default"
         }
       ]
     },
@@ -151,7 +151,7 @@
           "w": 758,
           "h": 173,
           "link_to": "wyWPbmOIm8tsXTOfvTV1DWwG",
-          "transition": "fade"
+          "transition": "Default"
         },
         {
           "x": 182,
@@ -159,7 +159,7 @@
           "w": 131,
           "h": 161,
           "link_to": "0pBQFNA6OHJJwrZMxhEO2oEF",
-          "transition": "scale-up"
+          "transition": "Default"
         },
         {
           "x": 1,
@@ -167,7 +167,7 @@
           "w": 169,
           "h": 167,
           "link_to": "ETNaAidKe7VAY24dAINYXacQ",
-          "transition": "scale-up"
+          "transition": "Default"
         }
       ]
     }

@@ -220,8 +220,10 @@ public class MockDetailActivity extends BaseActivity
                 hideElementOption();
                 break;
             case R.id.action_link:
-                startActivityForResult(
-                    LinkToActivity.getLinkToIntent(this, mProject), LINKTO_REQUEST_CODE);
+                ElementView ev = (ElementView) mCustomRelativeLayout.getTag();
+                Element element = (Element) ev.getTag(R.string.title_element);
+                startActivityForResult(LinkToActivity.getLinkToIntent(
+                    this, mProject, element), LINKTO_REQUEST_CODE);
                 break;
             case R.id.action_gesture:
                 showGestureDialog();

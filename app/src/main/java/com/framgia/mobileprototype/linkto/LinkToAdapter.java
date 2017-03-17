@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import com.framgia.mobileprototype.R;
+import com.framgia.mobileprototype.data.model.Element;
 import com.framgia.mobileprototype.data.model.Mock;
 import com.framgia.mobileprototype.databinding.ItemLinkToBinding;
 
@@ -22,11 +23,13 @@ public class LinkToAdapter extends RecyclerView.Adapter<LinkToAdapter.ViewHolder
     private List<Mock> mMocks = new ArrayList<>();
     private LayoutInflater mLayoutInflater;
     private LinkToContract.Presenter mListener;
+    private Element mElement;
 
     public LinkToAdapter(Context context, List<Mock> mocks,
-                         LinkToContract.Presenter listener) {
+                         Element element, LinkToContract.Presenter listener) {
         if (mocks != null) mMocks.addAll(mocks);
         mLayoutInflater = LayoutInflater.from(context);
+        mElement = element;
         mListener = listener;
     }
 
@@ -45,6 +48,7 @@ public class LinkToAdapter extends RecyclerView.Adapter<LinkToAdapter.ViewHolder
             super(itemLinkToBinding.getRoot());
             mItemLinkToBinding = itemLinkToBinding;
             mLinkToItemActionHandler = new LinkToItemActionHandler(mListener);
+            mItemLinkToBinding.setElement(mElement);
             mItemLinkToBinding.setHandler(mLinkToItemActionHandler);
         }
 
