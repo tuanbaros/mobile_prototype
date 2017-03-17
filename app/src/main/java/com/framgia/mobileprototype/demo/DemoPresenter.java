@@ -62,7 +62,7 @@ public class DemoPresenter implements DemoContract.Presenter {
     }
 
     @Override
-    public void openNextScreen(String linkTo) {
-        mDemoView.showNextScreen(linkTo);
+    public void openNextScreen(String linkTo, String anim) {
+        mDemoView.showNextScreen(linkTo, anim);
     }
 }

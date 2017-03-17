@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.framgia.mobileprototype.R;
+import com.framgia.mobileprototype.data.model.Element;
 import com.framgia.mobileprototype.demo.DemoContract;
 
 /**
@@ -139,7 +140,8 @@ public class DemoView extends View implements View.OnTouchListener {
 
     private void doAction(int resId) {
         if (getResources().getString(resId).equals(mAction)) {
-            mListener.openNextScreen((String) this.getTag(R.string.title_link_to));
+            Element element = (Element) this.getTag(R.string.title_element);
+            mListener.openNextScreen(element.getLinkTo(), element.getTransition());
             mIsDone = true;
         } else {
             notifyAction();

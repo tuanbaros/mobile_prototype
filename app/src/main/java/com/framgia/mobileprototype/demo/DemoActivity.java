@@ -2,6 +2,7 @@ package com.framgia.mobileprototype.demo;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
@@ -29,6 +30,7 @@ import java.util.List;
 public class DemoActivity extends AppCompatActivity
     implements DemoContract.View, View.OnTouchListener {
     public static final String EXTRA_MOCK_ENTRY_ID = "EXTRA_MOCK_ENTRY_ID";
+    public static final String EXTRA_TRANSITION = "EXTRA_TRANSITION";
     private ObservableField<Mock> mMock = new ObservableField<>();
     private ActivityDemoBinding mDemoBinding;
     private DemoContract.Presenter mDemoPresenter;
@@ -38,6 +40,13 @@ public class DemoActivity extends AppCompatActivity
     public static Intent getDemoIntent(Context context, String mockEntryId) {
         Intent intent = new Intent(context, DemoActivity.class);
         intent.putExtra(EXTRA_MOCK_ENTRY_ID, mockEntryId);
+        return intent;
+    }
+
+    public static Intent getDemoIntent(Context context, String mockEntryId, String anim) {
+        Intent intent = new Intent(context, DemoActivity.class);
+        intent.putExtra(EXTRA_MOCK_ENTRY_ID, mockEntryId);
+        intent.putExtra(EXTRA_TRANSITION, anim);
         return intent;
     }
 
@@ -66,6 +75,9 @@ public class DemoActivity extends AppCompatActivity
     @Override
     public void start() {
         getIntentData();
+        if (!TextUtils.isEmpty(getIntent().getStringExtra(EXTRA_TRANSITION))) {
+            setAnimation(getIntent().getStringExtra(EXTRA_TRANSITION));
+        }
         mDemoPresenter.getMock(mMockEntryId);
     }
 
@@ -89,6 +101,7 @@ public class DemoActivity extends AppCompatActivity
             params.topMargin = (int) (element.getY() * ScreenSizeUtil.sScaleHeight) + paddingSize;
             view.setLayoutParams(params);
             view.setTag(R.string.title_link_to, element.getLinkTo());
+            view.setTag(R.string.title_element, element);
             relativeLayout.addView(view);
         }
         relativeLayout.setOnTouchListener(this);
@@ -112,9 +125,10 @@ public class DemoActivity extends AppCompatActivity
     }
 
     @Override
-    public void showNextScreen(String linkTo) {
+    public void showNextScreen(String linkTo, String anim) {
         clearAllElement();
-        startActivity(DemoActivity.getDemoIntent(this, linkTo));
+        startActivity(DemoActivity.getDemoIntent(this, linkTo, anim));
+        finish();
     }
 
     private void showHightlight() {
@@ -166,6 +180,49 @@ public class DemoActivity extends AppCompatActivity
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         mMockEntryId = intent.getStringExtra(EXTRA_MOCK_ENTRY_ID);
+        setAnimation(intent.getStringExtra(EXTRA_TRANSITION));
         mDemoPresenter.getMock(mMockEntryId);
+    }
+
+    private void setAnimation(String anim) {
+        Resources resources = getResources();
+        if (resources.getString(R.string.title_transition_default).equals(anim)) {
+            return;
+        }
+        if (resources.getString(R.string.title_transition_fade).equals(anim)) {
+            overridePendingTransition(R.anim.fade_in, android.R.anim.fade_out);
+            return;
+        }
+        if (resources.getString(R.string.title_transition_slide_top).equals(anim)) {
+            overridePendingTransition(R.anim.slide_top, android.R.anim.fade_out);
+            return;
+        }
+        if (resources.getString(R.string.title_transition_slide_left).equals(anim)) {
+            overridePendingTransition(R.anim.slide_left, android.R.anim.fade_out);
+            return;
+        }
+        if (resources.getString(R.string.title_transition_slide_bottom).equals(anim)) {
+            overridePendingTransition(R.anim.slide_bottom, android.R.anim.fade_out);
+            return;
+        }
+        if (resources.getString(R.string.title_transition_slide_right).equals(anim)) {
+            overridePendingTransition(R.anim.slide_right, android.R.anim.fade_out);
+            return;
+        }
+        if (resources.getString(R.string.title_transition_push_up).equals(anim)) {
+            overridePendingTransition(R.anim.slide_top, R.anim.slide_out_bottom);
+            return;
+        }
+        if (resources.getString(R.string.title_transition_push_down).equals(anim)) {
+            overridePendingTransition(R.anim.slide_bottom, R.anim.slide_out_top);
+            return;
+        }
+        if (resources.getString(R.string.title_transition_push_right).equals(anim)) {
+            overridePendingTransition(R.anim.slide_right, R.anim.slide_out_right);
+            return;
+        }
+        if (resources.getString(R.string.title_transition_push_left).equals(anim)) {
+            overridePendingTransition(R.anim.slide_left, R.anim.slide_out_left);
+        }
     }
 }
