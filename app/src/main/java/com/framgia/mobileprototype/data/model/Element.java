@@ -1,7 +1,10 @@
 package com.framgia.mobileprototype.data.model;
 
 import android.database.Cursor;
+import android.databinding.BaseObservable;
+import android.databinding.Bindable;
 
+import com.framgia.mobileprototype.BR;
 import com.framgia.mobileprototype.data.source.element.ElementPersistenceContract;
 import com.google.gson.annotations.SerializedName;
 
@@ -12,7 +15,7 @@ import java.io.Serializable;
  * Project: mobile_prototype
  * Package: com.framgia.mobileprototype.data.model
  */
-public class Element implements Serializable {
+public class Element extends BaseObservable implements Serializable {
     private int mId;
     @SerializedName("x")
     private int mX;
@@ -50,6 +53,8 @@ public class Element implements Serializable {
             ElementPersistenceContract.ElementEntry.COLUMN_NAME_LINK_TO));
         mGesture = cursor.getString(cursor.getColumnIndexOrThrow(
             ElementPersistenceContract.ElementEntry.COLUMN_NAME_GESTURE));
+        mMockId = cursor.getString(cursor.getColumnIndexOrThrow(
+            ElementPersistenceContract.ElementEntry.COLUMN_NAME_MOCK_ID));
     }
 
     public int getId() {
@@ -60,12 +65,14 @@ public class Element implements Serializable {
         this.mId = id;
     }
 
+    @Bindable
     public String getLinkTo() {
         return mLinkTo;
     }
 
     public void setLinkTo(String linkTo) {
         this.mLinkTo = linkTo;
+        notifyPropertyChanged(BR.linkTo);
     }
 
     public String getMockId() {
@@ -100,12 +107,14 @@ public class Element implements Serializable {
         this.mWidth = width;
     }
 
+    @Bindable
     public String getTransition() {
         return mTransition;
     }
 
     public void setTransition(String transition) {
         this.mTransition = transition;
+        notifyPropertyChanged(BR.transition);
     }
 
     public int getHeight() {

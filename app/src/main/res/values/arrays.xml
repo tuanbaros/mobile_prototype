@@ -21,4 +21,17 @@
         <item>@string/title_gesture_zoomout</item>
         <item>@string/title_gesture_doubletap</item>
     </string-array>
+
+    <string-array name="title_transition">
+        <item>@string/title_transition_default</item>
+        <item>@string/title_transition_fade_in</item>
+        <item>@string/title_transition_fade_out</item>
+        <item>@string/title_transition_push_up</item>
+        <item>@string/title_transition_push_down</item>
+        <item>@string/title_transition_push_left</item>
+        <item>@string/title_transition_push_right</item>
+        <item>@string/title_transition_slide_left</item>
+        <item>@string/title_transition_slide_right</item>
+    </string-array>
+    <string name="title_transition_default">Default</string>
 </resources>

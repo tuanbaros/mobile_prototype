@@ -28,4 +28,10 @@
     <dimen name="dp_8">8dp</dimen>
     <dimen name="dp_99">99dp</dimen>
     <dimen name="dp_2">2dp</dimen>
+    <dimen name="dp_120">120dp</dimen>
+    <dimen name="dp_180">180dp</dimen>
+    <dimen name="dp_252">252dp</dimen>
+    <dimen name="dp_210">210dp</dimen>
+    <dimen name="sp_14">14sp</dimen>
+    <dimen name="dp_160">160dp</dimen>
 </resources>

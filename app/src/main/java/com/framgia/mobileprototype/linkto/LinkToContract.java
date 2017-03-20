@@ -2,6 +2,7 @@ package com.framgia.mobileprototype.linkto;
 
 import com.framgia.mobileprototype.BasePresenter;
 import com.framgia.mobileprototype.BaseView;
+import com.framgia.mobileprototype.data.model.Element;
 import com.framgia.mobileprototype.data.model.Mock;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public interface LinkToContract {
 
     interface Presenter extends BasePresenter {
         void getMocks(String projectId);
-        void chooseMock(Mock mock);
+        void chooseMock(Mock mock, Element element);
+        void chooseTransition(String transition, Element element);
     }
 }

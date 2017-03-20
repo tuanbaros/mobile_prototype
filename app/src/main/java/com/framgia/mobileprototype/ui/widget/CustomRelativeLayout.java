@@ -50,6 +50,7 @@ public class CustomRelativeLayout extends RelativeLayout implements View.OnTouch
             Element element = new Element();
             element.setId((int) mPresenter.saveElement(element));
             element.setGesture(getResources().getString(R.string.title_gesture_tap));
+            element.setTransition(getResources().getString(R.string.title_transition_default));
             elementView.setTag(R.string.title_element, element);
             this.addView(elementView);
             this.setTag(elementView);
