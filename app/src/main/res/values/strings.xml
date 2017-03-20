@@ -81,4 +81,11 @@
     <string name="title_transition_push_right">Push right</string>
     <string name="title_transition_slide_left">Slide left</string>
     <string name="title_transition_slide_right">Slide right</string>
+    <string name="title_transition_slide_top">Slide top</string>
+    <string name="title_transition_slide_bottom">Slide bottom</string>
+    <string name="title_transition_rotate">Rotate</string>
+    <string name="title_transition_flip">Flip</string>
+    <string name="action_checkmark">Checkmark</string>
+    <string name="title_transition_default">Default</string>
+    <string name="title_transition_fade">Fade</string>
 </resources>

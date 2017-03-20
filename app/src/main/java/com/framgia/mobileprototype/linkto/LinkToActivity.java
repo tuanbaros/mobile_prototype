@@ -7,6 +7,8 @@ import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.framgia.mobileprototype.BaseActivity;
 import com.framgia.mobileprototype.R;
@@ -86,9 +88,9 @@ public class LinkToActivity extends BaseActivity implements LinkToContract.View 
     }
 
     @Override
-    public void saveLinkTo(Mock mock) {
+    public void saveLinkTo() {
         Intent intent = new Intent();
-        intent.putExtra(EXTRA_MOCK_ENTRYID, mock.getEntryId());
+        intent.putExtra(EXTRA_ELEMENT, mElement);
         setResult(RESULT_OK, intent);
         finish();
     }
@@ -99,5 +101,17 @@ public class LinkToActivity extends BaseActivity implements LinkToContract.View 
 
     public ObservableField<TransitionAdapter> getTransitionAdapter() {
         return mTransitionAdapter;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_link_to, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        if (menuItem.getItemId() == R.id.action_checkmark) saveLinkTo();
+        return super.onOptionsItemSelected(menuItem);
     }
 }
