@@ -2,6 +2,7 @@ package com.framgia.mobileprototype.ui.widget;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -92,6 +93,7 @@ public class ElementView extends RelativeLayout implements View.OnTouchListener 
     }
 
     public void setLinkTo(String mockEntryId) {
+        if (TextUtils.isEmpty(mockEntryId)) return;
         ((Element) this.getTag(R.string.title_element)).setLinkTo(mockEntryId);
         this.getChildAt(NUMBER_DOT_CONTROL).setBackgroundResource(R.drawable.link_to_selector);
         for (int j = 0; j < NUMBER_DOT_CONTROL; j++) {

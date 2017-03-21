@@ -39,17 +39,26 @@ public class TransitionAdapter extends RecyclerView.Adapter<TransitionAdapter.Vi
 
     private void setUpListTransition() {
         Resources resources = mContext.getResources();
-        mTransitions.add(new Transition(resources.getString(R.string.title_transition_default), 0));
+        mTransitions
+            .add(new Transition(resources.getString(R.string.title_transition_default), 0, 0));
         mTransitions.add(new Transition(resources.getString(
-            R.string.title_transition_fade), R.anim.fade_in));
+            R.string.title_transition_fade), R.anim.fade_in, 0));
         mTransitions.add(new Transition(resources.getString(
-            R.string.title_transition_slide_right), R.anim.slide_right));
+            R.string.title_transition_slide_right), R.anim.slide_right, 0));
         mTransitions.add(new Transition(resources.getString(
-            R.string.title_transition_slide_left), R.anim.slide_left));
+            R.string.title_transition_slide_left), R.anim.slide_left, 0));
         mTransitions.add(new Transition(resources.getString(
-            R.string.title_transition_slide_bottom), R.anim.slide_top));
+            R.string.title_transition_slide_bottom), R.anim.slide_top, 0));
         mTransitions.add(new Transition(resources.getString(
-            R.string.title_transition_slide_top), R.anim.slide_bottom));
+            R.string.title_transition_slide_top), R.anim.slide_bottom, 0));
+        mTransitions.add(new Transition(resources.getString(
+            R.string.title_transition_push_up), R.anim.slide_top, R.anim.slide_out_bottom));
+        mTransitions.add(new Transition(resources.getString(
+            R.string.title_transition_push_down), R.anim.slide_bottom, R.anim.slide_out_top));
+        mTransitions.add(new Transition(resources.getString(
+            R.string.title_transition_push_right), R.anim.slide_right, R.anim.slide_out_right));
+        mTransitions.add(new Transition(resources.getString(
+            R.string.title_transition_push_left), R.anim.slide_left, R.anim.slide_out_left));
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -73,10 +82,15 @@ public class TransitionAdapter extends RecyclerView.Adapter<TransitionAdapter.Vi
 
         @Override
         public void onClick(View view) {
-            if (mItemTransitionBinding.getTransition().mAnim != 0) {
+            if (mItemTransitionBinding.getTransition().mStartAnim != 0) {
                 Animation animation = AnimationUtils.loadAnimation(
-                    mContext, mItemTransitionBinding.getTransition().mAnim);
+                    mContext, mItemTransitionBinding.getTransition().mStartAnim);
                 mItemTransitionBinding.textTransitionChosen.startAnimation(animation);
+                if (mItemTransitionBinding.getTransition().mExitAnim != 0) {
+                    Animation exitAnim = AnimationUtils.loadAnimation(
+                        mContext, mItemTransitionBinding.getTransition().mExitAnim);
+                    mItemTransitionBinding.textTransitionNormal.startAnimation(exitAnim);
+                }
             }
             mListener.chooseTransition(mItemTransitionBinding.getTransition().mName, mElement);
         }
@@ -101,11 +115,13 @@ public class TransitionAdapter extends RecyclerView.Adapter<TransitionAdapter.Vi
 
     public class Transition {
         private String mName;
-        private int mAnim;
+        private int mStartAnim;
+        private int mExitAnim;
 
-        public Transition(String name, int anim) {
+        public Transition(String name, int startAnim, int exitAnim) {
             this.mName = name;
-            this.mAnim = anim;
+            this.mStartAnim = startAnim;
+            mExitAnim = exitAnim;
         }
 
         public String getName() {
@@ -115,13 +131,19 @@ public class TransitionAdapter extends RecyclerView.Adapter<TransitionAdapter.Vi
         public void setName(String name) {
             this.mName = name;
         }
-
-        public int getAnim() {
-            return mAnim;
+        public int getStartAnim() {
+            return mStartAnim;
         }
 
-        public void setAnim(int anim) {
-            this.mAnim = anim;
+        public void setStartAnim(int startAnim) {
+            this.mStartAnim = startAnim;
+        }
+
+        public int getExitAnim() {
+            return mExitAnim;
+        }
+
+        public void setExitAnim(int exitAnim) {
         }
     }
 }
