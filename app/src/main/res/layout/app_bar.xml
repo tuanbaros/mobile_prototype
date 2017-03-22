@@ -49,7 +49,8 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/dp_4"
                 app:adapter="@{activity.projectsAdapter}"
-                app:layoutManager="@{LayoutManagerUtil.linear()}"/>
+                app:layoutManager="@{LayoutManagerUtil.linear()}"
+                app:behavier="@{fab}"/>
 
             <ProgressBar
                 android:layout_width="wrap_content"
@@ -78,8 +79,7 @@
             app:backgroundTint="@color/colorPrimary"
             app:srcCompat="@drawable/ic_plus"
             android:visibility="@{activity.isLoading ? View.GONE : View.VISIBLE}"
-            android:onClick="@{() -> presenter.createProject()}"
-            app:layout_behavior="com.framgia.mobileprototype.ui.widget.ScrollAwareFabBehavior"/>
+            android:onClick="@{() -> presenter.createProject()}"/>
 
     </android.support.design.widget.CoordinatorLayout>
 </layout>
