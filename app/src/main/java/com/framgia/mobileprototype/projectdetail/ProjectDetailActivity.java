@@ -189,10 +189,7 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
             pickImage();
             return;
         }
-        String[] permissions = {
-            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.CAMERA
-        };
+        String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
         for (String permission : permissions) {
             if (ContextCompat.checkSelfPermission(this,
                 permission) != PackageManager.PERMISSION_GRANTED) {
@@ -326,12 +323,12 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
                                            @NonNull int[] grantResults) {
         switch (requestCode) {
             case PERMISSION_REQUEST_CODE:
-                if (grantResults.length > 0
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                    && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                if (grantResults.length > 0 &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     pickImage();
                 } else {
-                    Toast.makeText(this, R.string.msg_grant_permission, Toast.LENGTH_LONG).show();
+                    Toast.makeText(
+                        this, R.string.msg_grant_permission, Toast.LENGTH_LONG).show();
                 }
                 break;
             default:

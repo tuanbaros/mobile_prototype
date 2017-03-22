@@ -56,9 +56,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 
-@RegisterPermission(permissions = {
-    Manifest.permission.WRITE_EXTERNAL_STORAGE,
-    Manifest.permission.CAMERA})
+@RegisterPermission(permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE})
 public class ProjectsActivity extends PermissionActivity implements
     ProjectsContract.View,
     NavigationView.OnNavigationItemSelectedListener {

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.Toast;
 
@@ -19,15 +18,14 @@ import com.framgia.mobileprototype.demo.DemoContract;
  */
 @SuppressLint("ViewConstructor")
 public class DemoView extends View implements View.OnTouchListener {
-    private static final float ORIGIN_SCALE_FACTOR = 1.0f;
     private float mDownX;
     private float mDownY;
     private GestureDetector mGestureDetector;
-    private ScaleGestureDetector mScaleDetector;
     private String mAction;
     private DemoContract.Presenter mListener;
     private boolean mIsDone;
     private boolean mIsTouchDown;
+    private float mBaseX;
 
     public DemoView(Context context, String action, DemoContract.Presenter listener) {
         super(context);
@@ -35,13 +33,16 @@ public class DemoView extends View implements View.OnTouchListener {
         mAction = action;
         setOnTouchListener(this);
         mGestureDetector = new GestureDetector(context, new MyGesture());
-        mScaleDetector = new ScaleGestureDetector(context, new ScaleListener());
     }
 
     @Override
     public boolean onTouch(View view, MotionEvent event) {
+        if (event.getPointerCount() > 1) {
+            zoomEvent(event);
+            mIsTouchDown = false;
+            return true;
+        }
         mGestureDetector.onTouchEvent(event);
-        mScaleDetector.onTouchEvent(event);
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN: {
                 mIsTouchDown = true;
@@ -121,15 +122,6 @@ public class DemoView extends View implements View.OnTouchListener {
         }
     }
 
-    private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
-        @Override
-        public boolean onScale(ScaleGestureDetector detector) {
-            if (detector.getScaleFactor() >= ORIGIN_SCALE_FACTOR) onZoomOut();
-            else onZoomIn();
-            return true;
-        }
-    }
-
     private void notifyAction() {
         if (mIsDone) return;
         if (mIsTouchDown)
@@ -145,6 +137,18 @@ public class DemoView extends View implements View.OnTouchListener {
             mIsDone = true;
         } else {
             notifyAction();
+        }
+        mBaseX = 0;
+    }
+
+    private void zoomEvent(MotionEvent event) {
+        if (mBaseX == 0) mBaseX = Math.abs(event.getX(0) - event.getX(1));
+        if (event.getAction() == MotionEvent.ACTION_CANCEL ||
+            event.getAction() == MotionEvent.ACTION_POINTER_UP) {
+            mIsTouchDown = true;
+            float currentX = Math.abs(event.getX(0) - event.getX(1));
+            if (currentX > mBaseX) onZoomOut();
+            else onZoomIn();
         }
     }
 }
