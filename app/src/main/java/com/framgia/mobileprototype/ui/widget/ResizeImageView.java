@@ -1,10 +1,10 @@
 package com.framgia.mobileprototype.ui.widget;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.framgia.mobileprototype.R;
@@ -15,7 +15,7 @@ import com.framgia.mobileprototype.mockdetail.MockDetailContract;
  * Project: mobile_prototype
  * Package: com.framgia.mobileprototype.ui.widget
  */
-public class ResizeImageView extends ImageView implements View.OnTouchListener {
+public class ResizeImageView extends AppCompatImageView implements View.OnTouchListener {
     private int mBaseX, mBaseY, mBaseW, mBaseH, mMargl, mMargt;
     private static final int MIN_WIDTH = 150;
     private MockDetailContract.Presenter mPresenter;

@@ -131,6 +131,7 @@ public class TransitionAdapter extends RecyclerView.Adapter<TransitionAdapter.Vi
         public void setName(String name) {
             this.mName = name;
         }
+
         public int getStartAnim() {
             return mStartAnim;
         }
