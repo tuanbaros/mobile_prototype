@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.databinding.BindingAdapter;
 import android.net.Uri;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerAdapter;
@@ -126,5 +127,17 @@ public class BindingAdapterUtil {
             chosen.setVisibility(View.VISIBLE);
             return;
         }
+    }
+
+    @BindingAdapter({"behavier"})
+    public static void setBehavier(RecyclerView recyclerView, final FloatingActionButton fab) {
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (dy > 0) fab.hide();
+                else fab.show();
+                super.onScrolled(recyclerView, dx, dy);
+            }
+        });
     }
 }
