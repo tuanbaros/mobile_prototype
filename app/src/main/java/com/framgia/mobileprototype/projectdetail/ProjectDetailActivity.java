@@ -283,7 +283,7 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
         if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case CAMERA_REQUEST_CODE:
-                    Uri cameraResultUri = getUriFromFile(Constant.FILE_PATH);
+                    Uri cameraResultUri = getUriFromFile(Constant.FILE_TEMP);
                     if (cameraResultUri != null) cropImage(cameraResultUri);
                     break;
                 case GALLERY_REQUEST_CODE:
@@ -352,6 +352,7 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
             intent.putExtra(EXTRA_PROJECT, mProject);
             setResult(RESULT_OK, intent);
         }
+        mProjectDetailPresenter.updateMockPosition();
         super.onBackPressed();
     }
 
@@ -425,10 +426,6 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
         return mIsRemoving;
     }
 
-    public void setIsRemoving(ObservableBoolean isRemoving) {
-        this.mIsRemoving = isRemoving;
-    }
-
     @Override
     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
         mItemTouchHelper.startDrag(viewHolder);
@@ -453,12 +450,13 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
                 onBackPressed();
                 break;
             case R.id.action_remove:
+                if (mIsRemoving.get()) break;
                 mMockAdapter.get().setIsRemoving(true);
                 mIsRemoving.set(true);
                 showNumberMockToRemove(DEFAULT_NUMBER_MOCKS_TO_REMOVE);
                 break;
             case R.id.action_play:
-                Mock mock = mMockAdapter.get().getFirtItem();
+                Mock mock = mProjectDetailPresenter.getFirstMockItem();
                 if (mock == null) {
                     Toast.makeText(this, R.string.msg_empty_mock, Toast.LENGTH_LONG).show();
                     return false;

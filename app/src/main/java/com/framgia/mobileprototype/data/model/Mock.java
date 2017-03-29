@@ -29,6 +29,7 @@ public class Mock extends BaseObservable implements Cloneable, Serializable {
     private String mProjectId;
     @SerializedName("elements")
     private List<Element> mElements;
+    private int mPosition;
     private boolean mCheckToDelete;
 
     public Mock(Cursor cursor) {
@@ -44,6 +45,8 @@ public class Mock extends BaseObservable implements Cloneable, Serializable {
             MockPersistenceContract.MockEntry.COLUMN_NAME_IMAGE));
         mProjectId = cursor.getString(cursor.getColumnIndexOrThrow(
             MockPersistenceContract.MockEntry.COLUMN_NAME_PROJECT_ID));
+        mPosition = cursor.getInt(cursor.getColumnIndexOrThrow(
+            MockPersistenceContract.MockEntry.COLUMN_NAME_POSITION));
     }
 
     public Mock() {
@@ -124,5 +127,13 @@ public class Mock extends BaseObservable implements Cloneable, Serializable {
     @Override
     public Object clone() throws CloneNotSupportedException {
         return super.clone();
+    }
+
+    public int getPosition() {
+        return mPosition;
+    }
+
+    public void setPosition(int position) {
+        mPosition = position;
     }
 }

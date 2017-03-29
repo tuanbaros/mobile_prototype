@@ -26,4 +26,5 @@ public class Constant {
     public static final String STATUS_BAR_HEIGHT = "status_bar_height";
     public static final String IMAGE_RECENT_PATH = "image/*";
     public static final String DEFAULT_GESTURE = "Tap";
+    public static final int MIN_SIZE = 150;
 }

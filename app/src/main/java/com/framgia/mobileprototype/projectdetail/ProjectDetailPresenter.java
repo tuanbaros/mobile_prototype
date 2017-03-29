@@ -26,6 +26,7 @@ public class ProjectDetailPresenter implements ProjectDetailContract.Presenter {
     public static final int NUMBER_BIT_RANDOM = 130;
     public static final int BASE_RANDOM = 32;
     private ArrayList<Mock> mRemoveMocks = new ArrayList<>();
+    private ArrayList<Mock> mSortMocks = new ArrayList<>();
     private Mock mMockCopy;
 
     public ProjectDetailPresenter(MockRepository mockRepository,
@@ -39,6 +40,7 @@ public class ProjectDetailPresenter implements ProjectDetailContract.Presenter {
         mMockRepository.getData(projectId, new DataSource.GetListCallback<Mock>() {
             @Override
             public void onSuccess(List<Mock> datas) {
+                mSortMocks.addAll(datas);
                 mProjectDetailView.mocksLoaded(datas);
             }
 
@@ -83,10 +85,17 @@ public class ProjectDetailPresenter implements ProjectDetailContract.Presenter {
         String entryId = new BigInteger(NUMBER_BIT_RANDOM, random).toString(BASE_RANDOM);
         mock.setEntryId(entryId);
         mock.setImage(entryId + Constant.DEFAULT_COMPRESS_FORMAT);
+        if (mSortMocks.size() > 1) {
+            Mock lastMock = mSortMocks.get(mSortMocks.size() - 1);
+            mock.setPosition(lastMock.getPosition() + 1);
+        } else {
+            mock.setPosition(0);
+        }
         long id = mMockRepository.saveData(mock);
         if (id < 1) return;
         mock.setId(String.valueOf(id));
         saveMockImage(mProjectDetailView.getMockImagePath(), mock.getImage());
+        mSortMocks.add(mock);
         mProjectDetailView.updateListMock(mock);
     }
 
@@ -203,7 +212,47 @@ public class ProjectDetailPresenter implements ProjectDetailContract.Presenter {
     }
 
     @Override
+    public void updateSortMock(final int fromPos, final int toPos) {
+        new Thread(new Runnable() {
+            @Override
+            public synchronized void run() {
+                Mock mock = mSortMocks.get(fromPos);
+                mSortMocks.remove(fromPos);
+                mSortMocks.add(toPos, mock);
+            }
+        }).start();
+    }
+
+    @Override
+    public void updateMockPosition() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < mSortMocks.size(); i++) {
+                    mSortMocks.get(i).setPosition(i);
+                    mMockRepository.updateData(mSortMocks.get(i));
+                }
+            }
+        }).start();
+    }
+
+    @Override
+    public Mock getFirstMockItem() {
+        return mSortMocks.get(0);
+    }
+
+    @Override
+    public void removeMockFromSortMock(Mock mock) {
+        mSortMocks.remove(mock);
+    }
+
+    @Override
     public void start() {
         mProjectDetailView.onPrepare();
+    }
+
+    @Override
+    public ArrayList<Mock> getSortMocks() {
+        return mSortMocks;
     }
 }

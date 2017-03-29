@@ -37,32 +37,27 @@ public class ElementView extends RelativeLayout implements View.OnTouchListener 
         view.bringToFront();
         final int X = (int) event.getRawX();
         final int Y = (int) event.getRawY();
-        switch (event.getAction() & MotionEvent.ACTION_MASK) {
+        RelativeLayout.LayoutParams params =
+            (RelativeLayout.LayoutParams) view.getLayoutParams();
+        switch (event.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
-                RelativeLayout.LayoutParams params =
-                    (RelativeLayout.LayoutParams) view.getLayoutParams();
                 mXDelta = X - params.leftMargin;
                 mYDelta = Y - params.topMargin;
                 break;
             case MotionEvent.ACTION_MOVE:
-                int sizeWidth = view.getWidth();
-                int sizeHeight = view.getHeight();
-                int maxLeft = parentView.getWidth() - sizeWidth;
-                int maxTop = parentView.getHeight() - sizeHeight;
+                int maxLeft = parentView.getWidth() - params.width;
+                int maxTop = parentView.getHeight() - params.height;
                 int minLeft = 0;
                 int minTop = 0;
-                RelativeLayout.LayoutParams layoutParams =
-                    (RelativeLayout.LayoutParams) view.getLayoutParams();
-                layoutParams.leftMargin = X - mXDelta;
-                layoutParams.topMargin = Y - mYDelta;
-                if (layoutParams.leftMargin < minLeft) layoutParams.leftMargin = minLeft;
-                if (layoutParams.topMargin < minTop) layoutParams.topMargin = minTop;
-                if (layoutParams.leftMargin > maxLeft) layoutParams.leftMargin = maxLeft;
-                if (layoutParams.topMargin > maxTop) layoutParams.topMargin = maxTop;
-                view.setLayoutParams(layoutParams);
+                params.leftMargin = X - mXDelta;
+                params.topMargin = Y - mYDelta;
+                if (params.leftMargin < minLeft) params.leftMargin = minLeft;
+                if (params.topMargin < minTop) params.topMargin = minTop;
+                if (params.leftMargin > maxLeft) params.leftMargin = maxLeft;
+                if (params.topMargin > maxTop) params.topMargin = maxTop;
+                view.setLayoutParams(params);
                 break;
         }
-        parentView.invalidate();
         if (mPresenter != null) mPresenter.openElementOption();
         parentView.setTag(view);
         return true;

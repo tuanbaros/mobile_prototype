@@ -56,6 +56,7 @@ public class DataImport {
             for (int i = 0; i < project.getMocks().size(); i++) {
                 Mock mock = project.getMocks().get(i);
                 mock.setProjectId(String.valueOf(projectId));
+                mock.setPosition(i);
                 long mockId = mMockRepository.saveData(mock);
                 if (mockId == DataHelper.INSERT_ERROR) continue;
                 for (int j = 0; j < mock.getElements().size(); j++) {

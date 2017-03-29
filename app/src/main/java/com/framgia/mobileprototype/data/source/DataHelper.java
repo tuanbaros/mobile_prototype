@@ -38,7 +38,8 @@ public class DataHelper extends SQLiteOpenHelper {
             MockPersistenceContract.MockEntry.COLUMN_NAME_TITLE + TEXT_TYPE + COMMA_SEP +
             MockPersistenceContract.MockEntry.COLUMN_NAME_NOTE + TEXT_TYPE + COMMA_SEP +
             MockPersistenceContract.MockEntry.COLUMN_NAME_IMAGE + TEXT_TYPE + COMMA_SEP +
-            MockPersistenceContract.MockEntry.COLUMN_NAME_PROJECT_ID + TEXT_TYPE +
+            MockPersistenceContract.MockEntry.COLUMN_NAME_PROJECT_ID + TEXT_TYPE + COMMA_SEP +
+            MockPersistenceContract.MockEntry.COLUMN_NAME_POSITION + INTEGER_TYPE +
             " )";
     private static final String SQL_CREATE_ELEMENT_ENTRIES =
         "CREATE TABLE " + ElementPersistenceContract.ElementEntry.TABLE_NAME + " (" +

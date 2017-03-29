@@ -13,5 +13,6 @@ public final class MockPersistenceContract {
         public static final String COLUMN_NAME_NOTE = "note";
         public static final String COLUMN_NAME_IMAGE = "image";
         public static final String COLUMN_NAME_PROJECT_ID = "project_id";
+        public static final String COLUMN_NAME_POSITION = "position";
     }
 }

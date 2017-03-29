@@ -57,5 +57,10 @@ public interface ProjectDetailContract {
         void takePhoto();
         void importFromGallery();
         void openDrawPanel();
+        void updateSortMock(int fromPos, int toPos);
+        void updateMockPosition();
+        Mock getFirstMockItem();
+        void removeMockFromSortMock(Mock mock);
+        ArrayList<Mock> getSortMocks();
     }
 }

@@ -32,5 +32,6 @@ public interface MockDetailContract {
         long saveElement(Element element);
         void deleteElement(Element element);
         void setElementGesture(String gesture);
+        String getMockId();
     }
 }

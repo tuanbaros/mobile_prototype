@@ -45,9 +45,10 @@ public class MockLocalDataSource extends DataHelper implements MockDataSource {
         SQLiteDatabase sqLiteDatabase = getWritableDatabase();
         String whereClause = MockPersistenceContract.MockEntry.COLUMN_NAME_PROJECT_ID + "=?";
         String[] whereArgs = {dataId};
+        String sortOrder = MockPersistenceContract.MockEntry.COLUMN_NAME_POSITION + " ASC";
         Cursor cursor = sqLiteDatabase.query(
             MockPersistenceContract.MockEntry.TABLE_NAME,
-            null, whereClause, whereArgs, null, null, null);
+            null, whereClause, whereArgs, null, null, sortOrder);
         if (cursor != null && cursor.getCount() > 0) {
             mocks = new ArrayList<>();
             while (cursor.moveToNext()) {
@@ -155,6 +156,8 @@ public class MockLocalDataSource extends DataHelper implements MockDataSource {
             MockPersistenceContract.MockEntry.COLUMN_NAME_IMAGE, mock.getImage());
         contentValues.put(
             MockPersistenceContract.MockEntry.COLUMN_NAME_PROJECT_ID, mock.getProjectId());
+        contentValues.put(
+            MockPersistenceContract.MockEntry.COLUMN_NAME_POSITION, mock.getPosition());
         return contentValues;
     }
 

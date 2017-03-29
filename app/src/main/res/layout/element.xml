@@ -6,6 +6,7 @@
     android:layout_height="@dimen/dp_150">
 
     <com.framgia.mobileprototype.ui.widget.ResizeImageView
+        android:id="@+id/top_left_resize_image_view"
         android:layout_width="@dimen/dp_16"
         android:layout_height="@dimen/dp_16"
         android:layout_alignParentLeft="true"
@@ -14,6 +15,7 @@
         android:background="@drawable/circle_view_resize"/>
 
     <com.framgia.mobileprototype.ui.widget.ResizeImageView
+        android:id="@+id/top_right_resize_image_view"
         android:layout_width="@dimen/dp_16"
         android:layout_height="@dimen/dp_16"
         android:layout_alignParentRight="true"
@@ -22,6 +24,7 @@
         android:background="@drawable/circle_view_resize"/>
 
     <com.framgia.mobileprototype.ui.widget.ResizeImageView
+        android:id="@+id/bottom_left_resize_image_view"
         android:layout_width="@dimen/dp_16"
         android:layout_height="@dimen/dp_16"
         android:layout_alignParentBottom="true"
@@ -30,6 +33,7 @@
         android:background="@drawable/circle_view_resize"/>
 
     <com.framgia.mobileprototype.ui.widget.ResizeImageView
+        android:id="@+id/bottom_right_resize_image_view"
         android:layout_width="@dimen/dp_16"
         android:layout_height="@dimen/dp_16"
         android:layout_alignParentBottom="true"

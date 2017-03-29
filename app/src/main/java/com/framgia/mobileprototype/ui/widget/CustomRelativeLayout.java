@@ -31,7 +31,7 @@ public class CustomRelativeLayout extends RelativeLayout implements View.OnTouch
             ElementView elementView = (ElementView) View.inflate(view.getContext(), R.layout
                 .element, null);
             elementView.setPresenter(mPresenter);
-            int size = (int) getResources().getDimension(R.dimen.dp_100);
+            int size = getResources().getDimensionPixelSize(R.dimen.dp_100);
             int maxLeft = view.getWidth() - size;
             int minLeft = MIN_MARGIN;
             int maxTop = view.getHeight() - size;
@@ -48,9 +48,10 @@ public class CustomRelativeLayout extends RelativeLayout implements View.OnTouch
             elementView.setLayoutParams(params);
             hideControlOfChildView();
             Element element = new Element();
-            element.setId((int) mPresenter.saveElement(element));
             element.setGesture(getResources().getString(R.string.title_gesture_tap));
             element.setTransition(getResources().getString(R.string.title_transition_default));
+            element.setMockId(mPresenter.getMockId());
+            element.setId((int) mPresenter.saveElement(element));
             elementView.setTag(R.string.title_element, element);
             this.addView(elementView);
             this.setTag(elementView);

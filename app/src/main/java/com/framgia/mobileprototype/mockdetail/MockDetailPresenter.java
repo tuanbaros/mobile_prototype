@@ -14,6 +14,7 @@ import java.util.List;
 public class MockDetailPresenter implements MockDetailContract.Presenter {
     private MockDetailContract.View mMockDetailView;
     private ElementRepository mElementRepository;
+    private String mMockId;
 
     public MockDetailPresenter(MockDetailContract.View mockDetailView,
                                ElementRepository elementRepository) {
@@ -23,6 +24,7 @@ public class MockDetailPresenter implements MockDetailContract.Presenter {
 
     @Override
     public void getElements(String mockId) {
+        mMockId = mockId;
         mElementRepository.getData(mockId, new DataSource.GetListCallback<Element>() {
             @Override
             public void onSuccess(List<Element> datas) {
@@ -74,5 +76,10 @@ public class MockDetailPresenter implements MockDetailContract.Presenter {
     @Override
     public void start() {
         mMockDetailView.onPrepare();
+    }
+
+    @Override
+    public String getMockId() {
+        return mMockId;
     }
 }

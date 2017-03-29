@@ -16,8 +16,17 @@ import com.framgia.mobileprototype.mockdetail.MockDetailContract;
  * Package: com.framgia.mobileprototype.ui.widget
  */
 public class ResizeImageView extends AppCompatImageView implements View.OnTouchListener {
-    private int mBaseX, mBaseY, mBaseW, mBaseH, mMargl, mMargt;
-    private static final int MIN_WIDTH = 150;
+    private int mBaseX;
+    private int mBaseY;
+    private int mBaseW;
+    private int mBaseH;
+    private int mBaseTopMargin;
+    private int mBaseLeftMargin;
+    private int mMaxWidth;
+    private int mMaxHeight;
+    private int mMaxTopMargin;
+    private int mMaxLeftMargin;
+    private int mMinSize;
     private MockDetailContract.Presenter mPresenter;
 
     public ResizeImageView(Context context, AttributeSet attrs) {
@@ -30,56 +39,90 @@ public class ResizeImageView extends AppCompatImageView implements View.OnTouchL
         ElementView elementView = (ElementView) view.getParent();
         setPresenter(elementView.getPresenter());
         if (mPresenter != null) mPresenter.openElementOption();
-        RelativeLayout parentView = (RelativeLayout) elementView.getParent();
-        int size = (int) getResources().getDimension(R.dimen.dp_100);
-        int j = (int) event.getRawX();
-        int i = (int) event.getRawY();
-        RelativeLayout.LayoutParams layoutParams =
+        int X = (int) event.getRawX();
+        int Y = (int) event.getRawY();
+        RelativeLayout.LayoutParams params =
             (RelativeLayout.LayoutParams) elementView.getLayoutParams();
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                elementView.invalidate();
-                mBaseX = j;
-                mBaseY = i;
-                mBaseW = elementView.getWidth();
-                mBaseH = elementView.getHeight();
-                int[] location = new int[2];
-                elementView.getLocationOnScreen(location);
-                mMargl = layoutParams.leftMargin;
-                mMargt = layoutParams.topMargin;
+                mBaseX = X;
+                mBaseY = Y;
+                mBaseW = params.width;
+                mBaseH = params.height;
+                mMinSize = getResources().getDimensionPixelSize(R.dimen.dp_100);
+                switch (view.getId()) {
+                    case R.id.top_right_resize_image_view:
+                        mBaseTopMargin = params.topMargin;
+                        mBaseLeftMargin = params.leftMargin;
+                        mMaxTopMargin = params.topMargin + mBaseH - mMinSize;
+                        mMaxHeight = mBaseTopMargin + mBaseH;
+                        break;
+                    case R.id.bottom_left_resize_image_view:
+                        mBaseTopMargin = params.topMargin;
+                        mBaseLeftMargin = params.leftMargin;
+                        mMaxLeftMargin = mBaseLeftMargin + mBaseW - mMinSize;
+                        mMaxWidth = mBaseLeftMargin + mBaseW;
+                        break;
+                    case R.id.top_left_resize_image_view:
+                        mBaseTopMargin = params.topMargin;
+                        mBaseLeftMargin = params.leftMargin;
+                        mMaxTopMargin = params.topMargin + mBaseH - mMinSize;
+                        mMaxHeight = mBaseTopMargin + mBaseH;
+                        mMaxLeftMargin = mBaseLeftMargin + mBaseW - mMinSize;
+                        mMaxWidth = mBaseLeftMargin + mBaseW;
+                        break;
+                    default:
+                        break;
+                }
                 break;
             case MotionEvent.ACTION_MOVE:
-                int maxLeft = parentView.getWidth() - size;
-                int maxTop = parentView.getHeight() - size;
-                int minLeft = 0;
-                int minTop = 0;
-                float f2 = (float) Math.toDegrees(Math.atan2(i - mBaseY, j - mBaseX));
-                float f1 = f2;
-                if (f2 < 0.0F) {
-                    f1 = f2 + 360.0F;
+                switch (view.getId()) {
+                    case R.id.top_right_resize_image_view:
+                        int deltaX = X - mBaseX;
+                        int deltaY = mBaseY - Y;
+                        params.width = mBaseW + deltaX;
+                        params.height = mBaseH + deltaY;
+                        params.leftMargin = mBaseLeftMargin;
+                        params.topMargin = mBaseTopMargin - deltaY;
+                        if (params.topMargin < 0) params.topMargin = 0;
+                        if (params.topMargin > mMaxTopMargin) params.topMargin = mMaxTopMargin;
+                        if (params.height > mMaxHeight) params.height = mMaxHeight;
+                        break;
+                    case R.id.top_left_resize_image_view:
+                        int deltaX2 = mBaseX - X;
+                        int deltaY2 = mBaseY - Y;
+                        params.width = mBaseW + deltaX2;
+                        params.height = mBaseH + deltaY2;
+                        params.topMargin = mBaseTopMargin - deltaY2;
+                        params.leftMargin = mBaseLeftMargin - deltaX2;
+                        if (params.topMargin < 0) params.topMargin = 0;
+                        if (params.topMargin > mMaxTopMargin) params.topMargin = mMaxTopMargin;
+                        if (params.height > mMaxHeight) params.height = mMaxHeight;
+                        if (params.leftMargin < 0) params.leftMargin = 0;
+                        if (params.leftMargin > mMaxLeftMargin) params.leftMargin = mMaxLeftMargin;
+                        if (params.width > mMaxWidth) params.width = mMaxWidth;
+                        break;
+                    case R.id.bottom_left_resize_image_view:
+                        int deltaX1 = mBaseX - X;
+                        int deltaY1 = Y - mBaseY;
+                        params.width = mBaseW + deltaX1;
+                        params.height = mBaseH + deltaY1;
+                        params.topMargin = mBaseTopMargin;
+                        params.leftMargin = mBaseLeftMargin - deltaX1;
+                        if (params.leftMargin < 0) params.leftMargin = 0;
+                        if (params.leftMargin > mMaxLeftMargin) params.leftMargin = mMaxLeftMargin;
+                        if (params.width > mMaxWidth) params.width = mMaxWidth;
+                        break;
+                    case R.id.bottom_right_resize_image_view:
+                        params.width = mBaseW + X - mBaseX;
+                        params.height = mBaseH + Y - mBaseY;
+                        break;
+                    default:
+                        break;
                 }
-                j -= mBaseX;
-                int k = i - mBaseY;
-                i = (int) (Math.sqrt(j * j + k * k) * Math.cos(Math.toRadians(f1
-                    - elementView.getRotation())));
-                j = (int) (Math.sqrt(i * i + k * k) * Math.sin(Math.toRadians(f1
-                    - elementView.getRotation())));
-                k = i * 2 + mBaseW;
-                int m = j * 2 + mBaseH;
-                if (k > MIN_WIDTH) {
-                    layoutParams.width = k;
-                    layoutParams.leftMargin = (mMargl - i);
-                }
-                if (m > MIN_WIDTH) {
-                    layoutParams.height = m;
-                    layoutParams.topMargin = (mMargt - j);
-                }
-                if (layoutParams.leftMargin < minLeft) layoutParams.leftMargin = minLeft;
-                if (layoutParams.topMargin < minTop) layoutParams.topMargin = minTop;
-                if (layoutParams.leftMargin > maxLeft) layoutParams.leftMargin = maxLeft;
-                if (layoutParams.topMargin > maxTop) layoutParams.topMargin = maxTop;
-                elementView.setLayoutParams(layoutParams);
-                elementView.performLongClick();
+                if (params.width < mMinSize) params.width = mMinSize;
+                if (params.height < mMinSize) params.height = mMinSize;
+                elementView.setLayoutParams(params);
                 break;
         }
         return true;

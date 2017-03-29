@@ -30,7 +30,6 @@ public class MockAdapter extends RecyclerView.Adapter<MockAdapter.ViewHolder> im
     private final OnStartDragListener mDragStartListener;
     private boolean mIsPortrait;
     private ObservableBoolean mIsRemoving = new ObservableBoolean();
-    private Mock mFirsItem, mTemp;
 
     public MockAdapter(Context context, List<Mock> mocks,
                        ProjectDetailContract.Presenter listener,
@@ -38,7 +37,6 @@ public class MockAdapter extends RecyclerView.Adapter<MockAdapter.ViewHolder> im
                        boolean isPortrait) {
         if (mocks != null) {
             mMocks.addAll(mocks);
-            mFirsItem = mMocks.get(0);
         }
         mLayoutInflater = LayoutInflater.from(context);
         mListener = listener;
@@ -51,7 +49,6 @@ public class MockAdapter extends RecyclerView.Adapter<MockAdapter.ViewHolder> im
             mMocks.add(mock);
             notifyDataSetChanged();
         }
-        if (mFirsItem == null) mFirsItem = mMocks.get(0);
     }
 
     public void removeItem(int position) {
@@ -61,17 +58,17 @@ public class MockAdapter extends RecyclerView.Adapter<MockAdapter.ViewHolder> im
 
     public void removeMultipItem(ArrayList<Mock> mocks) {
         for (Mock mock : mocks) {
-            mMocks.remove(mock);
-            if (mFirsItem == mock) mFirsItem = null;
+            mListener.removeMockFromSortMock(mock);
         }
+        mMocks.clear();
+        mMocks.addAll(mListener.getSortMocks());
         notifyDataSetChanged();
-        if (mMocks.size() > 0 && mFirsItem == null) mFirsItem = mMocks.get(0);
     }
 
     @Override
     public boolean onItemMove(int fromPosition, int toPosition) {
         notifyItemMoved(fromPosition, toPosition);
-        if (toPosition == 0) mFirsItem = mTemp;
+        mListener.updateSortMock(fromPosition, toPosition);
         return true;
     }
 
@@ -97,7 +94,6 @@ public class MockAdapter extends RecyclerView.Adapter<MockAdapter.ViewHolder> im
 
         @Override
         public boolean onLongClick(View view) {
-            mTemp = mItemMockBinding.getMock();
             mDragStartListener.onStartDrag(this);
             return true;
         }
@@ -130,9 +126,5 @@ public class MockAdapter extends RecyclerView.Adapter<MockAdapter.ViewHolder> im
 
     public boolean isPortrait() {
         return mIsPortrait;
-    }
-
-    public Mock getFirtItem() {
-        return mFirsItem;
     }
 }
