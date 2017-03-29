@@ -140,4 +140,22 @@ public class BindingAdapterUtil {
             }
         });
     }
+
+    @BindingAdapter({"mockImage", "rotate"})
+    public static void loadMockImage(ImageView view, String path, boolean rotate) {
+        String filePath = Constant.FILE_PATH + path;
+        File imgFile = new File(filePath);
+        if (imgFile.exists()) {
+            Glide.with(view.getContext())
+                .load(imgFile)
+                .transform(rotate ? new RotateTransformation(view.getContext(), 90f) : null)
+                .signature(new StringSignature(imgFile.getName() + imgFile.lastModified()))
+                .into(view);
+            return;
+        }
+        Glide.with(view.getContext())
+            .load(Uri.parse(Constant.ASSET_PATH + path))
+            .error(R.mipmap.ic_launcher)
+            .into(view);
+    }
 }

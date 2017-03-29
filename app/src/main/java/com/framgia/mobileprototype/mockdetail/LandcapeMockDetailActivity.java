@@ -24,7 +24,7 @@ import com.framgia.mobileprototype.data.model.Mock;
 import com.framgia.mobileprototype.data.model.Project;
 import com.framgia.mobileprototype.data.source.element.ElementLocalDataSource;
 import com.framgia.mobileprototype.data.source.element.ElementRepository;
-import com.framgia.mobileprototype.databinding.ActivityMockDetailBinding;
+import com.framgia.mobileprototype.databinding.ActivityLandcapeMockDetailBinding;
 import com.framgia.mobileprototype.databinding.DialogChoiceGestureBinding;
 import com.framgia.mobileprototype.linkto.LinkToActivity;
 import com.framgia.mobileprototype.ui.widget.CustomRelativeLayout;
@@ -33,12 +33,12 @@ import com.framgia.mobileprototype.ui.widget.ElementView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MockDetailActivity extends BaseActivity
+public class LandcapeMockDetailActivity extends BaseActivity
     implements MockDetailContract.View {
     public static final String EXTRA_MOCK = "EXTRA_MOCK";
     public static final String EXTRA_PROJECT = "EXTRA_PROJECT";
     public static final int LINKTO_REQUEST_CODE = 3;
-    private ActivityMockDetailBinding mMockDetailBinding;
+    private ActivityLandcapeMockDetailBinding mLandcapeMockDetailBinding;
     private MockDetailContract.Presenter mMockDetailPresenter;
     private Mock mMock;
     private ObservableBoolean mIsLoading = new ObservableBoolean();
@@ -50,7 +50,7 @@ public class MockDetailActivity extends BaseActivity
     private Dialog mGestureDialog;
 
     public static Intent getMockDetailIntent(Context context, Mock mock, Project project) {
-        Intent intent = new Intent(context, MockDetailActivity.class);
+        Intent intent = new Intent(context, LandcapeMockDetailActivity.class);
         intent.putExtra(EXTRA_MOCK, mock);
         intent.putExtra(EXTRA_PROJECT, project);
         return intent;
@@ -59,13 +59,13 @@ public class MockDetailActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mMockDetailBinding =
-            DataBindingUtil.setContentView(this, R.layout.activity_mock_detail);
+        mLandcapeMockDetailBinding =
+            DataBindingUtil.setContentView(this, R.layout.activity_landcape_mock_detail);
         mMockDetailPresenter = new MockDetailPresenter(this,
             ElementRepository.getInstance(ElementLocalDataSource.getInstance(this)));
-        mMockDetailBinding.setActivity(this);
-        mMockDetailBinding.setPresenter(mMockDetailPresenter);
-        mCustomRelativeLayout = mMockDetailBinding.relativeLayout;
+        mLandcapeMockDetailBinding.setActivity(this);
+        mLandcapeMockDetailBinding.setPresenter(mMockDetailPresenter);
+        mCustomRelativeLayout = mLandcapeMockDetailBinding.relativeLayout;
         start();
     }
 
@@ -188,7 +188,7 @@ public class MockDetailActivity extends BaseActivity
     }
 
     private void setUpView() {
-        mMockDetailBinding.setMock(mMock);
+        mLandcapeMockDetailBinding.setMock(mMock);
     }
 
     public ObservableBoolean getIsLoading() {

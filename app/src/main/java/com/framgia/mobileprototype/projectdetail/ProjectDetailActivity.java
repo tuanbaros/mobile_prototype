@@ -41,9 +41,11 @@ import com.framgia.mobileprototype.databinding.DialogAddMockBinding;
 import com.framgia.mobileprototype.databinding.DialogEditMockBinding;
 import com.framgia.mobileprototype.databinding.DialogPickImageBinding;
 import com.framgia.mobileprototype.demo.DemoActivity;
+import com.framgia.mobileprototype.demo.LandcapeDemoActivity;
 import com.framgia.mobileprototype.draw.DrawActivity;
 import com.framgia.mobileprototype.helper.ItemTouchCallbackHelper;
 import com.framgia.mobileprototype.helper.OnStartDragListener;
+import com.framgia.mobileprototype.mockdetail.LandcapeMockDetailActivity;
 import com.framgia.mobileprototype.mockdetail.MockDetailActivity;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
@@ -230,8 +232,13 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
 
     @Override
     public void showMockDetailUi(Mock mock) {
+        if (mProject.isPortrait()) {
+            startActivity(
+                MockDetailActivity.getMockDetailIntent(this, mock, mProject));
+            return;
+        }
         startActivity(
-            MockDetailActivity.getMockDetailIntent(this, mock, mProject));
+            LandcapeMockDetailActivity.getMockDetailIntent(this, mock, mProject));
     }
 
     @Override
@@ -461,7 +468,11 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
                     Toast.makeText(this, R.string.msg_empty_mock, Toast.LENGTH_LONG).show();
                     return false;
                 }
-                startActivity(DemoActivity.getDemoIntent(this, mock.getEntryId()));
+                if (mProject.isPortrait()) {
+                    startActivity(DemoActivity.getDemoIntent(this, mock.getEntryId()));
+                } else {
+                    startActivity(LandcapeDemoActivity.getDemoIntent(this, mock.getEntryId()));
+                }
                 break;
             default:
                 break;

@@ -8,9 +8,11 @@
 
         <import type="com.framgia.mobileprototype.util.LayoutManagerUtil"/>
 
+        <import type="com.framgia.mobileprototype.mockdetail.GestureAdapter"/>
+
         <variable
-            name="activity"
-            type="com.framgia.mobileprototype.mockdetail.MockDetailActivity"/>
+            name="gestureAdapter"
+            type="android.databinding.ObservableField"/>
     </data>
 
     <RelativeLayout
@@ -20,7 +22,7 @@
         <android.support.v7.widget.RecyclerView
             android:layout_width="@dimen/dp_280"
             android:layout_height="wrap_content"
-            app:adapter="@{activity.gestureAdapter}"
+            app:adapter="@{(GestureAdapter) gestureAdapter.get()}"
             app:layoutManager="@{LayoutManagerUtil.grid(Constant.NUMBER_COLUMN_GRID_PORTRAIT)}"/>
 
     </RelativeLayout>

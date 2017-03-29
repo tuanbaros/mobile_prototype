@@ -37,6 +37,15 @@
             android:name=".demo.DemoActivity"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".draw.DrawActivity"/>
+        <activity
+            android:name=".demo.LandcapeDemoActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
+            android:name=".mockdetail.LandcapeMockDetailActivity"
+            android:screenOrientation="landscape">
+        </activity>
     </application>
 
 </manifest>
