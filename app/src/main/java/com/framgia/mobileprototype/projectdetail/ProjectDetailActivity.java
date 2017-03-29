@@ -453,6 +453,7 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
                 onBackPressed();
                 break;
             case R.id.action_remove:
+                if (mIsRemoving.get()) break;
                 mMockAdapter.get().setIsRemoving(true);
                 mIsRemoving.set(true);
                 showNumberMockToRemove(DEFAULT_NUMBER_MOCKS_TO_REMOVE);
