@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View"/>
+
+        <variable
+            name="mock"
+            type="com.framgia.mobileprototype.data.model.Mock"/>
+
+        <variable
+            name="element"
+            type="com.framgia.mobileprototype.data.model.Element"/>
+
+        <variable
+            name="position"
+            type="int"/>
+
+        <variable
+            name="handler"
+            type="com.framgia.mobileprototype.linkto.LinkToItemActionHandler"/>
+    </data>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_width="@dimen/dp_160"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/dp_4"
+        android:clickable="@{!mock.id.equals(element.mockId)}"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:onClick="@{() -> handler.chooseMock(mock, element)}">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/image_mock"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_210"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:layout_marginRight="@dimen/dp_5"
+                android:layout_marginTop="@dimen/dp_5"
+                android:scaleType="fitXY"
+                app:imageUrl="@{mock.image}"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/image_mock"
+                android:layout_marginBottom="@dimen/dp_9"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:layout_marginTop="@dimen/dp_5"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:lines="1"
+                android:text="@{mock.title}"
+                android:textColor="@android:color/black"
+                android:textSize="@dimen/sp_14"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@drawable/border_item"
+                android:paddingBottom="@dimen/dp_5"
+                android:paddingLeft="@dimen/dp_10"
+                android:paddingRight="@dimen/dp_10"
+                android:paddingTop="@dimen/dp_5"
+                android:text="@string/title_editing"
+                android:textColor="@android:color/white"
+                android:visibility="@{mock.id.equals(element.mockId) ? View.VISIBLE : View.GONE}"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/link_to_selector"
+            android:visibility="@{mock.entryId.equals(element.linkTo) ? View.VISIBLE : View.GONE}">
+
+            <ImageView
+                android:layout_width="@dimen/dp_32"
+                android:layout_height="@dimen/dp_32"
+                android:layout_centerInParent="true"
+                android:src="@drawable/ic_image_pick"/>
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+</layout>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.framgia.mobileprototype.ui.widget.ElementView
+    android:id="@+id/element_view"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/dp_150"
+    android:layout_height="@dimen/dp_150">
+
+    <com.framgia.mobileprototype.ui.widget.ResizeImageView
+        android:id="@+id/top_left_resize_image_view"
+        android:layout_width="@dimen/dp_16"
+        android:layout_height="@dimen/dp_16"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:adjustViewBounds="true"
+        android:background="@drawable/circle_view_resize"/>
+
+    <com.framgia.mobileprototype.ui.widget.ResizeImageView
+        android:id="@+id/top_right_resize_image_view"
+        android:layout_width="@dimen/dp_16"
+        android:layout_height="@dimen/dp_16"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:adjustViewBounds="true"
+        android:background="@drawable/circle_view_resize"/>
+
+    <com.framgia.mobileprototype.ui.widget.ResizeImageView
+        android:id="@+id/bottom_left_resize_image_view"
+        android:layout_width="@dimen/dp_16"
+        android:layout_height="@dimen/dp_16"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:adjustViewBounds="true"
+        android:background="@drawable/circle_view_resize"/>
+
+    <com.framgia.mobileprototype.ui.widget.ResizeImageView
+        android:id="@+id/bottom_right_resize_image_view"
+        android:layout_width="@dimen/dp_16"
+        android:layout_height="@dimen/dp_16"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:adjustViewBounds="true"
+        android:background="@drawable/circle_view_resize"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:layout_margin="@dimen/dp_8"
+        android:background="@drawable/touch_selector"/>
+
+    <ImageView
+        android:layout_width="@dimen/dp_32"
+        android:layout_height="@dimen/dp_32"
+        android:src="@drawable/ic_gesture_tap"
+        android:layout_centerInParent="true"/>
+
+</com.framgia.mobileprototype.ui.widget.ElementView>

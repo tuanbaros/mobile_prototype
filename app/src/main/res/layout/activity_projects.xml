@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:bind="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="projectsActivity"
+            type="com.framgia.mobileprototype.projects.ProjectsActivity"/>
+
+        <variable
+            name="presenter"
+            type="com.framgia.mobileprototype.projects.ProjectsContract.Presenter"/>
+
+        <variable
+            name="listener"
+            type="android.support.design.widget.NavigationView.OnNavigationItemSelectedListener"/>
+    </data>
+
+    <android.support.v4.widget.DrawerLayout
+        android:id="@+id/drawer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        bind:isOpenDrawer="@{projectsActivity.isDrawerOpen}"
+        tools:openDrawer="start">
+
+        <include
+            android:id="@+id/app_bar"
+            layout="@layout/app_bar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            bind:activity="@{projectsActivity}"
+            bind:presenter="@{presenter}"/>
+
+        <android.support.design.widget.NavigationView
+            android:id="@+id/nav_view"
+            android:layout_width="@dimen/dp_300"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:fitsSystemWindows="true"
+            app:itemIconTint="@color/colorPrimaryDark"
+            app:menu="@menu/activity_projects_drawer"
+            app:navListener="@{listener}"/>
+
+    </android.support.v4.widget.DrawerLayout>
+</layout>

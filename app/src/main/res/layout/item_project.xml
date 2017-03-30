@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="project"
+            type="com.framgia.mobileprototype.data.model.Project"/>
+
+        <variable
+            name="position"
+            type="int"/>
+
+        <variable
+            name="handler"
+            type="com.framgia.mobileprototype.projects.ProjectItemActionHandler"/>
+    </data>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginLeft="@dimen/dp_9"
+        android:layout_marginRight="@dimen/dp_9"
+        android:layout_marginTop="@dimen/dp_5"
+        android:layout_marginBottom="@dimen/dp_4"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:onClick="@{() -> handler.openDetailProject(project)}">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/image_project_poster"
+                android:layout_width="@dimen/dp_100"
+                android:layout_height="@dimen/dp_100"
+                android:layout_margin="@dimen/dp_9"
+                android:src="@mipmap/ic_launcher"
+                android:scaleType="centerCrop"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                app:imageUrl="@{project.poster}"/>
+
+            <LinearLayout
+                android:id="@+id/linear_option"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true">
+
+                <ImageView
+                    android:layout_width="@dimen/dp_32"
+                    android:layout_height="@dimen/dp_32"
+                    android:padding="@dimen/dp_5"
+                    android:src="@drawable/ic_edit"
+                    android:onClick="@{() -> handler.editProject(project)}"/>
+
+                <ImageView
+                    android:layout_width="@dimen/dp_32"
+                    android:layout_height="@dimen/dp_32"
+                    android:padding="@dimen/dp_5"
+                    android:src="@drawable/ic_delete"
+                    android:onClick="@{() -> handler.removeProject(project, position)}"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_toRightOf="@+id/image_project_poster"
+                android:layout_toEndOf="@+id/image_project_poster"
+                android:layout_alignTop="@+id/image_project_poster"
+                android:layout_toLeftOf="@+id/linear_option"
+                android:layout_toStartOf="@+id/linear_option">
+
+                <TextView
+                    android:id="@+id/text_project_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:textStyle="bold"
+                    android:paddingBottom="@dimen/dp_5"
+                    android:textColor="@android:color/black"
+                    android:textSize="@dimen/sp_16"
+                    android:text="@{project.title}"/>
+
+                <TextView
+                    android:id="@+id/text_project_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:maxLines="3"
+                    android:ellipsize="end"
+                    android:paddingBottom="@dimen/dp_5"
+                    android:text="@{project.description}"/>
+
+                <TextView
+                    android:id="@+id/text_project_count_screen"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textStyle="italic"
+                    android:text="@{@string/msg_mock(project.numberMocks)}"/>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+</layout>

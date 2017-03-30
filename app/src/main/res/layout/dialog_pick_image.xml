@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="presenter"
+            type="com.framgia.mobileprototype.projectdetail.ProjectDetailContract.Presenter"/>
+    </data>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/PickImageTextView"
+            android:onClick="@{() -> presenter.openDrawPanel()}"
+            android:text="@string/action_drawing"/>
+
+        <TextView
+            style="@style/PickImageTextView"
+            android:onClick="@{() -> presenter.takePhoto()}"
+            android:text="@string/action_take_photos"/>
+
+        <TextView
+            style="@style/PickImageTextView"
+            android:onClick="@{() -> presenter.importFromGallery()}"
+            android:text="@string/action_import_from_gallery"/>
+
+    </LinearLayout>
+
+</layout>

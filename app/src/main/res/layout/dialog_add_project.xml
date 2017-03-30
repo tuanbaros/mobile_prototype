@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="presenter"
+            type="com.framgia.mobileprototype.projects.ProjectsContract.Presenter"/>
+
+        <variable
+            name="project"
+            type="com.framgia.mobileprototype.data.model.Project"/>
+
+        <variable
+            name="isPosterChanged"
+            type="boolean"/>
+    </data>
+
+    <ScrollView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/dp_20">
+
+            <TextView
+                android:layout_width="@dimen/dp_280"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimary"
+                android:text="@string/title_new_project"
+                android:textSize="@dimen/sp_20"/>
+
+            <EditText
+                android:id="@+id/edit_project_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"
+                android:hint="@string/msg_project_name"
+                android:text="@={project.title}"/>
+
+            <EditText
+                android:id="@+id/edit_project_descrition"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/dp_10"
+                android:hint="@string/msg_project_description"
+                android:text="@={project.description}"/>
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/dp_10"
+                android:checkedButton="@+id/button_portrait">
+
+                <RadioButton
+                    android:id="@+id/button_portrait"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/orientation_portrait"
+                    android:textSize="@dimen/sp_16"
+                    android:checked="@={project.portrait}"/>
+
+                <RadioButton
+                    android:id="@+id/button_landcape"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/orientation_landcape"
+                    android:layout_marginLeft="@dimen/dp_20"
+                    android:textSize="@dimen/sp_16"/>
+            </RadioGroup>
+
+            <LinearLayout
+                android:layout_marginTop="@dimen/dp_20"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/action_add_poster"
+                    android:textColor="@color/colorPrimary"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:onClick="@{() -> presenter.changePoster()}"/>
+
+                <ImageView
+                    android:id="@+id/image_project_poster"
+                    android:layout_width="@dimen/dp_80"
+                    android:layout_height="@dimen/dp_80"
+                    android:layout_marginLeft="@dimen/dp_20"
+                    android:src="@mipmap/ic_launcher"
+                    app:imageUrl="@{project.poster}"/>
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_marginTop="@dimen/dp_20"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/text_create_project"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/action_create_project"
+                    android:layout_alignParentRight="true"
+                    android:textColor="@color/colorPrimary"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:onClick="@{() -> presenter.storeProject(project, isPosterChanged)}"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/action_cancel_project"
+                    android:layout_toLeftOf="@+id/text_create_project"
+                    android:textColor="@color/colorPrimary"
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:onClick="@{() -> presenter.cancelCreateProject()}"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</layout>

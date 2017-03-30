@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View"/>
+
+        <import type="com.framgia.mobileprototype.Constant"/>
+
+        <import type="com.framgia.mobileprototype.util.LayoutManagerUtil"/>
+
+        <import type="android.support.v7.widget.LinearLayoutManager"/>
+
+        <variable
+            name="activity"
+            type="com.framgia.mobileprototype.linkto.LinkToActivity"/>
+
+        <variable
+            name="presenter"
+            type="com.framgia.mobileprototype.linkto.LinkToContract.Presenter"/>
+    </data>
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        tools:context=".linkto.LinkToActivity">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/tool_bar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:actionBar="@{activity}"
+                app:popupTheme="@style/AppTheme.PopupOverlay"/>
+
+        </android.support.design.widget.AppBarLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/dp_5"
+                    android:paddingLeft="@dimen/dp_10"
+                    android:paddingRight="@dimen/dp_10"
+                    android:paddingTop="@dimen/dp_5"
+                    android:text="@string/title_link_to_screen"
+                    android:textSize="@dimen/sp_16"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_linkto"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:paddingBottom="@dimen/dp_4"
+                    app:adapter="@{activity.linkToAdapter}"
+                    app:layoutManager="@{LayoutManagerUtil.linear(LinearLayoutManager.HORIZONTAL)}"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="@dimen/dp_5"
+                    android:paddingLeft="@dimen/dp_10"
+                    android:paddingRight="@dimen/dp_10"
+                    android:paddingTop="@dimen/dp_5"
+                    android:text="@string/title_transition"
+                    android:textSize="@dimen/sp_16"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_transition"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:paddingBottom="@dimen/dp_4"
+                    app:adapter="@{activity.transitionAdapter}"
+                    app:layoutManager="@{LayoutManagerUtil.linear(LinearLayoutManager.HORIZONTAL)}"/>
+
+            </LinearLayout>
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:visibility="@{activity.isLoading ? View.VISIBLE : View.GONE}"/>
+
+        </RelativeLayout>
+
+    </android.support.design.widget.CoordinatorLayout>
+</layout>

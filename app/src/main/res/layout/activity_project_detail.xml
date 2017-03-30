@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View"/>
+
+        <import type="com.framgia.mobileprototype.util.LayoutManagerUtil"/>
+
+        <variable
+            name="activity"
+            type="com.framgia.mobileprototype.projectdetail.ProjectDetailActivity"/>
+
+        <variable
+            name="presenter"
+            type="com.framgia.mobileprototype.projectdetail.ProjectDetailContract.Presenter"/>
+    </data>
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        tools:context=".projectdetail.ProjectDetailActivity">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/tool_bar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:actionBar="@{activity}"
+                app:popupTheme="@style/AppTheme.PopupOverlay"/>
+
+        </android.support.design.widget.AppBarLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/dp_4"
+                app:adapter="@{activity.mockAdapter}"
+                app:layoutManager="@{LayoutManagerUtil.grid(activity.numberColumns())}"
+                app:behavier="@{fab}"/>
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:visibility="@{activity.isLoading ? View.VISIBLE : View.GONE}"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:text="@string/msg_empty_mock"
+                android:textSize="@dimen/sp_24"
+                android:visibility="@{activity.isEmptyMock ? View.VISIBLE : View.GONE}"/>
+
+        </RelativeLayout>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/dp_16"
+            app:backgroundTint="@color/colorPrimary"
+            android:src="@{activity.isRemoving ? @drawable/ic_delete_light : @drawable/ic_plus}"
+            android:visibility="@{activity.isLoading ? View.GONE : View.VISIBLE}"
+            android:onClick="@{() -> presenter.checkAction(activity.isRemoving())}"/>
+
+    </android.support.design.widget.CoordinatorLayout>
+</layout>

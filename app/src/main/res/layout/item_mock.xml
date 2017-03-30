@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View"/>
+
+        <variable
+            name="mock"
+            type="com.framgia.mobileprototype.data.model.Mock"/>
+
+        <variable
+            name="position"
+            type="int"/>
+
+        <variable
+            name="adapter"
+            type="com.framgia.mobileprototype.projectdetail.MockAdapter"/>
+
+        <variable
+            name="handler"
+            type="com.framgia.mobileprototype.projectdetail.MockItemActionHandler"/>
+    </data>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="@dimen/dp_4"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:onClick="@{() -> handler.openMockDetail(mock)}">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/image_mock"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_170"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:layout_marginRight="@dimen/dp_5"
+                android:layout_marginTop="@dimen/dp_5"
+                android:scaleType="fitXY"
+                android:visibility="@{adapter.portrait ? View.VISIBLE : View.GONE}"
+                app:imageUrl="@{mock.image}"/>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_100"
+                android:layout_marginLeft="@dimen/dp_5"
+                android:layout_marginRight="@dimen/dp_5"
+                android:layout_marginTop="@dimen/dp_5"
+                android:scaleType="fitXY"
+                android:visibility="@{adapter.portrait ? View.GONE : View.VISIBLE}"
+                app:imageUrl="@{mock.image}"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/text_mock_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginBottom="@dimen/dp_9"
+                    android:layout_marginLeft="@dimen/dp_5"
+                    android:layout_marginTop="@dimen/dp_5"
+                    android:ellipsize="end"
+                    android:lines="1"
+                    android:text="@{mock.title}"
+                    android:textColor="@android:color/black"/>
+
+                <CheckBox
+                    android:id="@+id/checkbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:checked="@{mock.checkToDelete}"
+                    android:onCheckedChanged="@{(cb, isChecked) -> handler.completeChanged(mock, isChecked)}"
+                    android:visibility="@{adapter.isRemoving ? View.VISIBLE : View.GONE}"
+                    app:buttonTint="@color/colorPrimaryDark"/>
+
+                <ImageView
+                    android:id="@+id/image_edit_mock"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignBottom="@+id/text_mock_title"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignTop="@+id/text_mock_title"
+                    android:onClick="@{() -> handler.editMock(mock)}"
+                    android:src="@drawable/ic_edit_mock"
+                    android:visibility="@{adapter.isRemoving ? View.GONE : View.VISIBLE}"/>
+
+            </RelativeLayout>
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+</layout>

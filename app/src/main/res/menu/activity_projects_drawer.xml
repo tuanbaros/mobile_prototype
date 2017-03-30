@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_project"
+            android:icon="@drawable/ic_project"
+            android:title="@string/title_project"/>
+        <item
+            android:id="@+id/nav_introduction"
+            android:icon="@drawable/ic_introduction"
+            android:title="@string/title_introduction"/>
+        <item
+            android:icon="@drawable/ic_about"
+            android:id="@+id/nav_about"
+            android:title="@string/title_about"/>
+
+        <item
+            android:icon="@drawable/ic_rate"
+            android:id="@+id/nav_rate"
+            android:title="@string/title_rate"/>
+    </group>
+</menu>

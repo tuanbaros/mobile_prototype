@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="com.framgia.mobileprototype.Constant"/>
+
+        <import type="com.framgia.mobileprototype.util.LayoutManagerUtil"/>
+
+        <variable
+            name="activity"
+            type="com.framgia.mobileprototype.mockdetail.MockDetailActivity"/>
+    </data>
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="@dimen/dp_280"
+            android:layout_height="wrap_content"
+            app:adapter="@{activity.gestureAdapter}"
+            app:layoutManager="@{LayoutManagerUtil.grid(Constant.NUMBER_COLUMN_GRID_PORTRAIT)}"/>
+
+    </RelativeLayout>
+</layout>
