@@ -22,11 +22,10 @@
             type="com.framgia.mobileprototype.linkto.LinkToContract.Presenter"/>
     </data>
 
-    <android.support.design.widget.CoordinatorLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true"
-        tools:context=".linkto.LinkToActivity">
+        android:orientation="vertical">
 
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
@@ -43,15 +42,15 @@
 
         </android.support.design.widget.AppBarLayout>
 
-
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:orientation="vertical">
 
                 <TextView
@@ -62,16 +61,24 @@
                     android:paddingRight="@dimen/dp_10"
                     android:paddingTop="@dimen/dp_5"
                     android:text="@string/title_link_to_screen"
+                    android:textColor="@android:color/black"
                     android:textSize="@dimen/sp_16"/>
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycler_linkto"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
+                    android:layout_height="match_parent"
                     android:paddingBottom="@dimen/dp_4"
                     app:adapter="@{activity.linkToAdapter}"
                     app:layoutManager="@{LayoutManagerUtil.linear(LinearLayoutManager.HORIZONTAL)}"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -81,26 +88,26 @@
                     android:paddingRight="@dimen/dp_10"
                     android:paddingTop="@dimen/dp_5"
                     android:text="@string/title_transition"
+                    android:textColor="@android:color/black"
                     android:textSize="@dimen/sp_16"/>
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycler_transition"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
+                    android:layout_height="match_parent"
                     android:paddingBottom="@dimen/dp_4"
                     app:adapter="@{activity.transitionAdapter}"
                     app:layoutManager="@{LayoutManagerUtil.linear(LinearLayoutManager.HORIZONTAL)}"/>
 
             </LinearLayout>
 
-            <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:visibility="@{activity.isLoading ? View.VISIBLE : View.GONE}"/>
+        </LinearLayout>
 
-        </RelativeLayout>
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="@{activity.isLoading ? View.VISIBLE : View.GONE}"/>
 
-    </android.support.design.widget.CoordinatorLayout>
+    </LinearLayout>
 </layout>
