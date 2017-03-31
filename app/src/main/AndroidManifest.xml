@@ -20,6 +20,7 @@
         <activity
             android:name=".projects.ProjectsActivity"
             android:label="@string/title_project"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
@@ -27,16 +28,25 @@
             android:theme="@style/Base.Theme.AppCompat"/>
         <activity
             android:name=".projectdetail.ProjectDetailActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".about.AboutActivity"/>
-        <activity android:name=".mockdetail.MockDetailActivity"/>
+        <activity
+            android:name=".about.AboutActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".mockdetail.MockDetailActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".linkto.LinkToActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".demo.DemoActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".draw.DrawActivity"/>
+        <activity
+            android:name=".draw.DrawActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".demo.LandcapeDemoActivity"
             android:screenOrientation="landscape"
