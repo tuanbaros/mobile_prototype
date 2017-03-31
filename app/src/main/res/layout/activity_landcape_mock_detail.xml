@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View"/>
+
+        <variable
+            name="mock"
+            type="com.framgia.mobileprototype.data.model.Mock"/>
+
+        <variable
+            name="activity"
+            type="com.framgia.mobileprototype.mockdetail.LandcapeMockDetailActivity"/>
+
+        <variable
+            name="presenter"
+            type="com.framgia.mobileprototype.mockdetail.MockDetailContract.Presenter"/>
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/dp_16"
+        tools:context="com.framgia.mobileprototype.mockdetail.LandcapeMockDetailActivity">
+
+        <com.framgia.mobileprototype.ui.widget.CustomRelativeLayout
+            android:id="@+id/relative_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            app:touchHandler="@{presenter}">
+
+            <ImageView
+                android:id="@+id/image_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                android:adjustViewBounds="true"
+                app:imageUrl="@{mock.image}"/>
+
+        </com.framgia.mobileprototype.ui.widget.CustomRelativeLayout>
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="@{activity.isLoading ? View.VISIBLE : View.GONE}"/>
+
+    </RelativeLayout>
+</layout>

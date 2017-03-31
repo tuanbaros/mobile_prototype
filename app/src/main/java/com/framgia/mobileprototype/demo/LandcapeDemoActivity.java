@@ -21,30 +21,30 @@ import com.framgia.mobileprototype.data.source.element.ElementLocalDataSource;
 import com.framgia.mobileprototype.data.source.element.ElementRepository;
 import com.framgia.mobileprototype.data.source.mock.MockLocalDataSource;
 import com.framgia.mobileprototype.data.source.mock.MockRepository;
-import com.framgia.mobileprototype.databinding.ActivityDemoBinding;
+import com.framgia.mobileprototype.databinding.ActivityLandcapeDemoBinding;
 import com.framgia.mobileprototype.ui.widget.DemoView;
 import com.framgia.mobileprototype.util.ScreenSizeUtil;
 
 import java.util.List;
 
-public class DemoActivity extends AppCompatActivity
+public class LandcapeDemoActivity extends AppCompatActivity
     implements DemoContract.View, View.OnTouchListener {
     public static final String EXTRA_MOCK_ENTRY_ID = "EXTRA_MOCK_ENTRY_ID";
     public static final String EXTRA_TRANSITION = "EXTRA_TRANSITION";
     protected ObservableField<Mock> mMock = new ObservableField<>();
-    protected ActivityDemoBinding mDemoBinding;
+    protected ActivityLandcapeDemoBinding mDemoBinding;
     protected DemoContract.Presenter mDemoPresenter;
     protected ObservableBoolean mIsLoading = new ObservableBoolean();
     protected String mMockEntryId;
 
     public static Intent getDemoIntent(Context context, String mockEntryId) {
-        Intent intent = new Intent(context, DemoActivity.class);
+        Intent intent = new Intent(context, LandcapeDemoActivity.class);
         intent.putExtra(EXTRA_MOCK_ENTRY_ID, mockEntryId);
         return intent;
     }
 
     public static Intent getDemoIntent(Context context, String mockEntryId, String anim) {
-        Intent intent = new Intent(context, DemoActivity.class);
+        Intent intent = new Intent(context, LandcapeDemoActivity.class);
         intent.putExtra(EXTRA_MOCK_ENTRY_ID, mockEntryId);
         intent.putExtra(EXTRA_TRANSITION, anim);
         return intent;
@@ -56,7 +56,7 @@ public class DemoActivity extends AppCompatActivity
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
             WindowManager.LayoutParams.FLAG_FULLSCREEN);
         mDemoBinding =
-            DataBindingUtil.setContentView(this, R.layout.activity_demo);
+            DataBindingUtil.setContentView(this, R.layout.activity_landcape_demo);
         mDemoBinding.setActivity(this);
         mDemoPresenter = new DemoPresenter(this,
             ElementRepository.getInstance(ElementLocalDataSource.getInstance(this)),
@@ -127,7 +127,7 @@ public class DemoActivity extends AppCompatActivity
     @Override
     public void showNextScreen(String linkTo, String anim) {
         clearAllElement();
-        startActivity(DemoActivity.getDemoIntent(this, linkTo, anim));
+        startActivity(LandcapeDemoActivity.getDemoIntent(this, linkTo, anim));
         finish();
     }
 
