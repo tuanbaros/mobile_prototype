@@ -49,7 +49,7 @@ public class ResizeImageView extends AppCompatImageView implements View.OnTouchL
                 mBaseY = Y;
                 mBaseW = params.width;
                 mBaseH = params.height;
-                mMinSize = getResources().getDimensionPixelSize(R.dimen.dp_100);
+                mMinSize = getResources().getDimensionPixelSize(R.dimen.dp_50);
                 switch (view.getId()) {
                     case R.id.top_right_resize_image_view:
                         mBaseTopMargin = params.topMargin;
