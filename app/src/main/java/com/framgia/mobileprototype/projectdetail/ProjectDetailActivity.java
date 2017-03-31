@@ -275,7 +275,9 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
     @Override
     public void showDrawUi() {
         mPickImageDialog.cancel();
-        startActivityForResult(new Intent(this, DrawActivity.class), DRAW_REQUEST_CODE);
+        startActivityForResult(
+            DrawActivity.getDrawIntent(this, mProject),
+            DRAW_REQUEST_CODE);
     }
 
     @Override
