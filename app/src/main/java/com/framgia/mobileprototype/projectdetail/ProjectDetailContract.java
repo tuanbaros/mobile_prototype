@@ -3,6 +3,7 @@ package com.framgia.mobileprototype.projectdetail;
 import com.framgia.mobileprototype.BasePresenter;
 import com.framgia.mobileprototype.BaseView;
 import com.framgia.mobileprototype.data.model.Mock;
+import com.framgia.mobileprototype.data.model.Project;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +24,7 @@ public interface ProjectDetailContract {
         void pickImage();
         void showMockTitleEmpty();
         void updateListMock(Mock mock);
-        String getMockImagePath();
+        Object getMockImagePath();
         void setDefaultImagePath();
         void checkPermission();
         void emptyMockToRemove();
@@ -35,6 +36,8 @@ public interface ProjectDetailContract {
         void openCamera();
         void openGallery();
         void showDrawUi();
+        void showCloneMockDialogUi(List<Project> projects, Mock mock);
+        void closeCloneMockDialog();
     }
 
     interface Presenter extends BasePresenter {
@@ -44,7 +47,7 @@ public interface ProjectDetailContract {
         void openCreateMockDialog();
         void closeCreateMockDialog();
         void saveMock(Mock mock);
-        void saveMockImage(String path, String filename);
+        void saveMockImage(Object path, String filename);
         void addMockToRemoveList(Mock mock);
         void clearMockFromRemoveList(Mock mock);
         void deleteMocks();
@@ -62,5 +65,9 @@ public interface ProjectDetailContract {
         Mock getFirstMockItem();
         void removeMockFromSortMock(Mock mock);
         ArrayList<Mock> getSortMocks();
+        void openCloneMockDialog(boolean isPortrait, Mock mock);
+        void cloneMock(Mock mock);
+        void closeCloneMockDialog();
+        void setProjectId(int id);
     }
 }
