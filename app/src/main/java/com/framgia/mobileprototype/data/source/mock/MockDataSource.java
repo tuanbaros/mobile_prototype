@@ -1,6 +1,7 @@
 package com.framgia.mobileprototype.data.source.mock;
 
 import com.framgia.mobileprototype.data.model.Mock;
+import com.framgia.mobileprototype.data.model.Project;
 import com.framgia.mobileprototype.data.source.DataSource;
 
 /**
@@ -14,4 +15,5 @@ public interface MockDataSource extends DataSource<Mock> {
         void onMockNotAvailable();
     }
     void getMockByEntryId(String mockEntryId, GetCallback getCallback);
+    void getSameOrientationProject(String orientation, GetListCallback<Project> getListCallback);
 }

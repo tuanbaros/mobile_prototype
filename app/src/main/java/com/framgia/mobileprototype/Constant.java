@@ -27,4 +27,6 @@ public class Constant {
     public static final String IMAGE_RECENT_PATH = "image/*";
     public static final String DEFAULT_GESTURE = "Tap";
     public static final int MIN_SIZE = 150;
+    public static final int SAMPLE_PROJECT_ID = 1;
+    public static final int SAMPLE_MOCK_COUNT = 6;
 }
