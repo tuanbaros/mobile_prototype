@@ -48,9 +48,9 @@ public class TransitionAdapter extends RecyclerView.Adapter<TransitionAdapter.Vi
         mTransitions.add(new Transition(resources.getString(
             R.string.title_transition_slide_left), R.anim.slide_left, 0));
         mTransitions.add(new Transition(resources.getString(
-            R.string.title_transition_slide_bottom), R.anim.slide_top, 0));
+            R.string.title_transition_slide_bottom), R.anim.slide_bottom, 0));
         mTransitions.add(new Transition(resources.getString(
-            R.string.title_transition_slide_top), R.anim.slide_bottom, 0));
+            R.string.title_transition_slide_top), R.anim.slide_top, 0));
         mTransitions.add(new Transition(resources.getString(
             R.string.title_transition_push_up), R.anim.slide_top, R.anim.slide_out_bottom));
         mTransitions.add(new Transition(resources.getString(

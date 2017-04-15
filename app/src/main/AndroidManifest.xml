@@ -56,6 +56,11 @@
             android:name=".mockdetail.LandcapeMockDetailActivity"
             android:screenOrientation="landscape">
         </activity>
+        <activity
+            android:name=".linkto.LandspaceLinkToActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
     </application>
 
 </manifest>

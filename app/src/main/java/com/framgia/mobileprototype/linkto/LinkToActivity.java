@@ -24,7 +24,6 @@ import java.util.List;
 public class LinkToActivity extends BaseActivity implements LinkToContract.View {
     public static final String EXTRA_PROJECT = "EXTRA_PROJECT";
     public static final String EXTRA_ELEMENT = "EXTRA_ELEMENT";
-    public static final String EXTRA_MOCK_ENTRYID = "EXTRA_MOCK_ENTRYID";
     private ActivityLinkToBinding mLinkToBinding;
     private LinkToContract.Presenter mLinkToPresenter;
     private ObservableBoolean mIsLoading = new ObservableBoolean();
