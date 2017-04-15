@@ -102,4 +102,13 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.ViewHo
         }
         notifyDataSetChanged();
     }
+
+    public Project getItem(int id) {
+        for (Project project: mProjects) {
+            if (Integer.parseInt(project.getId()) == id) {
+                return project;
+            }
+        }
+        return null;
+    }
 }

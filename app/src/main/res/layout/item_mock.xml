@@ -92,7 +92,7 @@
                     android:layout_alignBottom="@+id/text_mock_title"
                     android:layout_alignParentRight="true"
                     android:layout_alignTop="@+id/text_mock_title"
-                    android:onClick="@{() -> handler.editMock(mock)}"
+                    android:onClick="@{(view) -> handler.openMockOption(view, adapter.portrait, mock)}"
                     android:src="@drawable/ic_edit_mock"
                     android:visibility="@{adapter.isRemoving ? View.GONE : View.VISIBLE}"/>
 

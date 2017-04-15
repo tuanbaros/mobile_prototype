@@ -50,6 +50,9 @@ import com.framgia.mobileprototype.util.ScreenSizeUtil;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -95,6 +98,7 @@ public class ProjectsActivity extends PermissionActivity implements
             ElementRepository.getInstance(ElementLocalDataSource.getInstance(this)));
         mProjectsBinding.setPresenter(mProjectsPresenter);
         mProjectsBinding.setListener(this);
+        EventBus.getDefault().register(this);
         start();
     }
 
@@ -459,5 +463,20 @@ public class ProjectsActivity extends PermissionActivity implements
             }
         });
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe
+    public void onEvent(ProjectEvent event) {
+        Project project = mProjectsAdapter.get().getItem(event.getId());
+        int base = project.getNumberMocks() + 1;
+        project.setNumberMocks(base);
+        base = mNumberMocks.get() + 1;
+        mNumberMocks.set(base);
     }
 }
