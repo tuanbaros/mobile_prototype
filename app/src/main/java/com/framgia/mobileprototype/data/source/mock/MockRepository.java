@@ -3,6 +3,8 @@ package com.framgia.mobileprototype.data.source.mock;
 import android.support.annotation.NonNull;
 
 import com.framgia.mobileprototype.data.model.Mock;
+import com.framgia.mobileprototype.data.model.Project;
+import com.framgia.mobileprototype.data.source.DataSource;
 
 /**
  * Created by tuannt on 22/02/2017.
@@ -52,5 +54,11 @@ public class MockRepository implements MockDataSource {
     @Override
     public void getMockByEntryId(String mockEntryId, GetCallback getCallback) {
         mMockLocalDataSource.getMockByEntryId(mockEntryId, getCallback);
+    }
+
+    @Override
+    public void getSameOrientationProject(String orientation,
+            GetListCallback<Project> getListCallback) {
+        mMockLocalDataSource.getSameOrientationProject(orientation, getListCallback);
     }
 }
