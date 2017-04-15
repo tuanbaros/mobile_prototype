@@ -26,6 +26,7 @@ import com.framgia.mobileprototype.data.source.element.ElementLocalDataSource;
 import com.framgia.mobileprototype.data.source.element.ElementRepository;
 import com.framgia.mobileprototype.databinding.ActivityLandcapeMockDetailBinding;
 import com.framgia.mobileprototype.databinding.DialogChoiceGestureBinding;
+import com.framgia.mobileprototype.linkto.LandspaceLinkToActivity;
 import com.framgia.mobileprototype.linkto.LinkToActivity;
 import com.framgia.mobileprototype.ui.widget.CustomRelativeLayout;
 import com.framgia.mobileprototype.ui.widget.ElementView;
@@ -222,7 +223,7 @@ public class LandcapeMockDetailActivity extends BaseActivity
             case R.id.action_link:
                 ElementView ev = (ElementView) mCustomRelativeLayout.getTag();
                 Element element = (Element) ev.getTag(R.string.title_element);
-                startActivityForResult(LinkToActivity.getLinkToIntent(
+                startActivityForResult(LandspaceLinkToActivity.getLinkToIntent(
                     this, mProject, element), LINKTO_REQUEST_CODE);
                 break;
             case R.id.action_gesture:
