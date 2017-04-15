@@ -8,8 +8,10 @@ import android.support.annotation.NonNull;
 
 import com.framgia.mobileprototype.Constant;
 import com.framgia.mobileprototype.data.model.Mock;
+import com.framgia.mobileprototype.data.model.Project;
 import com.framgia.mobileprototype.data.source.DataHelper;
 import com.framgia.mobileprototype.data.source.element.ElementPersistenceContract;
+import com.framgia.mobileprototype.data.source.project.ProjectPersistenceContract;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -176,6 +178,32 @@ public class MockLocalDataSource extends DataHelper implements MockDataSource {
         if (cursor != null) cursor.close();
         if (mock == null) getCallback.onMockNotAvailable();
         else getCallback.onMockLoaded(mock);
+        sqLiteDatabase.close();
+    }
+
+    @Override
+    public void getSameOrientationProject(String orientation,
+                                          GetListCallback<Project> getListCallback) {
+        List<Project> projects = null;
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        String sortOrder = ProjectPersistenceContract.ProjectEntry._ID + " DESC";
+        String whereClause = ProjectPersistenceContract.ProjectEntry.COLUMN_NAME_ORIENTATION + "=?";
+        String[] whereArgs = {orientation};
+        Cursor cursor = sqLiteDatabase.query(
+            ProjectPersistenceContract.ProjectEntry.TABLE_NAME,
+            null, whereClause, whereArgs, null, null, sortOrder);
+        if (cursor != null && cursor.getCount() > 0) {
+            projects = new ArrayList<>();
+            while (cursor.moveToNext()) {
+                projects.add(new Project(cursor));
+            }
+        }
+        if (cursor != null) cursor.close();
+        if (projects == null) {
+            getListCallback.onError();
+        } else {
+            getListCallback.onSuccess(projects);
+        }
         sqLiteDatabase.close();
     }
 }

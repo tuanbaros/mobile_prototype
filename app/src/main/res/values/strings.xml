@@ -88,4 +88,11 @@
     <string name="action_checkmark">Checkmark</string>
     <string name="title_transition_default">Default</string>
     <string name="title_transition_fade">Fade</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_clone">Clone</string>
+    <string name="title_clone_mock">Clone mock</string>
+    <string name="action_clone_mock">Clone</string>
+    <string name="msg_new_name">New name</string>
+    <string name="title_from_project">From project</string>
+    <string name="title_to_project">To project</string>
 </resources>

@@ -2,8 +2,12 @@ package com.framgia.mobileprototype.projectdetail;
 
 import com.framgia.mobileprototype.Constant;
 import com.framgia.mobileprototype.data.model.Mock;
+import com.framgia.mobileprototype.data.model.Project;
 import com.framgia.mobileprototype.data.source.DataSource;
 import com.framgia.mobileprototype.data.source.mock.MockRepository;
+import com.framgia.mobileprototype.projects.ProjectEvent;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -27,7 +31,10 @@ public class ProjectDetailPresenter implements ProjectDetailContract.Presenter {
     public static final int BASE_RANDOM = 32;
     private ArrayList<Mock> mRemoveMocks = new ArrayList<>();
     private ArrayList<Mock> mSortMocks = new ArrayList<>();
-    private Mock mMockCopy;
+    private Mock mBackUpMock;
+    private List<Project> mProjects;
+    private Mock mBaseMockClone;
+    private int mProjectId;
 
     public ProjectDetailPresenter(MockRepository mockRepository,
                                   ProjectDetailContract.View projectDetailView) {
@@ -81,32 +88,50 @@ public class ProjectDetailPresenter implements ProjectDetailContract.Presenter {
             mProjectDetailView.showMockTitleEmpty();
             return;
         }
+        savingMock(mock);
+    }
+
+    private void savingMock(Mock mock) {
         SecureRandom random = new SecureRandom();
         String entryId = new BigInteger(NUMBER_BIT_RANDOM, random).toString(BASE_RANDOM);
         mock.setEntryId(entryId);
         mock.setImage(entryId + Constant.DEFAULT_COMPRESS_FORMAT);
-        if (mSortMocks.size() > 1) {
-            Mock lastMock = mSortMocks.get(mSortMocks.size() - 1);
-            mock.setPosition(lastMock.getPosition() + 1);
-        } else {
-            mock.setPosition(0);
+        if (checkIsCurrentProject(mock)) {
+            if (mSortMocks.size() > 1) {
+                Mock lastMock = mSortMocks.get(mSortMocks.size() - 1);
+                mock.setPosition(lastMock.getPosition() + 1);
+            } else {
+                mock.setPosition(0);
+            }
         }
         long id = mMockRepository.saveData(mock);
         if (id < 1) return;
         mock.setId(String.valueOf(id));
         saveMockImage(mProjectDetailView.getMockImagePath(), mock.getImage());
-        mSortMocks.add(mock);
-        mProjectDetailView.updateListMock(mock);
+        if (checkIsCurrentProject(mock)) {
+            mSortMocks.add(mock);
+            mProjectDetailView.updateListMock(mock);
+        }
+    }
+
+    private boolean checkIsCurrentProject(Mock mock) {
+        return mBaseMockClone == null || mock.getProjectId().equals(mBaseMockClone.getProjectId());
     }
 
     @Override
-    public void saveMockImage(String path, String filename) {
+    public void saveMockImage(Object path, String filename) {
         if (path == null) return;
         String destinationFilename = Constant.FILE_PATH + filename;
         BufferedInputStream bis = null;
         BufferedOutputStream bos = null;
         try {
-            bis = new BufferedInputStream(new FileInputStream(path));
+            if (path instanceof String) {
+                bis = new BufferedInputStream(new FileInputStream((String) path));
+            } else if (path instanceof FileInputStream) {
+                bis = new BufferedInputStream((FileInputStream) path);
+            } else {
+                return;
+            }
             bos = new BufferedOutputStream(new FileOutputStream(destinationFilename, false));
             byte[] buf = new byte[1024];
             bis.read(buf);
@@ -169,7 +194,7 @@ public class ProjectDetailPresenter implements ProjectDetailContract.Presenter {
     @Override
     public void openEditMockDialog(Mock mock) {
         try {
-            mMockCopy = (Mock) mock.clone();
+            mBackUpMock = (Mock) mock.clone();
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
@@ -178,7 +203,7 @@ public class ProjectDetailPresenter implements ProjectDetailContract.Presenter {
 
     @Override
     public void closeEditMockDialog(Mock mock) {
-        mock.setTitle(mMockCopy.getTitle());
+        mock.setTitle(mBackUpMock.getTitle());
         mock.setImage(mock.getImage());
         mProjectDetailView.cancelEditMockDialog();
     }
@@ -254,5 +279,52 @@ public class ProjectDetailPresenter implements ProjectDetailContract.Presenter {
     @Override
     public ArrayList<Mock> getSortMocks() {
         return mSortMocks;
+    }
+
+    @Override
+    public void openCloneMockDialog(boolean isPortrait, Mock mock) {
+        mBaseMockClone = mock;
+        String orientation = isPortrait ? Project.PORTRAIT : Project.LANDSCAPE;
+        try {
+            final Mock cloneMock = (Mock) mock.clone();
+            if (mProjects == null) {
+                mMockRepository.getSameOrientationProject(orientation,
+                    new DataSource.GetListCallback<Project>() {
+                        @Override
+                        public void onSuccess(List<Project> datas) {
+                            mProjects = datas;
+                        }
+
+                        @Override
+                        public void onError() {
+                        }
+                    });
+            }
+            mProjectDetailView.showCloneMockDialogUi(mProjects, cloneMock);
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void cloneMock(Mock mock) {
+        if (mock.getTitle() == null || mock.getTitle().trim().equals("")) {
+            mock.setTitle(mBaseMockClone.getTitle());
+        }
+        savingMock(mock);
+        if (!mock.getProjectId().equals(mBaseMockClone.getProjectId())) {
+            EventBus.getDefault().post(new ProjectEvent(mProjectId));
+        }
+        closeCloneMockDialog();
+    }
+
+    @Override
+    public void closeCloneMockDialog() {
+        mProjectDetailView.closeCloneMockDialog();
+        mBaseMockClone = null;
+    }
+
+    public void setProjectId(int projectId) {
+        mProjectId = projectId;
     }
 }

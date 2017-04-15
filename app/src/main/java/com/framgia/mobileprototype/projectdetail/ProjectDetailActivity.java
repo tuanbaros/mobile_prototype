@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.AssetFileDescriptor;
+import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableBoolean;
@@ -24,7 +26,9 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -38,6 +42,7 @@ import com.framgia.mobileprototype.data.source.mock.MockLocalDataSource;
 import com.framgia.mobileprototype.data.source.mock.MockRepository;
 import com.framgia.mobileprototype.databinding.ActivityProjectDetailBinding;
 import com.framgia.mobileprototype.databinding.DialogAddMockBinding;
+import com.framgia.mobileprototype.databinding.DialogCloneMockBinding;
 import com.framgia.mobileprototype.databinding.DialogEditMockBinding;
 import com.framgia.mobileprototype.databinding.DialogPickImageBinding;
 import com.framgia.mobileprototype.demo.DemoActivity;
@@ -51,7 +56,9 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,10 +76,11 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
     private ObservableBoolean mIsLoading = new ObservableBoolean();
     private ObservableBoolean mIsEmptyMock = new ObservableBoolean();
     private ObservableField<MockAdapter> mMockAdapter = new ObservableField<>();
-    private Dialog mCreateMockDialog, mEditMockDialog, mPickImageDialog;
+    private Dialog mCreateMockDialog, mEditMockDialog, mPickImageDialog, mCloneMockDialog;
     private DialogAddMockBinding mAddMockBinding;
     private DialogEditMockBinding mEditMockBinding;
-    private String mMockImagePath;
+    private DialogCloneMockBinding mCloneMockBinding;
+    private Object mMockImagePath;
     private ArrayList<String> mDeniedPermissions = new ArrayList<>();
     private ItemTouchHelper mItemTouchHelper;
     private ObservableBoolean mIsRemoving = new ObservableBoolean();
@@ -176,7 +184,7 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
     }
 
     @Override
-    public String getMockImagePath() {
+    public Object getMockImagePath() {
         return mMockImagePath;
     }
 
@@ -278,6 +286,59 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
         startActivityForResult(
             DrawActivity.getDrawIntent(this, mProject),
             DRAW_REQUEST_CODE);
+    }
+
+    @Override
+    public void showCloneMockDialogUi(final List<Project> projects, final Mock mock) {
+        if (Integer.parseInt(mock.getId()) <= Constant.SAMPLE_MOCK_COUNT) {
+            AssetManager assetManager = getAssets();
+            try {
+                AssetFileDescriptor descriptor = assetManager.openFd(mock.getImage());
+                FileInputStream stream = descriptor.createInputStream();
+                mMockImagePath = stream;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            mMockImagePath = Constant.FILE_PATH + mock.getImage();
+        }
+        if (mCloneMockDialog == null) {
+            setUpCloneMockDialog();
+        }
+        mCloneMockBinding.setMock(mock);
+        mCloneMockBinding.setBaseName(mock.getTitle());
+        mCloneMockBinding.spinnerProject.setAdapter(new ProjectSpinnerAdapter(projects));
+        mCloneMockBinding.spinnerProject.setOnItemSelectedListener(
+            new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    mock.setProjectId(projects.get(i).getId());
+                    mProjectDetailPresenter.setProjectId(Integer.parseInt(mock.getProjectId()));
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+                }
+            });
+        mCloneMockDialog.show();
+    }
+
+    private void setUpCloneMockDialog() {
+        mCloneMockBinding = DataBindingUtil.inflate(getLayoutInflater(),
+            R.layout.dialog_clone_mock, null, false);
+        mCloneMockBinding.setPresenter(mProjectDetailPresenter);
+        mCloneMockBinding.setProject(mProject);
+        mCloneMockDialog = new Dialog(this);
+        mCloneMockDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        mCloneMockDialog.setContentView(mCloneMockBinding.getRoot());
+        mCloneMockDialog.setCanceledOnTouchOutside(false);
+    }
+
+    @Override
+    public void closeCloneMockDialog() {
+        if (mCloneMockDialog != null && mCloneMockDialog.isShowing()) {
+            mCloneMockDialog.cancel();
+        }
     }
 
     @Override
