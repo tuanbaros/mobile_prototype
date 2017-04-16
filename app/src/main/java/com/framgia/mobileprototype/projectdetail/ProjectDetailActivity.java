@@ -56,7 +56,6 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -290,18 +289,7 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
 
     @Override
     public void showCloneMockDialogUi(final List<Project> projects, final Mock mock) {
-        if (Integer.parseInt(mock.getId()) <= Constant.SAMPLE_MOCK_COUNT) {
-            AssetManager assetManager = getAssets();
-            try {
-                AssetFileDescriptor descriptor = assetManager.openFd(mock.getImage());
-                FileInputStream stream = descriptor.createInputStream();
-                mMockImagePath = stream;
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            mMockImagePath = Constant.FILE_PATH + mock.getImage();
-        }
+        setUpSourceCloneMock(mock);
         if (mCloneMockDialog == null) {
             setUpCloneMockDialog();
         }
@@ -313,6 +301,7 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                     mock.setProjectId(projects.get(i).getId());
+                    mock.setPosition(projects.get(i).getNumberMocks());
                     mProjectDetailPresenter.setProjectId(Integer.parseInt(mock.getProjectId()));
                 }
 
@@ -321,6 +310,20 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
                 }
             });
         mCloneMockDialog.show();
+    }
+
+    private void setUpSourceCloneMock(Mock mock) {
+        if (Integer.parseInt(mock.getId()) <= Constant.SAMPLE_MOCK_COUNT) {
+            AssetManager assetManager = getAssets();
+            try {
+                AssetFileDescriptor descriptor = assetManager.openFd(mock.getImage());
+                mMockImagePath = descriptor.createInputStream();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            mMockImagePath = Constant.FILE_PATH + mock.getImage();
+        }
     }
 
     private void setUpCloneMockDialog() {

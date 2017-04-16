@@ -202,8 +202,29 @@ public class MockLocalDataSource extends DataHelper implements MockDataSource {
         if (projects == null) {
             getListCallback.onError();
         } else {
+            for (Project project : projects) {
+                project.setNumberMocks(countMocks(project.getId()));
+            }
             getListCallback.onSuccess(projects);
         }
         sqLiteDatabase.close();
+    }
+
+    private int countMocks(String projectId) {
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        int count = 0;
+        String[] columns = {"COUNT(*)"};
+        String selection = MockPersistenceContract.MockEntry.COLUMN_NAME_PROJECT_ID + " = ?";
+        String[] selectionArgs = {projectId};
+        Cursor cursor = sqLiteDatabase.query(
+            MockPersistenceContract.MockEntry.TABLE_NAME, columns, selection, selectionArgs,
+            null, null, null);
+        if (cursor == null) return 0;
+        if (cursor.moveToFirst()) {
+            count = cursor.getInt(0);
+        }
+        cursor.close();
+        sqLiteDatabase.close();
+        return count;
     }
 }
