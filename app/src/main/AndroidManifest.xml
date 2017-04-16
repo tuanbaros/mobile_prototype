@@ -49,8 +49,7 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".demo.LandcapeDemoActivity"
-            android:screenOrientation="landscape"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:screenOrientation="landscape">
         </activity>
         <activity
             android:name=".mockdetail.LandcapeMockDetailActivity"

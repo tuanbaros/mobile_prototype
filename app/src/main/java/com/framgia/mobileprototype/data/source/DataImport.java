@@ -42,12 +42,15 @@ public class DataImport {
             String line;
             while ((line = reader.readLine()) != null) result.append(line);
             Project project = new Gson().fromJson(result.toString(), Project.class);
-            float scaleWidth = (float) ScreenSizeUtil.sChildWidth / project.getWidth();
-            float scaleHeight = (float) ScreenSizeUtil.sChildHeight / project.getHeight();
+            float scaleWidth, scaleHeight;
             if (project.getOrientation().equals(Project.LANDSCAPE)) {
+                scaleWidth = (float) ScreenSizeUtil.sChildHeight / project.getWidth();
+                scaleHeight = (float) ScreenSizeUtil.sChildWidth / project.getHeight();
                 project.setWidth(ScreenSizeUtil.sHeight);
                 project.setHeight(ScreenSizeUtil.sWidth);
             } else {
+                scaleWidth = (float) ScreenSizeUtil.sChildWidth / project.getWidth();
+                scaleHeight = (float) ScreenSizeUtil.sChildHeight / project.getHeight();
                 project.setWidth(ScreenSizeUtil.sWidth);
                 project.setHeight(ScreenSizeUtil.sHeight);
             }

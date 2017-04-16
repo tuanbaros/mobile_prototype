@@ -7,13 +7,16 @@ import android.databinding.DataBindingUtil;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
 
+import com.framgia.mobileprototype.Constant;
 import com.framgia.mobileprototype.R;
 import com.framgia.mobileprototype.data.model.Element;
 import com.framgia.mobileprototype.data.model.Mock;
@@ -61,7 +64,6 @@ public class LandcapeDemoActivity extends AppCompatActivity
         mDemoPresenter = new DemoPresenter(this,
             ElementRepository.getInstance(ElementLocalDataSource.getInstance(this)),
             MockRepository.getInstance(MockLocalDataSource.getInstance(this)));
-        start();
     }
 
     public ObservableField<Mock> getMock() {
@@ -91,14 +93,16 @@ public class LandcapeDemoActivity extends AppCompatActivity
         for (Element element : elements) {
             if (TextUtils.isEmpty(element.getLinkTo())) continue;
             DemoView view = new DemoView(this, element.getGesture(), mDemoPresenter);
-            int width = (int) (element.getWidth() * ScreenSizeUtil.sScaleWidth);
-            int height = (int) (element.getHeight() * ScreenSizeUtil.sScaleHeight);
+            int width = (int) (element.getWidth() * ScreenSizeUtil.sScaleLandscapeWidth);
+            int height = (int) (element.getHeight() * ScreenSizeUtil.sScaleLandscapeHeight);
             int paddingSize = (int) getResources().getDimension(R.dimen.dp_8);
             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
                 width - 2 * paddingSize,
                 height - 2 * paddingSize);
-            params.leftMargin = (int) (element.getX() * ScreenSizeUtil.sScaleWidth) + paddingSize;
-            params.topMargin = (int) (element.getY() * ScreenSizeUtil.sScaleHeight) + paddingSize;
+            params.leftMargin =
+                (int) (element.getX() * ScreenSizeUtil.sScaleLandscapeWidth) + paddingSize;
+            params.topMargin =
+                (int) (element.getY() * ScreenSizeUtil.sScaleLandscapeHeight) + paddingSize;
             view.setLayoutParams(params);
             view.setTag(R.string.title_link_to, element.getLinkTo());
             view.setTag(R.string.title_element, element);
@@ -224,5 +228,37 @@ public class LandcapeDemoActivity extends AppCompatActivity
         if (resources.getString(R.string.title_transition_push_left).equals(anim)) {
             overridePendingTransition(R.anim.slide_left, R.anim.slide_out_left);
         }
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        ActionBar actionBar = getSupportActionBar();
+        if (ScreenSizeUtil.sScaleLandscapeWidth == 0) {
+            if (actionBar != null) {
+                int actionBarHeight = actionBar.getHeight();
+                int statusBarHeight = getStatusBarHeight();
+                int paddingDistance = 2 * (int) getResources().getDimension(R.dimen.dp_16);
+                ScreenSizeUtil.sChildLandscapeWidth = ScreenSizeUtil.sHeight - (paddingDistance);
+                ScreenSizeUtil.sChildLandscapeHeight =
+                    ScreenSizeUtil.sWidth - actionBarHeight - statusBarHeight - paddingDistance;
+                ScreenSizeUtil.sScaleLandscapeWidth =
+                    (float) ScreenSizeUtil.sHeight / ScreenSizeUtil.sChildLandscapeWidth;
+                ScreenSizeUtil.sScaleLandscapeHeight =
+                    (float) ScreenSizeUtil.sWidth / ScreenSizeUtil.sChildLandscapeHeight;
+            }
+        }
+        if (actionBar != null) actionBar.hide();
+        start();
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier(
+            Constant.STATUS_BAR_HEIGHT, Constant.DIMEN, Constant.ANDROID);
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
     }
 }
