@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableBoolean;
-import android.databinding.ObservableField;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
@@ -16,8 +15,8 @@ import android.view.View;
 import android.view.Window;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-
 import com.framgia.mobileprototype.BaseActivity;
+import com.framgia.mobileprototype.Constant;
 import com.framgia.mobileprototype.R;
 import com.framgia.mobileprototype.data.model.Element;
 import com.framgia.mobileprototype.data.model.Mock;
@@ -29,24 +28,22 @@ import com.framgia.mobileprototype.databinding.DialogChoiceGestureBinding;
 import com.framgia.mobileprototype.linkto.LinkToActivity;
 import com.framgia.mobileprototype.ui.widget.CustomRelativeLayout;
 import com.framgia.mobileprototype.ui.widget.ElementView;
-
+import com.framgia.mobileprototype.util.ScreenSizeUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MockDetailActivity extends BaseActivity
-    implements MockDetailContract.View {
+public class MockDetailActivity extends BaseActivity implements MockDetailContract.View {
     public static final String EXTRA_MOCK = "EXTRA_MOCK";
     public static final String EXTRA_PROJECT = "EXTRA_PROJECT";
     public static final int LINKTO_REQUEST_CODE = 3;
     private ActivityMockDetailBinding mMockDetailBinding;
-    private MockDetailContract.Presenter mMockDetailPresenter;
-    private Mock mMock;
+    protected MockDetailContract.Presenter mMockDetailPresenter;
+    protected Mock mMock;
     private ObservableBoolean mIsLoading = new ObservableBoolean();
     private MenuItem mRemoveItem, mLinkToItem, mGestureItem;
-    private Project mProject;
-    private CustomRelativeLayout mCustomRelativeLayout;
-    public ObservableField<GestureAdapter> mGestureAdapter = new ObservableField<>();
-    private DialogChoiceGestureBinding mDialogChoiceGestureBinding;
+    protected Project mProject;
+    protected CustomRelativeLayout mCustomRelativeLayout;
+    private GestureAdapter mGestureAdapter;
     private Dialog mGestureDialog;
 
     public static Intent getMockDetailIntent(Context context, Mock mock, Project project) {
@@ -59,14 +56,12 @@ public class MockDetailActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mMockDetailBinding =
-            DataBindingUtil.setContentView(this, R.layout.activity_mock_detail);
+        mMockDetailBinding = DataBindingUtil.setContentView(this, R.layout.activity_mock_detail);
         mMockDetailPresenter = new MockDetailPresenter(this,
-            ElementRepository.getInstance(ElementLocalDataSource.getInstance(this)));
+                ElementRepository.getInstance(ElementLocalDataSource.getInstance(this)));
         mMockDetailBinding.setActivity(this);
         mMockDetailBinding.setPresenter(mMockDetailPresenter);
         mCustomRelativeLayout = mMockDetailBinding.relativeLayout;
-        start();
     }
 
     @Override
@@ -82,20 +77,23 @@ public class MockDetailActivity extends BaseActivity
         mIsLoading.set(false);
     }
 
-    private void setUpElement(List<Element> elements) {
+    protected void setUpElement(List<Element> elements) {
+        int paddingSize = (int) getResources().getDimension(R.dimen.dp_8);
+        float sw = (float) 1 / ScreenSizeUtil.sScaleWidth;
+        float sh = (float) 1 / ScreenSizeUtil.sScaleHeight;
         for (Element element : elements) {
             ElementView elementView =
-                (ElementView) View.inflate(getBaseContext(), R.layout.element, null);
+                    (ElementView) View.inflate(getBaseContext(), R.layout.element, null);
             elementView.setTag(R.string.title_element, element);
-            RelativeLayout.LayoutParams params =
-                new RelativeLayout.LayoutParams(element.getWidth(), element.getHeight());
-            params.leftMargin = element.getX();
-            params.topMargin = element.getY();
+            int width = (Math.round(element.getWidth() * sw)) + 2 * paddingSize;
+            int height = (Math.round(element.getHeight() * sh)) + 2 * paddingSize;
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, height);
+            params.leftMargin = Math.round(element.getX() * sw) - paddingSize;
+            params.topMargin = Math.round(element.getY() * sh) - paddingSize;
             elementView.setLayoutParams(params);
             elementView.setPresenter(mMockDetailPresenter);
             elementView.setGesture(element.getGesture());
-            if (!TextUtils.isEmpty(element.getLinkTo()))
-                elementView.setLinkTo(element.getLinkTo());
+            if (!TextUtils.isEmpty(element.getLinkTo())) elementView.setLinkTo(element.getLinkTo());
             mCustomRelativeLayout.addView(elementView);
         }
         mCustomRelativeLayout.hideControlOfChildView();
@@ -126,15 +124,22 @@ public class MockDetailActivity extends BaseActivity
             Toast.makeText(this, R.string.msg_empty_element, Toast.LENGTH_SHORT).show();
             mCustomRelativeLayout.setEnabled(true);
         } else {
+            int paddingSize = (int) getResources().getDimension(R.dimen.dp_8);
             List<Element> elements = new ArrayList<>();
             for (int i = 1; i < mCustomRelativeLayout.getChildCount(); i++) {
                 ElementView elementView = (ElementView) mCustomRelativeLayout.getChildAt(i);
                 Element element = (Element) elementView.getTag(R.string.title_element);
                 element.setMockId(mMock.getId());
-                element.setX((int) elementView.getX());
-                element.setY((int) elementView.getY());
-                element.setWidth(elementView.getWidth());
-                element.setHeight(elementView.getHeight());
+                int x = Math.round((elementView.getX() + paddingSize) * ScreenSizeUtil.sScaleWidth);
+                int y = Math.round((elementView.getY() + paddingSize) * ScreenSizeUtil.sScaleHeight);
+                int width = Math.round((elementView.getWidth() - 2 * paddingSize)
+                        * ScreenSizeUtil.sScaleWidth);
+                int height = Math.round((elementView.getHeight() - 2 * paddingSize)
+                        * ScreenSizeUtil.sScaleHeight);
+                element.setX(x);
+                element.setY(y);
+                element.setWidth(width);
+                element.setHeight(height);
                 if (elementView.getTag() != null) {
                     element.setLinkTo((String) elementView.getTag());
                 }
@@ -216,14 +221,14 @@ public class MockDetailActivity extends BaseActivity
                 ElementView elementView = (ElementView) mCustomRelativeLayout.getTag();
                 mCustomRelativeLayout.removeView(elementView);
                 mMockDetailPresenter.deleteElement(
-                    (Element) elementView.getTag(R.string.title_element));
+                        (Element) elementView.getTag(R.string.title_element));
                 hideElementOption();
                 break;
             case R.id.action_link:
                 ElementView ev = (ElementView) mCustomRelativeLayout.getTag();
                 Element element = (Element) ev.getTag(R.string.title_element);
-                startActivityForResult(LinkToActivity.getLinkToIntent(
-                    this, mProject, element), LINKTO_REQUEST_CODE);
+                startActivityForResult(LinkToActivity.getLinkToIntent(this, mProject, element),
+                        LINKTO_REQUEST_CODE);
                 break;
             case R.id.action_gesture:
                 showGestureDialog();
@@ -235,19 +240,24 @@ public class MockDetailActivity extends BaseActivity
     }
 
     private void setUpGestureDialog() {
-        mDialogChoiceGestureBinding = DataBindingUtil.inflate(getLayoutInflater(),
-            R.layout.dialog_choice_gesture, null, false);
+        DialogChoiceGestureBinding dialogChoiceGestureBinding = DataBindingUtil.inflate(
+                getLayoutInflater(), R.layout.dialog_choice_gesture, null, false);
         mGestureDialog = new Dialog(this);
-        mDialogChoiceGestureBinding.setGestureAdapter(mGestureAdapter);
+        if (mGestureAdapter == null) {
+            mGestureAdapter = new GestureAdapter(
+                    this, getResources().getString(R.string.title_gesture_tap),
+                    mMockDetailPresenter);
+        }
+        dialogChoiceGestureBinding.setGestureAdapter(mGestureAdapter);
         mGestureDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        mGestureDialog.setContentView(mDialogChoiceGestureBinding.getRoot());
+        mGestureDialog.setContentView(dialogChoiceGestureBinding.getRoot());
     }
 
-    private void showGestureDialog() {
+    protected void showGestureDialog() {
         if (mGestureDialog == null) setUpGestureDialog();
         ElementView elementView = (ElementView) mCustomRelativeLayout.getTag();
         Element element = (Element) elementView.getTag(R.string.title_element);
-        mGestureAdapter.set(new GestureAdapter(this, element.getGesture(), mMockDetailPresenter));
+        mGestureAdapter.updateStringGesture(element.getGesture());
         mGestureDialog.show();
     }
 
@@ -280,11 +290,38 @@ public class MockDetailActivity extends BaseActivity
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public ObservableField<GestureAdapter> getGestureAdapter() {
-        return mGestureAdapter;
-    }
-
     public Project getProject() {
         return mProject;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if (ScreenSizeUtil.sScaleWidth == 0 || ScreenSizeUtil.sScaleHeight == 0) {
+            ActionBar actionBar = getSupportActionBar();
+            if (actionBar != null) {
+                int actionBarHeight = actionBar.getHeight();
+                int statusBarHeight = getStatusBarHeight();
+                int paddingDistance = 2 * (int) getResources().getDimension(R.dimen.dp_16);
+                int childWidth = ScreenSizeUtil.sWidth - paddingDistance;
+                int childHeight = ScreenSizeUtil.sHeight
+                        - actionBarHeight
+                        - statusBarHeight
+                        - paddingDistance;
+                ScreenSizeUtil.sScaleWidth = (float) ScreenSizeUtil.sWidth / childWidth;
+                ScreenSizeUtil.sScaleHeight = (float) ScreenSizeUtil.sHeight / childHeight;
+            }
+        }
+        start();
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    protected int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier(Constant.STATUS_BAR_HEIGHT, Constant.DIMEN,
+                Constant.ANDROID);
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
     }
 }

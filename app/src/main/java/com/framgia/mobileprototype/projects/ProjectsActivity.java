@@ -16,7 +16,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.SearchView;
 import android.util.DisplayMetrics;
@@ -65,7 +64,7 @@ public class ProjectsActivity extends PermissionActivity implements
     NavigationView.OnNavigationItemSelectedListener {
     private static final String EXTRA_FIRST_OPEN_APP = "EXTRA_FIRST_OPEN_APP";
     private static final int PROJECT_DETAIL_REQUEST_CODE = 1;
-    private static final String SAMPLE_PROJECT_FILE_NAME = "sample_project.json";
+    private static final String SAMPLE_PROJECT_FILE_NAME = "sample.json";
     private ActivityProjectsBinding mProjectsBinding;
     private ObservableBoolean mIsDrawerOpen = new ObservableBoolean();
     private ActionBarDrawerToggle mActionBarDrawerToggle;
@@ -100,6 +99,7 @@ public class ProjectsActivity extends PermissionActivity implements
         mProjectsBinding.setListener(this);
         EventBus.getDefault().register(this);
         start();
+        mProjectsPresenter.start();
     }
 
     private void setUpDrawerListener() {
@@ -414,35 +414,6 @@ public class ProjectsActivity extends PermissionActivity implements
                 break;
         }
         return false;
-    }
-
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            int actionBarHeight = actionBar.getHeight();
-            int statusBarHeight = getStatusBarHeight();
-            int paddingDistance = 2 * (int) getResources().getDimension(R.dimen.dp_16);
-            ScreenSizeUtil.sChildWidth = ScreenSizeUtil.sWidth - (paddingDistance);
-            ScreenSizeUtil.sChildHeight =
-                ScreenSizeUtil.sHeight - actionBarHeight - statusBarHeight - paddingDistance;
-            ScreenSizeUtil.sScaleWidth =
-                (float) ScreenSizeUtil.sWidth / ScreenSizeUtil.sChildWidth;
-            ScreenSizeUtil.sScaleHeight =
-                (float) ScreenSizeUtil.sHeight / ScreenSizeUtil.sChildHeight;
-        }
-        mProjectsPresenter.start();
-        return super.onPrepareOptionsMenu(menu);
-    }
-
-    public int getStatusBarHeight() {
-        int result = 0;
-        int resourceId = getResources().getIdentifier(
-            Constant.STATUS_BAR_HEIGHT, Constant.DIMEN, Constant.ANDROID);
-        if (resourceId > 0) {
-            result = getResources().getDimensionPixelSize(resourceId);
-        }
-        return result;
     }
 
     @Override

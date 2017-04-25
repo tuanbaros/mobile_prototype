@@ -13,7 +13,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
-
 import com.framgia.mobileprototype.R;
 import com.framgia.mobileprototype.data.model.Element;
 import com.framgia.mobileprototype.data.model.Mock;
@@ -23,12 +22,10 @@ import com.framgia.mobileprototype.data.source.mock.MockLocalDataSource;
 import com.framgia.mobileprototype.data.source.mock.MockRepository;
 import com.framgia.mobileprototype.databinding.ActivityDemoBinding;
 import com.framgia.mobileprototype.ui.widget.DemoView;
-import com.framgia.mobileprototype.util.ScreenSizeUtil;
-
 import java.util.List;
 
 public class DemoActivity extends AppCompatActivity
-    implements DemoContract.View, View.OnTouchListener {
+        implements DemoContract.View, View.OnTouchListener {
     public static final String EXTRA_MOCK_ENTRY_ID = "EXTRA_MOCK_ENTRY_ID";
     public static final String EXTRA_TRANSITION = "EXTRA_TRANSITION";
     protected ObservableField<Mock> mMock = new ObservableField<>();
@@ -54,13 +51,12 @@ public class DemoActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-            WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        mDemoBinding =
-            DataBindingUtil.setContentView(this, R.layout.activity_demo);
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        mDemoBinding = DataBindingUtil.setContentView(this, R.layout.activity_demo);
         mDemoBinding.setActivity(this);
         mDemoPresenter = new DemoPresenter(this,
-            ElementRepository.getInstance(ElementLocalDataSource.getInstance(this)),
-            MockRepository.getInstance(MockLocalDataSource.getInstance(this)));
+                ElementRepository.getInstance(ElementLocalDataSource.getInstance(this)),
+                MockRepository.getInstance(MockLocalDataSource.getInstance(this)));
         start();
     }
 
@@ -91,14 +87,10 @@ public class DemoActivity extends AppCompatActivity
         for (Element element : elements) {
             if (TextUtils.isEmpty(element.getLinkTo())) continue;
             DemoView view = new DemoView(this, element.getGesture(), mDemoPresenter);
-            int width = (int) (element.getWidth() * ScreenSizeUtil.sScaleWidth);
-            int height = (int) (element.getHeight() * ScreenSizeUtil.sScaleHeight);
-            int paddingSize = (int) getResources().getDimension(R.dimen.dp_8);
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                width - 2 * paddingSize,
-                height - 2 * paddingSize);
-            params.leftMargin = (int) (element.getX() * ScreenSizeUtil.sScaleWidth) + paddingSize;
-            params.topMargin = (int) (element.getY() * ScreenSizeUtil.sScaleHeight) + paddingSize;
+            RelativeLayout.LayoutParams params =
+                    new RelativeLayout.LayoutParams(element.getWidth(), element.getHeight());
+            params.leftMargin = element.getX();
+            params.topMargin = element.getY();
             view.setLayoutParams(params);
             view.setTag(R.string.title_link_to, element.getLinkTo());
             view.setTag(R.string.title_element, element);
