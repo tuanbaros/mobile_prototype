@@ -53,19 +53,16 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentTop="true">
 
-                <ImageView
+                <TextView
                     android:layout_width="@dimen/dp_32"
                     android:layout_height="@dimen/dp_32"
-                    android:padding="@dimen/dp_5"
-                    android:src="@drawable/ic_edit"
-                    android:onClick="@{() -> handler.editProject(project)}"/>
-
-                <ImageView
-                    android:layout_width="@dimen/dp_32"
-                    android:layout_height="@dimen/dp_32"
-                    android:padding="@dimen/dp_5"
-                    android:src="@drawable/ic_delete"
-                    android:onClick="@{() -> handler.removeProject(project, position)}"/>
+                    android:text="@string/text_ic_menu"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/sp_20"
+                    android:gravity="center"
+                    android:textColor="@android:color/black"
+                    android:onClick="@{(view) -> handler.openProjectOption(view, position, project)}"
+                    style="@style/TextAppearance.AppCompat.Widget.Button.Borderless.Colored"/>
 
             </LinearLayout>
 
