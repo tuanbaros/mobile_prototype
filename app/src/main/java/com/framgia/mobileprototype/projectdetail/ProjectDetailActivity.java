@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.AssetFileDescriptor;
 import android.content.res.AssetManager;
@@ -48,6 +49,7 @@ import com.framgia.mobileprototype.databinding.DialogPickImageBinding;
 import com.framgia.mobileprototype.demo.DemoActivity;
 import com.framgia.mobileprototype.demo.LandcapeDemoActivity;
 import com.framgia.mobileprototype.draw.DrawActivity;
+import com.framgia.mobileprototype.draw.LandscapeDrawActivity;
 import com.framgia.mobileprototype.helper.ItemTouchCallbackHelper;
 import com.framgia.mobileprototype.helper.OnStartDragListener;
 import com.framgia.mobileprototype.mockdetail.LandcapeMockDetailActivity;
@@ -283,7 +285,8 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
     public void showDrawUi() {
         mPickImageDialog.cancel();
         startActivityForResult(
-            DrawActivity.getDrawIntent(this, mProject),
+            mProject.isPortrait() ? DrawActivity.getDrawIntent(this, mProject) :
+                    LandscapeDrawActivity.getDrawIntent(this, mProject),
             DRAW_REQUEST_CODE);
     }
 
@@ -439,6 +442,9 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
 
     private void getIntentData() {
         mProject = (Project) getIntent().getSerializableExtra(EXTRA_PROJECT);
+        if (!mProject.isPortrait()) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
     }
 
     private void setUpTitle() {
@@ -505,8 +511,7 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
     }
 
     public int numberColumns() {
-        return mProject.isPortrait() ? Constant.NUMBER_COLUMN_GRID_PORTRAIT :
-            Constant.NUMBER_COLUMN_GRID_LANDSCAPE;
+        return Constant.NUMBER_COLUMN_GRID_PORTRAIT;
     }
 
     @Override

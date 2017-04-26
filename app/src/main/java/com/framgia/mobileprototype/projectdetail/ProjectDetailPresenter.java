@@ -263,7 +263,7 @@ public class ProjectDetailPresenter implements ProjectDetailContract.Presenter {
 
     @Override
     public Mock getFirstMockItem() {
-        return mSortMocks.get(0);
+        return mSortMocks.size() > 0 ? mSortMocks.get(0) : null;
     }
 
     @Override
