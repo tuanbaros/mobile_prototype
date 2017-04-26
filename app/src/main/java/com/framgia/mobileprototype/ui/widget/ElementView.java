@@ -49,6 +49,8 @@ public class ElementView extends RelativeLayout implements View.OnTouchListener 
                 int maxTop = parentView.getHeight() - params.height;
                 int minLeft = 0;
                 int minTop = 0;
+                if (maxLeft < minLeft) maxLeft = minLeft;
+                if (maxTop < minTop) maxTop = minTop;
                 params.leftMargin = X - mXDelta;
                 params.topMargin = Y - mYDelta;
                 if (params.leftMargin < minLeft) params.leftMargin = minLeft;

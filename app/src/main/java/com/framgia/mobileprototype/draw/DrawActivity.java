@@ -62,9 +62,7 @@ public class DrawActivity extends BaseActivity {
         RelativeLayout.LayoutParams layoutParams;
         int width, height;
         if (mProject != null && mProject.isPortrait()) {
-            height =
-                (int) (ScreenSizeUtil.sChildHeight +
-                    2 * (getResources().getDimension(R.dimen.dp_16)));
+            height = ScreenSizeUtil.sHeight - mActionBarHeight - mStatusBarHeight;
             width = height * ScreenSizeUtil.sWidth / ScreenSizeUtil.sHeight;
             layoutParams = new RelativeLayout.LayoutParams(width, height);
             layoutParams.leftMargin = (ScreenSizeUtil.sWidth - width) / 2;

@@ -15,8 +15,7 @@
     <RelativeLayout
         android:id="@+id/activity_demo"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context="com.framgia.mobileprototype.demo.DemoActivity">
+        android:layout_height="match_parent">
 
         <ImageView
             android:layout_width="match_parent"

@@ -44,13 +44,13 @@ public class DataImport {
             Project project = new Gson().fromJson(result.toString(), Project.class);
             float scaleWidth, scaleHeight;
             if (project.getOrientation().equals(Project.LANDSCAPE)) {
-                scaleWidth = (float) ScreenSizeUtil.sChildHeight / project.getWidth();
-                scaleHeight = (float) ScreenSizeUtil.sChildWidth / project.getHeight();
+                scaleWidth = (float) ScreenSizeUtil.sHeight / project.getWidth();
+                scaleHeight = (float) ScreenSizeUtil.sWidth / project.getHeight();
                 project.setWidth(ScreenSizeUtil.sHeight);
                 project.setHeight(ScreenSizeUtil.sWidth);
             } else {
-                scaleWidth = (float) ScreenSizeUtil.sChildWidth / project.getWidth();
-                scaleHeight = (float) ScreenSizeUtil.sChildHeight / project.getHeight();
+                scaleWidth = (float) ScreenSizeUtil.sWidth / project.getWidth();
+                scaleHeight = (float) ScreenSizeUtil.sHeight / project.getHeight();
                 project.setWidth(ScreenSizeUtil.sWidth);
                 project.setHeight(ScreenSizeUtil.sHeight);
             }
@@ -78,9 +78,10 @@ public class DataImport {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if (reader == null) return;
             try {
-                reader.close();
+                if (reader != null) {
+                    reader.close();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

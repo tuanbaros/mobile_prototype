@@ -29,6 +29,11 @@ public class GestureAdapter extends RecyclerView.Adapter<GestureAdapter.ViewHold
         setUpListGestures();
     }
 
+    public void updateStringGesture(String gesture) {
+        mGesture = gesture;
+        notifyDataSetChanged();
+    }
+
     private void setUpListGestures() {
         mGestures.clear();
         String[] gestures = mContext.getResources().getStringArray(R.array.title_gesture_list);

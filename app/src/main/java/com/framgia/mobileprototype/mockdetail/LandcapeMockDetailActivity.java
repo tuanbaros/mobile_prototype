@@ -1,54 +1,25 @@
 package com.framgia.mobileprototype.mockdetail;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
-import android.databinding.ObservableBoolean;
-import android.databinding.ObservableField;
-import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.text.TextUtils;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-
-import com.framgia.mobileprototype.BaseActivity;
 import com.framgia.mobileprototype.R;
 import com.framgia.mobileprototype.data.model.Element;
 import com.framgia.mobileprototype.data.model.Mock;
 import com.framgia.mobileprototype.data.model.Project;
-import com.framgia.mobileprototype.data.source.element.ElementLocalDataSource;
-import com.framgia.mobileprototype.data.source.element.ElementRepository;
-import com.framgia.mobileprototype.databinding.ActivityLandcapeMockDetailBinding;
-import com.framgia.mobileprototype.databinding.DialogChoiceGestureBinding;
 import com.framgia.mobileprototype.linkto.LandspaceLinkToActivity;
-import com.framgia.mobileprototype.linkto.LinkToActivity;
-import com.framgia.mobileprototype.ui.widget.CustomRelativeLayout;
 import com.framgia.mobileprototype.ui.widget.ElementView;
-
+import com.framgia.mobileprototype.util.ScreenSizeUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LandcapeMockDetailActivity extends BaseActivity
-    implements MockDetailContract.View {
-    public static final String EXTRA_MOCK = "EXTRA_MOCK";
-    public static final String EXTRA_PROJECT = "EXTRA_PROJECT";
-    public static final int LINKTO_REQUEST_CODE = 3;
-    private ActivityLandcapeMockDetailBinding mLandcapeMockDetailBinding;
-    private MockDetailContract.Presenter mMockDetailPresenter;
-    private Mock mMock;
-    private ObservableBoolean mIsLoading = new ObservableBoolean();
-    private MenuItem mRemoveItem, mLinkToItem, mGestureItem;
-    private Project mProject;
-    private CustomRelativeLayout mCustomRelativeLayout;
-    public ObservableField<GestureAdapter> mGestureAdapter = new ObservableField<>();
-    private DialogChoiceGestureBinding mDialogChoiceGestureBinding;
-    private Dialog mGestureDialog;
+public class LandcapeMockDetailActivity extends MockDetailActivity {
 
     public static Intent getMockDetailIntent(Context context, Mock mock, Project project) {
         Intent intent = new Intent(context, LandcapeMockDetailActivity.class);
@@ -58,67 +29,26 @@ public class LandcapeMockDetailActivity extends BaseActivity
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mLandcapeMockDetailBinding =
-            DataBindingUtil.setContentView(this, R.layout.activity_landcape_mock_detail);
-        mMockDetailPresenter = new MockDetailPresenter(this,
-            ElementRepository.getInstance(ElementLocalDataSource.getInstance(this)));
-        mLandcapeMockDetailBinding.setActivity(this);
-        mLandcapeMockDetailBinding.setPresenter(mMockDetailPresenter);
-        mCustomRelativeLayout = mLandcapeMockDetailBinding.relativeLayout;
-        start();
-    }
-
-    @Override
-    public void onPrepare() {
-        mIsLoading.set(true);
-        mMockDetailPresenter.getElements(mMock.getId());
-    }
-
-    @Override
-    public void elementsLoaded(List<Element> elements) {
-        mMock.setElements(elements);
-        setUpElement(elements);
-        mIsLoading.set(false);
-    }
-
-    private void setUpElement(List<Element> elements) {
+    protected void setUpElement(List<Element> elements) {
+        int paddingSize = (int) getResources().getDimension(R.dimen.dp_8);
+        float sw = (float) 1 / ScreenSizeUtil.sScaleLandscapeWidth;
+        float sh = (float) 1 / ScreenSizeUtil.sScaleLandscapeHeight;
         for (Element element : elements) {
             ElementView elementView =
-                (ElementView) View.inflate(getBaseContext(), R.layout.element, null);
+                    (ElementView) View.inflate(getBaseContext(), R.layout.element, null);
             elementView.setTag(R.string.title_element, element);
-            RelativeLayout.LayoutParams params =
-                new RelativeLayout.LayoutParams(element.getWidth(), element.getHeight());
-            params.leftMargin = element.getX();
-            params.topMargin = element.getY();
+            int width = (Math.round(element.getWidth() * sw)) + 2 * paddingSize;
+            int height = (Math.round(element.getHeight() * sh)) + 2 * paddingSize;
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(width, height);
+            params.leftMargin = Math.round(element.getX() * sw) - paddingSize;
+            params.topMargin = Math.round(element.getY() * sh) - paddingSize;
             elementView.setLayoutParams(params);
             elementView.setPresenter(mMockDetailPresenter);
             elementView.setGesture(element.getGesture());
-            if (!TextUtils.isEmpty(element.getLinkTo()))
-                elementView.setLinkTo(element.getLinkTo());
+            if (!TextUtils.isEmpty(element.getLinkTo())) elementView.setLinkTo(element.getLinkTo());
             mCustomRelativeLayout.addView(elementView);
         }
         mCustomRelativeLayout.hideControlOfChildView();
-    }
-
-    @Override
-    public void elementsNotAvailable() {
-        mIsLoading.set(false);
-    }
-
-    @Override
-    public void showElementOption() {
-        mLinkToItem.setVisible(true);
-        mRemoveItem.setVisible(true);
-        mGestureItem.setVisible(true);
-    }
-
-    @Override
-    public void hideElementOption() {
-        mLinkToItem.setVisible(false);
-        mRemoveItem.setVisible(false);
-        mGestureItem.setVisible(false);
     }
 
     @Override
@@ -127,15 +57,24 @@ public class LandcapeMockDetailActivity extends BaseActivity
             Toast.makeText(this, R.string.msg_empty_element, Toast.LENGTH_SHORT).show();
             mCustomRelativeLayout.setEnabled(true);
         } else {
+            int paddingSize = (int) getResources().getDimension(R.dimen.dp_8);
             List<Element> elements = new ArrayList<>();
             for (int i = 1; i < mCustomRelativeLayout.getChildCount(); i++) {
                 ElementView elementView = (ElementView) mCustomRelativeLayout.getChildAt(i);
                 Element element = (Element) elementView.getTag(R.string.title_element);
                 element.setMockId(mMock.getId());
-                element.setX((int) elementView.getX());
-                element.setY((int) elementView.getY());
-                element.setWidth(elementView.getWidth());
-                element.setHeight(elementView.getHeight());
+                int x = Math.round((elementView.getX() + paddingSize)
+                        * ScreenSizeUtil.sScaleLandscapeWidth);
+                int y = Math.round((elementView.getY() + paddingSize)
+                        * ScreenSizeUtil.sScaleLandscapeHeight);
+                int width = Math.round((elementView.getWidth() - 2 * paddingSize)
+                        * ScreenSizeUtil.sScaleLandscapeWidth);
+                int height = Math.round((elementView.getHeight() - 2 * paddingSize)
+                        * ScreenSizeUtil.sScaleLandscapeHeight);
+                element.setX(x);
+                element.setY(y);
+                element.setWidth(width);
+                element.setHeight(height);
                 if (elementView.getTag() != null) {
                     element.setLinkTo((String) elementView.getTag());
                 }
@@ -143,68 +82,6 @@ public class LandcapeMockDetailActivity extends BaseActivity
             }
             mMockDetailPresenter.saveAllElement(elements);
         }
-    }
-
-    @Override
-    public void onSaveElementDone() {
-        mCustomRelativeLayout.setEnabled(true);
-        for (int i = 0; i < mCustomRelativeLayout.getChildCount(); i++) {
-            View child = mCustomRelativeLayout.getChildAt(i);
-            child.setEnabled(true);
-        }
-        mCustomRelativeLayout.hideControlOfChildView();
-    }
-
-    @Override
-    public void showElementGesture(String gesture) {
-        ElementView elementView = (ElementView) mCustomRelativeLayout.getTag();
-        elementView.setGesture(gesture);
-    }
-
-    @Override
-    public void hideGestureDialog() {
-        if (mGestureDialog != null && mGestureDialog.isShowing()) {
-            mGestureDialog.cancel();
-        }
-    }
-
-    @Override
-    public void start() {
-        getIntentData();
-        setUpTitle();
-        setUpView();
-        mMockDetailPresenter.start();
-    }
-
-    private void setUpTitle() {
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null && mMock.getTitle() != null) {
-            actionBar.setTitle(mMock.getTitle());
-        }
-    }
-
-    private void getIntentData() {
-        mMock = (Mock) getIntent().getSerializableExtra(EXTRA_MOCK);
-        mProject = (Project) getIntent().getSerializableExtra(EXTRA_PROJECT);
-    }
-
-    private void setUpView() {
-        mLandcapeMockDetailBinding.setMock(mMock);
-    }
-
-    public ObservableBoolean getIsLoading() {
-        return mIsLoading;
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.activity_mock_detail, menu);
-        mLinkToItem = menu.findItem(R.id.action_link);
-        mRemoveItem = menu.findItem(R.id.action_remove);
-        mGestureItem = menu.findItem(R.id.action_gesture);
-        hideElementOption();
-        return true;
     }
 
     @Override
@@ -217,14 +94,15 @@ public class LandcapeMockDetailActivity extends BaseActivity
                 ElementView elementView = (ElementView) mCustomRelativeLayout.getTag();
                 mCustomRelativeLayout.removeView(elementView);
                 mMockDetailPresenter.deleteElement(
-                    (Element) elementView.getTag(R.string.title_element));
+                        (Element) elementView.getTag(R.string.title_element));
                 hideElementOption();
                 break;
             case R.id.action_link:
                 ElementView ev = (ElementView) mCustomRelativeLayout.getTag();
                 Element element = (Element) ev.getTag(R.string.title_element);
-                startActivityForResult(LandspaceLinkToActivity.getLinkToIntent(
-                    this, mProject, element), LINKTO_REQUEST_CODE);
+                startActivityForResult(
+                        LandspaceLinkToActivity.getLinkToIntent(this, mProject, element),
+                        LINKTO_REQUEST_CODE);
                 break;
             case R.id.action_gesture:
                 showGestureDialog();
@@ -232,60 +110,31 @@ public class LandcapeMockDetailActivity extends BaseActivity
             default:
                 break;
         }
-        return super.onOptionsItemSelected(menuItem);
-    }
-
-    private void setUpGestureDialog() {
-        mDialogChoiceGestureBinding = DataBindingUtil.inflate(getLayoutInflater(),
-            R.layout.dialog_choice_gesture, null, false);
-        mGestureDialog = new Dialog(this);
-        mDialogChoiceGestureBinding.setGestureAdapter(mGestureAdapter);
-        mGestureDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        mGestureDialog.setContentView(mDialogChoiceGestureBinding.getRoot());
-    }
-
-    private void showGestureDialog() {
-        if (mGestureDialog == null) setUpGestureDialog();
-        ElementView elementView = (ElementView) mCustomRelativeLayout.getTag();
-        Element element = (Element) elementView.getTag(R.string.title_element);
-        mGestureAdapter.set(new GestureAdapter(this, element.getGesture(), mMockDetailPresenter));
-        mGestureDialog.show();
-    }
-
-    private void saveElement() {
-        mCustomRelativeLayout.setEnabled(false);
-        for (int i = 0; i < mCustomRelativeLayout.getChildCount(); i++) {
-            View child = mCustomRelativeLayout.getChildAt(i);
-            child.setEnabled(false);
-        }
-        mMockDetailPresenter.getAllElementInMock();
-        hideElementOption();
+        return true;
     }
 
     @Override
-    public void onBackPressed() {
-        saveElement();
-        super.onBackPressed();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == LINKTO_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
-            Element extra = (Element) data.getSerializableExtra(LinkToActivity.EXTRA_ELEMENT);
-            ElementView elementView = (ElementView) mCustomRelativeLayout.getTag();
-            elementView.setLinkTo(extra.getLinkTo());
-            Element element = (Element) elementView.getTag(R.string.title_element);
-            element.setTransition(extra.getTransition());
-            mMockDetailPresenter.saveElement(element);
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if (ScreenSizeUtil.sScaleLandscapeWidth == 0 || ScreenSizeUtil.sScaleLandscapeHeight == 0) {
+            ActionBar actionBar = getSupportActionBar();
+            if (ScreenSizeUtil.sScaleLandscapeWidth == 0) {
+                if (actionBar != null) {
+                    int actionBarHeight = actionBar.getHeight();
+                    int statusBarHeight = getStatusBarHeight();
+                    int paddingDistance = 2 * (int) getResources().getDimension(R.dimen.dp_16);
+                    int childLandscapeWidth = ScreenSizeUtil.sHeight - (paddingDistance);
+                    int childLandscapeHeight = ScreenSizeUtil.sWidth
+                            - actionBarHeight
+                            - statusBarHeight
+                            - paddingDistance;
+                    ScreenSizeUtil.sScaleLandscapeWidth =
+                            (float) ScreenSizeUtil.sHeight / childLandscapeWidth;
+                    ScreenSizeUtil.sScaleLandscapeHeight =
+                            (float) ScreenSizeUtil.sWidth / childLandscapeHeight;
+                }
+            }
         }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    public ObservableField<GestureAdapter> getGestureAdapter() {
-        return mGestureAdapter;
-    }
-
-    public Project getProject() {
-        return mProject;
+        start();
+        return true;
     }
 }
