@@ -61,6 +61,9 @@
             android:screenOrientation="landscape"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
+        <activity
+            android:name=".draw.LandscapeDrawActivity"
+            android:screenOrientation="landscape" />
     </application>
 
 </manifest>
