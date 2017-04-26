@@ -78,6 +78,7 @@ public class ProjectsActivity extends PermissionActivity implements
     private Project mProject;
     private ObservableInt mNumberProjects = new ObservableInt();
     private ObservableInt mNumberMocks = new ObservableInt();
+    private boolean flag;
 
     public static Intent getProjectsIntent(Context context, boolean isFirstOpenApp) {
         Intent intent = new Intent(context, ProjectsActivity.class);
@@ -180,6 +181,22 @@ public class ProjectsActivity extends PermissionActivity implements
             mIsDrawerOpen.set(false);
             return;
         }
+        if (!flag) {
+            flag = true;
+            Toast.makeText(this, "Press back again to exit!", Toast.LENGTH_SHORT).show();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(2500);
+                        flag = false;
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+            return;
+        }
         super.onBackPressed();
     }
 
@@ -270,10 +287,11 @@ public class ProjectsActivity extends PermissionActivity implements
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if (fOut == null) return;
             try {
-                fOut.flush();
-                fOut.close();
+                if (fOut != null) {
+                    fOut.flush();
+                    fOut.close();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
