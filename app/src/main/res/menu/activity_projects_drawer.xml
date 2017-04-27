@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
+    <group android:checkableBehavior="single"
+        android:id="@+id/group_primary">
         <item
             android:id="@+id/nav_project"
             android:icon="@drawable/ic_project"
             android:title="@string/title_project"/>
+
+        <item
+            android:id="@+id/nav_explore"
+            android:icon="@drawable/ic_explore"
+            android:title="@string/title_explore"/>
         <item
             android:id="@+id/nav_introduction"
             android:icon="@drawable/ic_introduction"
@@ -19,5 +25,24 @@
             android:icon="@drawable/ic_rate"
             android:id="@+id/nav_rate"
             android:title="@string/title_rate"/>
+    </group>
+
+    <group android:checkableBehavior="single"
+        android:id="@+id/group_secondary">
+        <item
+            android:id="@+id/nav_login"
+            android:icon="@drawable/ic_login"
+            android:title="@string/title_login"/>
+
+        <item
+            android:id="@+id/nav_register"
+            android:icon="@drawable/ic_register"
+            android:title="@string/title_register"/>
+
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_logout"
+            android:title="@string/title_logout"
+            android:visible="false"/>
     </group>
 </menu>
