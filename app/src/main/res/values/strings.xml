@@ -123,4 +123,12 @@
     <string name="action_clear">Clear</string>
     <string name="action_bring_to_front">Bring to front</string>
     <string name="action_done">Done</string>
+    <string name="title_email">Email</string>
+    <string name="title_password">Password</string>
+    <string name="action_create_account">Create an Account</string>
+    <string name="facebook_app_id">674392939435337</string>
+    <string name="title_signin">Sign in</string>
+    <string name="title_facebook">Login with Facebook</string>
+    <string name="title_google">Login with Google</string>
+    <string name="preference_file_key">mobileprototype</string>
 </resources>

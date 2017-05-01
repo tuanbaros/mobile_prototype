@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <import type="android.view.View"/>
+
+        <variable
+            name="presenter"
+            type="com.framgia.mobileprototype.login.LoginContract.Presenter"/>
+
+        <variable
+            name="user"
+            type="com.framgia.mobileprototype.data.model.User"/>
+
+        <variable
+            name="activity"
+            type="com.framgia.mobileprototype.login.LoginActivity"/>
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!--<ScrollView-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:padding="@dimen/dp_16">-->
+
+        <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="vertical"-->
+        <!--android:padding="@dimen/dp_16">-->
+
+        <!--<EditText-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:hint="@string/title_email"-->
+        <!--android:text="@={user.email}"/>-->
+
+        <!--<EditText-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginTop="@dimen/dp_5"-->
+        <!--android:hint="@string/title_password"-->
+        <!--android:inputType="textPassword"-->
+        <!--android:text="@={user.password}"/>-->
+
+        <!--<Button-->
+        <!--style="@style/Base.Widget.AppCompat.Button.Colored"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginTop="@dimen/dp_5"-->
+        <!--android:onClick="@{() -> presenter.login(user)}"-->
+        <!--android:paddingBottom="@dimen/dp_5"-->
+        <!--android:paddingTop="@dimen/dp_5"-->
+        <!--android:text="@string/title_login"-->
+        <!--android:textColor="@android:color/white"/>-->
+
+        <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:orientation="horizontal"-->
+        <!--android:weightSum="2">-->
+
+        <!--<Button-->
+        <!--android:id="@+id/google_login_button"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="@dimen/dp_42"-->
+        <!--android:layout_weight="1"-->
+        <!--android:onClick="@{() -> presenter.loginGoogle()}"-->
+        <!--android:text="@string/title_google"-->
+        <!--android:textColor="@android:color/holo_red_dark"/>-->
+
+        <!--<Button-->
+        <!--android:id="@+id/facebook_login_button"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="@dimen/dp_42"-->
+        <!--android:layout_weight="1"-->
+        <!--android:onClick="@{() -> presenter.loginFacebook()}"-->
+        <!--android:text="@string/title_facebook"-->
+        <!--android:textColor="@color/com_facebook_blue"/>-->
+
+        <!--</LinearLayout>-->
+
+        <!--<TextView-->
+        <!--style="@style/Widget.AppCompat.Button.Borderless"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:onClick="@{() -> presenter.createAnAccount()}"-->
+        <!--android:text="@string/action_create_account"/>-->
+
+        <!--</LinearLayout>-->
+
+        <!--</ScrollView>-->
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true">
+
+            <Button
+                android:id="@+id/facebook_login_button"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/dp_42"
+                android:layout_centerHorizontal="true"
+                android:onClick="@{() -> presenter.loginFacebook()}"
+                android:text="@string/title_facebook"
+                android:textColor="@color/com_facebook_blue"/>
+
+            <Button
+                android:id="@+id/google_login_button"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_42"
+                android:layout_alignEnd="@+id/facebook_login_button"
+                android:layout_alignLeft="@+id/facebook_login_button"
+                android:layout_alignRight="@+id/facebook_login_button"
+                android:layout_alignStart="@+id/facebook_login_button"
+                android:layout_below="@+id/facebook_login_button"
+                android:onClick="@{() -> presenter.loginGoogle()}"
+                android:text="@string/title_google"
+                android:textColor="@android:color/holo_red_dark"
+                />
+
+        </RelativeLayout>
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:visibility="@{activity.mLoading ? View.VISIBLE : View.GONE}"/>
+
+    </RelativeLayout>
+</layout>

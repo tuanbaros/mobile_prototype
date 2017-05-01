@@ -1,25 +1,25 @@
 apply plugin: 'com.android.application'
 
 android {
-  compileSdkVersion 25
-  buildToolsVersion "25.0.2"
-  defaultConfig {
-    applicationId "com.framgia.mobileprototype"
-    minSdkVersion 14
-    targetSdkVersion 23
-    versionCode 1
-    versionName "1.0"
-    testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-  }
-  buildTypes {
-    release {
-      minifyEnabled false
-      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+    defaultConfig {
+        applicationId "com.framgia.mobileprototype"
+        minSdkVersion 15
+        targetSdkVersion 23
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
-  }
-  dataBinding {
-    enabled true
-  }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    dataBinding {
+        enabled true
+    }
 }
 
 dependencies {
@@ -39,5 +39,10 @@ dependencies {
   compile 'org.greenrobot:eventbus:3.0.0'
   compile 'com.mikepenz:iconics-core:2.8.4@aar'
   compile 'com.mikepenz:google-material-typeface:3.0.1.0.original@aar'
+  compile 'com.google.android.gms:play-services-auth:10.2.4'
+  compile 'com.facebook.android:facebook-android-sdk:4.22.0'
+  compile 'com.amitshekhar.android:android-networking:1.0.0'
   testCompile 'junit:junit:4.12'
 }
+
+apply plugin: 'com.google.gms.google-services'

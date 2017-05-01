@@ -46,6 +46,14 @@ public class BindingAdapterUtil {
         imageView.setImageResource(resource);
     }
 
+    @BindingAdapter({"avatar"})
+    public static void setAvatar(ImageView imageView, String url) {
+        Glide.with(imageView.getContext())
+            .load(url)
+            .error(R.drawable.ic_avatar_default)
+            .into(imageView);
+    }
+
     @BindingAdapter({"text"})
     public static void setTextResource(TextView textView, int resource) {
         if (resource != 0) textView.setText(resource);

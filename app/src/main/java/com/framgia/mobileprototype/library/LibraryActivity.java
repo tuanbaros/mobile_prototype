@@ -475,7 +475,7 @@ public class LibraryActivity extends BaseActivity
             switch (requestCode) {
                 case CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE:
                     Uri imageUri = CropImage.getPickImageResultUri(this, data);
-                    cropImage(imageUri);
+                    cropImage(imageUri, false);
                     break;
                 case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
                     CropImage.ActivityResult result = CropImage.getActivityResult(data);
@@ -510,12 +510,16 @@ public class LibraryActivity extends BaseActivity
         CropImage.startPickImageActivity(this);
     }
 
-    private void cropImage(Uri imageUri) {
-        CropImage.activity(imageUri)
+    private void cropImage(Uri imageUri, boolean isSave) {
+        CropImage.ActivityBuilder builder = CropImage.activity(imageUri)
                 .setGuidelines(CropImageView.Guidelines.ON)
-                .setAutoZoomEnabled(false)
-                .setMinCropResultSize(100, 100)
-                .start(this);
+                .setAutoZoomEnabled(false);
+        if (isSave) {
+            builder.setAspectRatio(ScreenSizeUtil.sWidth, ScreenSizeUtil.sHeight);
+        } else {
+            builder.setMinCropResultSize(100, 100);
+        }
+        builder.start(this);
     }
 
     public void clearView() {
@@ -540,7 +544,7 @@ public class LibraryActivity extends BaseActivity
                 e.printStackTrace();
             }
         }
-        cropImage(getUriFromFile(file.getAbsolutePath()));
+        cropImage(getUriFromFile(file.getAbsolutePath()), true);
     }
 
     private Uri getUriFromFile(String filePath) {

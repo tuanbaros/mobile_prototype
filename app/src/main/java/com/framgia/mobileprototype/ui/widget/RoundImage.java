@@ -10,10 +10,13 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 
-public class RoundImage extends ImageView {
+import com.bumptech.glide.load.resource.bitmap.GlideBitmapDrawable;
+import com.bumptech.glide.request.target.SquaringDrawable;
+
+public class RoundImage extends AppCompatImageView {
     public RoundImage(Context context) {
         super(context);
     }
@@ -31,7 +34,12 @@ public class RoundImage extends ImageView {
         Drawable drawable = getDrawable();
         if (drawable == null) return;
         if (getWidth() == 0 || getHeight() == 0) return;
-        Bitmap b = ((BitmapDrawable) drawable).getBitmap();
+        Bitmap b;
+        if (drawable instanceof SquaringDrawable) {
+            b = ((GlideBitmapDrawable) this.getDrawable().getCurrent()).getBitmap();
+        } else {
+            b = ((BitmapDrawable) drawable).getBitmap();
+        }
         Bitmap bitmap = b.copy(Config.ARGB_8888, true);
         int w = getWidth();
         Bitmap roundBitmap = getCroppedBitmap(bitmap, w);
