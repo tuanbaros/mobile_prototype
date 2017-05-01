@@ -36,4 +36,6 @@
     <dimen name="dp_160">160dp</dimen>
     <dimen name="dp_140">140dp</dimen>
     <dimen name="sp_18">18sp</dimen>
+    <dimen name="dp_70">70dp</dimen>
+    <dimen name="dp_24">24dp</dimen>
 </resources>
