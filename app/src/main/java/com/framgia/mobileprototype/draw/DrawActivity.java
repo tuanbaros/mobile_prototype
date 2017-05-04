@@ -2,7 +2,6 @@ package com.framgia.mobileprototype.draw;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -11,7 +10,6 @@ import android.support.v7.app.ActionBar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.RelativeLayout;
-
 import com.azeesoft.lib.colorpicker.ColorPickerDialog;
 import com.framgia.mobileprototype.BaseActivity;
 import com.framgia.mobileprototype.Constant;
@@ -20,7 +18,6 @@ import com.framgia.mobileprototype.data.model.Project;
 import com.framgia.mobileprototype.databinding.ActivityDrawBinding;
 import com.framgia.mobileprototype.ui.widget.DrawView;
 import com.framgia.mobileprototype.util.ScreenSizeUtil;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -46,9 +43,6 @@ public class DrawActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mProject = (Project) getIntent().getSerializableExtra(EXTRA_PROJECT);
-        if (mProject != null && !mProject.isPortrait()) {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        }
         mDrawBinding = DataBindingUtil.setContentView(this, R.layout.activity_draw);
     }
 
@@ -75,9 +69,9 @@ public class DrawActivity extends BaseActivity {
         mRelativeLayout.setLayoutParams(layoutParams);
         mRelativeLayout.setBackgroundColor(Color.WHITE);
         mDrawBinding.relativeLayout.addView(mRelativeLayout);
-        DrawView drawView = new DrawView(this);
+        DrawView drawView = new DrawView(this, getCurrentColor());
         mRelativeLayout.addView(drawView);
-        mRelativeLayout.setTag(Color.BLACK);
+        mRelativeLayout.setTag(getCurrentColor());
     }
 
     private void setUpColorPicker() {
@@ -92,6 +86,7 @@ public class DrawActivity extends BaseActivity {
         });
         mColorPickerDialog.hideHexaDecimalValue();
         mColorPickerDialog.hideColorComponentsInfo();
+        mColorPickerDialog.setInitialColor(getCurrentColor());
     }
 
     @Override
@@ -134,10 +129,11 @@ public class DrawActivity extends BaseActivity {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if (fOut == null) return;
             try {
-                fOut.flush();
-                fOut.close();
+                if (fOut != null) {
+                    fOut.flush();
+                    fOut.close();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -180,7 +176,7 @@ public class DrawActivity extends BaseActivity {
         return true;
     }
 
-    public int getStatusBarHeight() {
+    private int getStatusBarHeight() {
         int result = 0;
         int resourceId = getResources().getIdentifier(
             Constant.STATUS_BAR_HEIGHT, Constant.DIMEN, Constant.ANDROID);
@@ -188,5 +184,9 @@ public class DrawActivity extends BaseActivity {
             result = getResources().getDimensionPixelSize(resourceId);
         }
         return result;
+    }
+
+    private int getCurrentColor() {
+        return ColorPickerDialog.getLastColor(this);
     }
 }
