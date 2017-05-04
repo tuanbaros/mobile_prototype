@@ -37,6 +37,7 @@ import com.bumptech.glide.Glide;
 import com.framgia.mobileprototype.BaseActivity;
 import com.framgia.mobileprototype.Constant;
 import com.framgia.mobileprototype.R;
+import com.framgia.mobileprototype.crop.LandscapeCropActivity;
 import com.framgia.mobileprototype.data.model.Mock;
 import com.framgia.mobileprototype.data.model.Project;
 import com.framgia.mobileprototype.data.source.mock.MockLocalDataSource;
@@ -433,11 +434,15 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
     }
 
     private void cropImage(Uri imageUri) {
-        CropImage.activity(imageUri)
+        CropImage.ActivityBuilder builder = CropImage.activity(imageUri)
             .setGuidelines(CropImageView.Guidelines.ON)
             .setAutoZoomEnabled(false)
-            .setAspectRatio(mProject.getWidth(), mProject.getHeight())
-            .start(this);
+            .setAspectRatio(mProject.getWidth(), mProject.getHeight());
+        if (mProject.isPortrait()) {
+            builder.start(this);
+            return;
+        }
+        builder.start(this, LandscapeCropActivity.class);
     }
 
     private void getIntentData() {
