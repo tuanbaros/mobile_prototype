@@ -32,4 +32,13 @@
         <item>@string/title_transition_slide_left</item>
         <item>@string/title_transition_slide_right</item>
     </string-array>
+
+    <string-array name="title_add_options">
+        <item>@string/title_oval</item>
+        <item>@string/title_rectangle</item>
+        <item>@string/title_text</item>
+        <item>@string/title_image</item>
+        <item>@string/title_icon</item>
+        <item>@string/title_wireframes</item>
+    </string-array>
 </resources>

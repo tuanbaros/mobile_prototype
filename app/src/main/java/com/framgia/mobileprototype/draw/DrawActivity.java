@@ -1,15 +1,19 @@
 package com.framgia.mobileprototype.draw;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.RelativeLayout;
+
 import com.azeesoft.lib.colorpicker.ColorPickerDialog;
 import com.framgia.mobileprototype.BaseActivity;
 import com.framgia.mobileprototype.Constant;
@@ -18,6 +22,7 @@ import com.framgia.mobileprototype.data.model.Project;
 import com.framgia.mobileprototype.databinding.ActivityDrawBinding;
 import com.framgia.mobileprototype.ui.widget.DrawView;
 import com.framgia.mobileprototype.util.ScreenSizeUtil;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -104,6 +109,9 @@ public class DrawActivity extends BaseActivity {
             case R.id.action_color:
                 mColorPickerDialog.show();
                 break;
+            case R.id.action_add:
+                showAddDialog();
+                break;
             case R.id.action_undo:
                 undo();
                 break;
@@ -113,7 +121,20 @@ public class DrawActivity extends BaseActivity {
             default:
                 break;
         }
-        return super.onOptionsItemSelected(menuItem);
+        return true;
+    }
+
+    private void showAddDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this,
+            android.R.style.Theme_Holo_Light_Dialog));
+        builder.setTitle(R.string.action_add)
+            .setItems(R.array.title_add_options, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    // The 'which' argument contains the index position
+                    // of the selected item
+                }
+            });
+        builder.create().show();
     }
 
     private void startResult() {
@@ -165,6 +186,7 @@ public class DrawActivity extends BaseActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
+        if (mActionBarHeight > 0) return false;
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             mActionBarHeight = actionBar.getHeight();
