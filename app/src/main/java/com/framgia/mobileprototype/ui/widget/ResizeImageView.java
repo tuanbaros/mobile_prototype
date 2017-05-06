@@ -36,13 +36,18 @@ public class ResizeImageView extends AppCompatImageView implements View.OnTouchL
 
     @Override
     public boolean onTouch(View view, MotionEvent event) {
-        ElementView elementView = (ElementView) view.getParent();
-        setPresenter(elementView.getPresenter());
-        if (mPresenter != null) mPresenter.openElementOption();
+        RelativeLayout viewParent;
+        if (view.getParent() instanceof ElementView) {
+            viewParent = (ElementView) view.getParent();
+            setPresenter(((ElementView) viewParent).getPresenter());
+            if (mPresenter != null) mPresenter.openElementOption();
+        } else {
+            viewParent = (AddView) view.getParent();
+        }
         int X = (int) event.getRawX();
         int Y = (int) event.getRawY();
         RelativeLayout.LayoutParams params =
-            (RelativeLayout.LayoutParams) elementView.getLayoutParams();
+            (RelativeLayout.LayoutParams) viewParent.getLayoutParams();
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 mBaseX = X;
@@ -122,7 +127,7 @@ public class ResizeImageView extends AppCompatImageView implements View.OnTouchL
                 }
                 if (params.width < mMinSize) params.width = mMinSize;
                 if (params.height < mMinSize) params.height = mMinSize;
-                elementView.setLayoutParams(params);
+                viewParent.setLayoutParams(params);
                 break;
         }
         return true;

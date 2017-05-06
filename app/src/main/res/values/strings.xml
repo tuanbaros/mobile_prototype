@@ -111,4 +111,8 @@
     <string name="title_image">Image</string>
     <string name="title_icon">Icon</string>
     <string name="title_wireframes">Wireframes</string>
+    <string name="title_apply">Apply</string>
+    <string name="title_stroke">Stroke</string>
+    <string name="title_background">Background</string>
+    <string name="action_backgound_color">Background Color</string>
 </resources>
