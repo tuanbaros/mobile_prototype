@@ -104,4 +104,11 @@
     <string name="text_anonymous">Anonymous</string>
     <string name="text_anonymous_email">Anonymous email</string>
     <string name="title_drawer">Drawer header</string>
+    <string name="action_add">Add</string>
+    <string name="title_oval">Oval</string>
+    <string name="title_rectangle">Rectangle</string>
+    <string name="title_text">Text</string>
+    <string name="title_image">Image</string>
+    <string name="title_icon">Icon</string>
+    <string name="title_wireframes">Wireframes</string>
 </resources>
