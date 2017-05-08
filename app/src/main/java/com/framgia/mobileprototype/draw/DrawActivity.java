@@ -1,18 +1,19 @@
 package com.framgia.mobileprototype.draw;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.view.ContextThemeWrapper;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.azeesoft.lib.colorpicker.ColorPickerDialog;
 import com.framgia.mobileprototype.BaseActivity;
@@ -37,6 +38,8 @@ public class DrawActivity extends BaseActivity {
     private Project mProject;
     private int mActionBarHeight;
     private int mStatusBarHeight;
+    private boolean mIsBackgroundColor;
+
 
     public static Intent getDrawIntent(Context context, Project project) {
         Intent intent = new Intent(context, DrawActivity.class);
@@ -84,9 +87,7 @@ public class DrawActivity extends BaseActivity {
         mColorPickerDialog.setOnColorPickedListener(new ColorPickerDialog.OnColorPickedListener() {
             @Override
             public void onColorPicked(int color, String hexVal) {
-                mRelativeLayout.setTag(color);
-                DrawView drawView = new DrawView(getBaseContext(), color);
-                mRelativeLayout.addView(drawView);
+                setColor(color);
             }
         });
         mColorPickerDialog.hideHexaDecimalValue();
@@ -107,10 +108,12 @@ public class DrawActivity extends BaseActivity {
                 onBackPressed();
                 break;
             case R.id.action_color:
+                mIsBackgroundColor = false;
                 mColorPickerDialog.show();
                 break;
-            case R.id.action_add:
-                showAddDialog();
+            case R.id.action_background_color:
+                mIsBackgroundColor = true;
+                mColorPickerDialog.show();
                 break;
             case R.id.action_undo:
                 undo();
@@ -124,17 +127,15 @@ public class DrawActivity extends BaseActivity {
         return true;
     }
 
-    private void showAddDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(this,
-            android.R.style.Theme_Holo_Light_Dialog));
-        builder.setTitle(R.string.action_add)
-            .setItems(R.array.title_add_options, new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int which) {
-                    // The 'which' argument contains the index position
-                    // of the selected item
-                }
-            });
-        builder.create().show();
+    private void setColor(final int color) {
+        if (mIsBackgroundColor) {
+            addBackgroundView();
+            mRelativeLayout.setBackgroundColor(color);
+            return;
+        }
+        mRelativeLayout.setTag(color);
+        DrawView drawView = new DrawView(getBaseContext(), color);
+        mRelativeLayout.addView(drawView);
     }
 
     private void startResult() {
@@ -173,8 +174,15 @@ public class DrawActivity extends BaseActivity {
         int count = mRelativeLayout.getChildCount();
         for (int i = 0; i < count; i++) {
             int index = count - 1 - i;
-            DrawView drawView = (DrawView) mRelativeLayout.getChildAt(index);
-            if (drawView.getTag() != null && (boolean) drawView.getTag()) {
+            if (mRelativeLayout.getChildAt(index) instanceof DrawView) {
+                DrawView drawView = (DrawView) mRelativeLayout.getChildAt(index);
+                if (drawView.getTag() != null && (boolean) drawView.getTag()) {
+                    mRelativeLayout.removeViewAt(index);
+                    break;
+                }
+            } else if (mRelativeLayout.getChildAt(index) instanceof TextView) {
+                TextView view = (TextView) mRelativeLayout.getChildAt(index);
+                mRelativeLayout.setBackgroundColor((Integer) view.getTag());
                 mRelativeLayout.removeViewAt(index);
                 break;
             }
@@ -206,6 +214,29 @@ public class DrawActivity extends BaseActivity {
             result = getResources().getDimensionPixelSize(resourceId);
         }
         return result;
+    }
+
+    private void addBackgroundView() {
+        TextView view = new TextView(this);
+        view.setVisibility(View.GONE);
+        int color = Color.WHITE;
+        Drawable background = mRelativeLayout.getBackground();
+        if (background instanceof ColorDrawable)
+            color = ((ColorDrawable) background).getColor();
+        view.setTag(color);
+        int lastDrawViewIndex = mRelativeLayout.getChildCount() - 1;
+        if (mRelativeLayout.getChildAt(lastDrawViewIndex) instanceof DrawView) {
+            mRelativeLayout.removeViewAt(lastDrawViewIndex);
+        }
+        mRelativeLayout.addView(view);
+        mRelativeLayout.addView(new DrawView(this, (Integer) mRelativeLayout.getTag()));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mRelativeLayout.getTag() == null) return;
+        mColorPickerDialog.setLastColor((Integer) mRelativeLayout.getTag());
     }
 
     private int getCurrentColor() {
