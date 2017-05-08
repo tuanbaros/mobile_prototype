@@ -3,15 +3,27 @@
 
     <data>
 
+        <import type="android.view.View"/>
+
         <variable
             name="presenter"
             type="com.framgia.mobileprototype.projectdetail.ProjectDetailContract.Presenter"/>
+
+        <variable
+            name="project"
+            type="com.framgia.mobileprototype.data.model.Project"/>
     </data>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
+        <TextView
+            style="@style/PickImageTextView"
+            android:onClick="@{() -> presenter.openLibrary()}"
+            android:text="@string/action_library"
+            android:visibility="@{project.portrait ? View.VISIBLE : View.GONE}"/>
 
         <TextView
             style="@style/PickImageTextView"

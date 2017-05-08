@@ -66,8 +66,12 @@
             android:screenOrientation="landscape"/>
         <activity
             android:name=".crop.LandscapeCropActivity"
-            android:theme="@style/Base.Theme.AppCompat"
-            android:screenOrientation="landscape"/>
+            android:screenOrientation="landscape"
+            android:theme="@style/Base.Theme.AppCompat"/>
+        <activity
+            android:name=".library.LibraryActivity"
+            android:screenOrientation="portrait">
+        </activity>
     </application>
 
 </manifest>
