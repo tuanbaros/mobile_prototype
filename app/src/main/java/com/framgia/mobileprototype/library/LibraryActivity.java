@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -14,7 +15,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
-
 import com.azeesoft.lib.colorpicker.ColorPickerDialog;
 import com.framgia.mobileprototype.BaseActivity;
 import com.framgia.mobileprototype.Constant;
@@ -79,8 +79,21 @@ public class LibraryActivity extends BaseActivity
     private void setUpColor(int color) {
         AddView addView = (AddView) mRelativeLayout.getTag();
         if (addView == null) return;
+        RelativeLayout relativeLayout;
         switch (addView.getType()) {
             case PATTERN_OVAL:
+                relativeLayout = (RelativeLayout) addView.getTag();
+                if (relativeLayout != null) {
+                    GradientDrawable gradientDrawable = (GradientDrawable) relativeLayout
+                            .getBackground();
+                    gradientDrawable.setColor(color);
+                    int sdk = android.os.Build.VERSION.SDK_INT;
+                    if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                        relativeLayout.setBackgroundDrawable(gradientDrawable);
+                    } else {
+                        relativeLayout.setBackground(gradientDrawable);
+                    }
+                }
                 break;
             case PATTERN_ICON:
                 break;
@@ -89,7 +102,7 @@ public class LibraryActivity extends BaseActivity
             case PATTERN_TEXT:
                 break;
             case PATTERN_RECTANGLE:
-                RelativeLayout relativeLayout = (RelativeLayout) addView.getTag();
+                relativeLayout = (RelativeLayout) addView.getTag();
                 if (relativeLayout != null) {
                     relativeLayout.setBackgroundColor(color);
                 }
@@ -178,6 +191,7 @@ public class LibraryActivity extends BaseActivity
             public void onClick(DialogInterface dialogInterface, int i) {
                 switch (i) {
                     case PATTERN_OVAL:
+                        addOval();
                         break;
                     case PATTERN_ICON:
                         break;
@@ -199,6 +213,22 @@ public class LibraryActivity extends BaseActivity
         builder.create().show();
     }
 
+    private void addOval() {
+        AddView addView = (AddView) View.inflate(this, R.layout.add, null);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(Constant.MIN_SIZE,
+            Constant.MIN_SIZE);
+        addView.setLayoutParams(params);
+        addView.setPresenter(mLibraryPresenter);
+        addView.setType(PATTERN_OVAL);
+        RelativeLayout relativeLayout =
+            (RelativeLayout) addView.findViewById(R.id.relative_layout);
+        relativeLayout.setBackgroundResource(R.drawable.oval);
+        addView.setTag(relativeLayout);
+        hideCurrentAddViewIsFocused();
+        mRelativeLayout.addView(addView);
+        mRelativeLayout.setTag(addView);
+    }
+
     private void addRectangle() {
         AddView addView = (AddView) View.inflate(this, R.layout.add, null);
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(Constant.MIN_SIZE,
@@ -211,6 +241,7 @@ public class LibraryActivity extends BaseActivity
         addView.setTag(relativeLayout);
         hideCurrentAddViewIsFocused();
         mRelativeLayout.addView(addView);
+        mRelativeLayout.setTag(addView);
     }
 
     @Override
