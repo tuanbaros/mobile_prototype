@@ -10,7 +10,8 @@ import com.framgia.mobileprototype.BaseView;
  */
 public interface LibraryContract {
     interface View extends BaseView {
-
+        void showOption();
+        void hideOption();
     }
 
     interface Presenter extends BasePresenter {
