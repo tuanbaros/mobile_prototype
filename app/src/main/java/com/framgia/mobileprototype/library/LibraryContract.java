@@ -15,6 +15,6 @@ public interface LibraryContract {
     }
 
     interface Presenter extends BasePresenter {
-
+        void handleShowOption();
     }
 }

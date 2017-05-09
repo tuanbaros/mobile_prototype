@@ -6,6 +6,12 @@
     android:layout_height="@dimen/dp_150"
     android:background="@drawable/border_add_view">
 
+    <RelativeLayout
+        android:id="@+id/relative_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimaryDark"/>
+
     <com.framgia.mobileprototype.ui.widget.ResizeImageView
         android:id="@+id/top_left_resize_image_view"
         android:layout_width="@dimen/dp_15"

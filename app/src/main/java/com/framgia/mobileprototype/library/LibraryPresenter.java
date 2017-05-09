@@ -17,4 +17,9 @@ public class LibraryPresenter implements LibraryContract.Presenter {
     public void start() {
         mLibraryView.start();
     }
+
+    @Override
+    public void handleShowOption() {
+        mLibraryView.showOption();
+    }
 }

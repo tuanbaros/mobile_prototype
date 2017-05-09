@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.framgia.mobileprototype.R;
+import com.framgia.mobileprototype.library.LibraryContract;
 
 /**
  * Created by tuannt on 5/6/17.
@@ -18,6 +19,8 @@ public class AddView extends RelativeLayout implements View.OnTouchListener {
     private static final int NUMBER_DOT_CONTROL = 4;
     private int mXDelta;
     private int mYDelta;
+    private LibraryContract.Presenter mPresenter;
+    private int mType;
 
     public AddView(Context context) {
         super(context);
@@ -28,6 +31,18 @@ public class AddView extends RelativeLayout implements View.OnTouchListener {
         setOnTouchListener(this);
     }
 
+    public int getType() {
+        return mType;
+    }
+
+    public void setType(int type) {
+        mType = type;
+    }
+
+    public void setPresenter(LibraryContract.Presenter presenter) {
+        mPresenter = presenter;
+    }
+
     public AddView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
@@ -35,6 +50,7 @@ public class AddView extends RelativeLayout implements View.OnTouchListener {
     @Override
     public boolean onTouch(View view, MotionEvent event) {
         RelativeLayout parentView = (RelativeLayout) view.getParent();
+        hideAnotherView();
         showControl();
         view.bringToFront();
         final int X = (int) event.getRawX();
@@ -62,21 +78,30 @@ public class AddView extends RelativeLayout implements View.OnTouchListener {
                 view.setLayoutParams(params);
                 break;
         }
-//        parentView.setTag(view);
+        if (mPresenter != null) mPresenter.handleShowOption();
+        parentView.setTag(view);
         return true;
     }
 
-    private void hideControl() {
-        for (int j = 0; j < NUMBER_DOT_CONTROL; j++) {
+    public void hideControl() {
+        for (int j = 1; j <= NUMBER_DOT_CONTROL; j++) {
             getChildAt(j).setVisibility(GONE);
         }
         setBackgroundResource(0);
     }
 
     private void showControl() {
-        for (int j = 0; j < NUMBER_DOT_CONTROL; j++) {
+        for (int j = 1; j <= NUMBER_DOT_CONTROL; j++) {
             getChildAt(j).setVisibility(VISIBLE);
         }
         setBackgroundResource(R.drawable.border_add_view);
+    }
+
+    private void hideAnotherView() {
+        RelativeLayout parentView = (RelativeLayout) getParent();
+        for (int i = 0; i < parentView.getChildCount(); i++) {
+            AddView addView = (AddView) parentView.getChildAt(i);
+            addView.hideControl();
+        }
     }
 }
