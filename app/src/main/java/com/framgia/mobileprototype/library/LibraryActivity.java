@@ -1,12 +1,16 @@
 package com.framgia.mobileprototype.library;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.RelativeLayout;
 
 import com.azeesoft.lib.colorpicker.ColorPickerDialog;
@@ -26,6 +30,7 @@ public class LibraryActivity extends BaseActivity implements LibraryContract.Vie
     private RelativeLayout mRelativeLayout;
     private Project mProject;
     private ColorPickerDialog mColorPickerDialog;
+    private MenuItem mColorItem, mDeleteItem;
 
     public static Intent getLibraryIntent(Context context, Project project) {
         Intent intent = new Intent(context, LibraryActivity.class);
@@ -84,6 +89,56 @@ public class LibraryActivity extends BaseActivity implements LibraryContract.Vie
     private void setUpTitle() {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) actionBar.setTitle(R.string.title_design);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = new MenuInflater(this);
+        menuInflater.inflate(R.menu.activity_library, menu);
+        mColorItem = menu.findItem(R.id.action_color);
+        mDeleteItem = menu.findItem(R.id.action_remove);
+        hideOption();
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public void hideOption() {
+        mColorItem.setVisible(false);
+        mDeleteItem.setVisible(false);
+    }
+
+    @Override
+    public void showOption() {
+        mColorItem.setVisible(true);
+        mDeleteItem.setVisible(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case R.id.action_add:
+                showAlertDialog();
+                break;
+            case R.id.action_color:
+                break;
+            case R.id.action_remove:
+                break;
+            case R.id.action_save:
+                break;
+            default: break;
+        }
+        return true;
+    }
+
+    private void showAlertDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.title_choose_pattern);
+        builder.setItems(R.array.title_add_options, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+            }
+        });
+        builder.create().show();
     }
 
     @Override
