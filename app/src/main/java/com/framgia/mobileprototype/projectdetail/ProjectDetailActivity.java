@@ -53,6 +53,7 @@ import com.framgia.mobileprototype.draw.DrawActivity;
 import com.framgia.mobileprototype.draw.LandscapeDrawActivity;
 import com.framgia.mobileprototype.helper.ItemTouchCallbackHelper;
 import com.framgia.mobileprototype.helper.OnStartDragListener;
+import com.framgia.mobileprototype.library.LibraryActivity;
 import com.framgia.mobileprototype.mockdetail.LandcapeMockDetailActivity;
 import com.framgia.mobileprototype.mockdetail.MockDetailActivity;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -71,6 +72,7 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
     public static final int CAMERA_REQUEST_CODE = 3;
     public static final int GALLERY_REQUEST_CODE = 4;
     public static final int DRAW_REQUEST_CODE = 5;
+    public static final int LIBRARY_REQUEST_CODE = 6;
     private static final int DEFAULT_NUMBER_MOCKS_TO_REMOVE = 0;
     private Project mProject;
     private ProjectDetailContract.Presenter mProjectDetailPresenter;
@@ -168,6 +170,7 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
         DialogPickImageBinding mPickImageBinding = DataBindingUtil.inflate(getLayoutInflater(),
             R.layout.dialog_pick_image, null, false);
         mPickImageBinding.setPresenter(mProjectDetailPresenter);
+        mPickImageBinding.setProject(mProject);
         mPickImageDialog = new Dialog(this);
         mPickImageDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         mPickImageDialog.setContentView(mPickImageBinding.getRoot());
@@ -346,6 +349,13 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
         if (mCloneMockDialog != null && mCloneMockDialog.isShowing()) {
             mCloneMockDialog.cancel();
         }
+    }
+
+    @Override
+    public void showLibraryUi() {
+        mPickImageDialog.cancel();
+        startActivityForResult(
+            LibraryActivity.getLibraryIntent(this, mProject), LIBRARY_REQUEST_CODE);
     }
 
     @Override

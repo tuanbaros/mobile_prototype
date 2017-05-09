@@ -38,6 +38,7 @@ public interface ProjectDetailContract {
         void showDrawUi();
         void showCloneMockDialogUi(List<Project> projects, Mock mock);
         void closeCloneMockDialog();
+        void showLibraryUi();
     }
 
     interface Presenter extends BasePresenter {
@@ -69,5 +70,6 @@ public interface ProjectDetailContract {
         void cloneMock(Mock mock);
         void closeCloneMockDialog();
         void setProjectId(int id);
+        void openLibrary();
     }
 }

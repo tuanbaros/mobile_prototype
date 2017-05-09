@@ -327,4 +327,9 @@ public class ProjectDetailPresenter implements ProjectDetailContract.Presenter {
     public void setProjectId(int projectId) {
         mProjectId = projectId;
     }
+
+    @Override
+    public void openLibrary() {
+        mProjectDetailView.showLibraryUi();
+    }
 }
