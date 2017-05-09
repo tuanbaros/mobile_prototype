@@ -11,6 +11,8 @@ import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.azeesoft.lib.colorpicker.ColorPickerDialog;
@@ -19,10 +21,18 @@ import com.framgia.mobileprototype.Constant;
 import com.framgia.mobileprototype.R;
 import com.framgia.mobileprototype.data.model.Project;
 import com.framgia.mobileprototype.databinding.ActivityLibraryBinding;
+import com.framgia.mobileprototype.ui.widget.AddView;
 import com.framgia.mobileprototype.util.ScreenSizeUtil;
 
-public class LibraryActivity extends BaseActivity implements LibraryContract.View {
+public class LibraryActivity extends BaseActivity
+    implements LibraryContract.View, View.OnTouchListener {
     private static final String EXTRA_PROJECT = "EXTRA_PROJECT";
+    private static final int PATTERN_OVAL = 0;
+    private static final int PATTERN_RECTANGLE = 1;
+    private static final int PATTERN_TEXT = 2;
+    private static final int PATTERN_IMAGE = 3;
+    private static final int PATTERN_ICON = 4;
+    private static final int PATTERN_WIREFRAMES = 5;
     private ActivityLibraryBinding mLibraryBinding;
     private LibraryContract.Presenter mLibraryPresenter;
     private int mActionBarHeight;
@@ -58,12 +68,37 @@ public class LibraryActivity extends BaseActivity implements LibraryContract.Vie
         mColorPickerDialog.setOnColorPickedListener(new ColorPickerDialog.OnColorPickedListener() {
             @Override
             public void onColorPicked(int color, String hexVal) {
-                // TODO: 5/8/17
+                setUpColor(color);
             }
         });
         mColorPickerDialog.hideHexaDecimalValue();
         mColorPickerDialog.hideColorComponentsInfo();
         mColorPickerDialog.setInitialColor(ColorPickerDialog.getLastColor(this));
+    }
+
+    private void setUpColor(int color) {
+        AddView addView = (AddView) mRelativeLayout.getTag();
+        if (addView == null) return;
+        switch (addView.getType()) {
+            case PATTERN_OVAL:
+                break;
+            case PATTERN_ICON:
+                break;
+            case PATTERN_IMAGE:
+                break;
+            case PATTERN_TEXT:
+                break;
+            case PATTERN_RECTANGLE:
+                RelativeLayout relativeLayout = (RelativeLayout) addView.getTag();
+                if (relativeLayout != null) {
+                    relativeLayout.setBackgroundColor(color);
+                }
+                break;
+            case PATTERN_WIREFRAMES:
+                break;
+            default:
+                break;
+        }
     }
 
     private void setUpMainView() {
@@ -84,6 +119,7 @@ public class LibraryActivity extends BaseActivity implements LibraryContract.Vie
         mRelativeLayout.setLayoutParams(layoutParams);
         mRelativeLayout.setBackgroundColor(Color.WHITE);
         mLibraryBinding.relativeLayout.addView(mRelativeLayout);
+        mRelativeLayout.setOnTouchListener(this);
     }
 
     private void setUpTitle() {
@@ -120,12 +156,16 @@ public class LibraryActivity extends BaseActivity implements LibraryContract.Vie
                 showAlertDialog();
                 break;
             case R.id.action_color:
+                mColorPickerDialog.show();
                 break;
             case R.id.action_remove:
+                removeCurrentAddViewIsFocused();
+                hideOption();
                 break;
             case R.id.action_save:
                 break;
-            default: break;
+            default:
+                break;
         }
         return true;
     }
@@ -136,9 +176,41 @@ public class LibraryActivity extends BaseActivity implements LibraryContract.Vie
         builder.setItems(R.array.title_add_options, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                switch (i) {
+                    case PATTERN_OVAL:
+                        break;
+                    case PATTERN_ICON:
+                        break;
+                    case PATTERN_IMAGE:
+                        break;
+                    case PATTERN_TEXT:
+                        break;
+                    case PATTERN_RECTANGLE:
+                        addRectangle();
+                        break;
+                    case PATTERN_WIREFRAMES:
+                        break;
+                    default:
+                        break;
+                }
+                showOption();
             }
         });
         builder.create().show();
+    }
+
+    private void addRectangle() {
+        AddView addView = (AddView) View.inflate(this, R.layout.add, null);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(Constant.MIN_SIZE,
+            Constant.MIN_SIZE);
+        addView.setLayoutParams(params);
+        addView.setPresenter(mLibraryPresenter);
+        addView.setType(PATTERN_RECTANGLE);
+        RelativeLayout relativeLayout =
+            (RelativeLayout) addView.findViewById(R.id.relative_layout);
+        addView.setTag(relativeLayout);
+        hideCurrentAddViewIsFocused();
+        mRelativeLayout.addView(addView);
     }
 
     @Override
@@ -161,5 +233,23 @@ public class LibraryActivity extends BaseActivity implements LibraryContract.Vie
             result = getResources().getDimensionPixelSize(resourceId);
         }
         return result;
+    }
+
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        hideCurrentAddViewIsFocused();
+        return true;
+    }
+
+    private void hideCurrentAddViewIsFocused() {
+        AddView addView = (AddView) mRelativeLayout.getTag();
+        if (addView == null) return;
+        addView.hideControl();
+    }
+
+    private void removeCurrentAddViewIsFocused() {
+        AddView addView = (AddView) mRelativeLayout.getTag();
+        if (addView == null) return;
+        mRelativeLayout.removeView(addView);
     }
 }
