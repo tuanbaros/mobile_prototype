@@ -1,12 +1,19 @@
 package com.framgia.mobileprototype.library;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.view.Menu;
@@ -14,15 +21,23 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 import com.azeesoft.lib.colorpicker.ColorPickerDialog;
+import com.bumptech.glide.Glide;
 import com.framgia.mobileprototype.BaseActivity;
 import com.framgia.mobileprototype.Constant;
 import com.framgia.mobileprototype.R;
 import com.framgia.mobileprototype.data.model.Project;
 import com.framgia.mobileprototype.databinding.ActivityLibraryBinding;
+import com.framgia.mobileprototype.projectdetail.ProjectDetailActivity;
 import com.framgia.mobileprototype.ui.widget.AddView;
 import com.framgia.mobileprototype.util.ScreenSizeUtil;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
+import java.util.ArrayList;
 
 public class LibraryActivity extends BaseActivity
     implements LibraryContract.View, View.OnTouchListener {
@@ -33,6 +48,7 @@ public class LibraryActivity extends BaseActivity
     private static final int PATTERN_IMAGE = 3;
     private static final int PATTERN_ICON = 4;
     private static final int PATTERN_WIREFRAMES = 5;
+    private static final int PERMISSION_REQUEST_CODE = 0;
     private ActivityLibraryBinding mLibraryBinding;
     private LibraryContract.Presenter mLibraryPresenter;
     private int mActionBarHeight;
@@ -41,6 +57,7 @@ public class LibraryActivity extends BaseActivity
     private Project mProject;
     private ColorPickerDialog mColorPickerDialog;
     private MenuItem mColorItem, mDeleteItem;
+    private ArrayList<String> mDeniedPermissions = new ArrayList<>();
 
     public static Intent getLibraryIntent(Context context, Project project) {
         Intent intent = new Intent(context, LibraryActivity.class);
@@ -165,6 +182,9 @@ public class LibraryActivity extends BaseActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem menuItem) {
         switch (menuItem.getItemId()) {
+            case android.R.id.home:
+                finish();
+                break;
             case R.id.action_add:
                 showAlertDialog();
                 break;
@@ -196,6 +216,7 @@ public class LibraryActivity extends BaseActivity
                     case PATTERN_ICON:
                         break;
                     case PATTERN_IMAGE:
+                        checkPermission();
                         break;
                     case PATTERN_TEXT:
                         break;
@@ -244,6 +265,28 @@ public class LibraryActivity extends BaseActivity
         mRelativeLayout.setTag(addView);
     }
 
+    private void addImage(Uri uri) {
+        AddView addView = (AddView) View.inflate(this, R.layout.add, null);
+        int w = ScreenSizeUtil.sWidth / 3;
+        int h = w * ScreenSizeUtil.sHeight / ScreenSizeUtil.sWidth;
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(w, h);
+        addView.setLayoutParams(params);
+        addView.setPresenter(mLibraryPresenter);
+        addView.setType(PATTERN_IMAGE);
+        RelativeLayout relativeLayout =
+                (RelativeLayout) addView.findViewById(R.id.relative_layout);
+        ImageView imageView = new ImageView(this);
+        RelativeLayout.LayoutParams imageParams = new RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        imageView.setLayoutParams(imageParams);
+        relativeLayout.addView(imageView);
+        Glide.with(this).load(uri).into(imageView);
+        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+        hideCurrentAddViewIsFocused();
+        mRelativeLayout.addView(addView);
+        mRelativeLayout.setTag(addView);
+    }
+
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         if (mActionBarHeight > 0) return false;
@@ -282,5 +325,76 @@ public class LibraryActivity extends BaseActivity
         AddView addView = (AddView) mRelativeLayout.getTag();
         if (addView == null) return;
         mRelativeLayout.removeView(addView);
+    }
+
+    private void checkPermission() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            pickImage();
+            return;
+        }
+        String[] permissions = { Manifest.permission.WRITE_EXTERNAL_STORAGE};
+        for (String permission : permissions) {
+            if (ContextCompat.checkSelfPermission(this,
+                    permission) != PackageManager.PERMISSION_GRANTED) {
+                mDeniedPermissions.add(permission);
+            }
+        }
+        if (mDeniedPermissions.size() == 0) {
+            pickImage();
+            return;
+        }
+        ActivityCompat.requestPermissions(this,
+                mDeniedPermissions.toArray(new String[mDeniedPermissions.size()]),
+                PERMISSION_REQUEST_CODE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+            @NonNull String permissions[],
+            @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case PERMISSION_REQUEST_CODE:
+                if (grantResults.length > 0 &&
+                        grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    pickImage();
+                } else {
+                    Toast.makeText(
+                            this, R.string.msg_grant_permission, Toast.LENGTH_LONG).show();
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            switch (requestCode) {
+                case CropImage.PICK_IMAGE_CHOOSER_REQUEST_CODE:
+                    Uri imageUri = CropImage.getPickImageResultUri(this, data);
+                    cropImage(imageUri);
+                    break;
+                case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
+                    CropImage.ActivityResult result = CropImage.getActivityResult(data);
+                    if (result.getUri() == null) return;
+                    addImage(result.getUri());
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    private void pickImage() {
+        CropImage.startPickImageActivity(this);
+    }
+
+    private void cropImage(Uri imageUri) {
+        CropImage.activity(imageUri)
+                .setGuidelines(CropImageView.Guidelines.ON)
+                .setAutoZoomEnabled(false)
+                .setAspectRatio(ScreenSizeUtil.sWidth, ScreenSizeUtil.sHeight)
+                .start(this);
     }
 }
