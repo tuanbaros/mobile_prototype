@@ -32,9 +32,9 @@ import com.framgia.mobileprototype.Constant;
 import com.framgia.mobileprototype.R;
 import com.framgia.mobileprototype.data.model.Project;
 import com.framgia.mobileprototype.databinding.ActivityLibraryBinding;
-import com.framgia.mobileprototype.projectdetail.ProjectDetailActivity;
 import com.framgia.mobileprototype.ui.widget.AddView;
 import com.framgia.mobileprototype.util.ScreenSizeUtil;
+import com.mikepenz.iconics.view.IconicsImageView;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 import java.util.ArrayList;
@@ -49,6 +49,7 @@ public class LibraryActivity extends BaseActivity
     private static final int PATTERN_ICON = 4;
     private static final int PATTERN_WIREFRAMES = 5;
     private static final int PERMISSION_REQUEST_CODE = 0;
+    private static final int ICON_REQUEST_CODE = 1;
     private ActivityLibraryBinding mLibraryBinding;
     private LibraryContract.Presenter mLibraryPresenter;
     private int mActionBarHeight;
@@ -56,7 +57,7 @@ public class LibraryActivity extends BaseActivity
     private RelativeLayout mRelativeLayout;
     private Project mProject;
     private ColorPickerDialog mColorPickerDialog;
-    private MenuItem mColorItem, mDeleteItem;
+    private MenuItem mColorItem, mDeleteItem, mBringToFrontItem;
     private ArrayList<String> mDeniedPermissions = new ArrayList<>();
 
     public static Intent getLibraryIntent(Context context, Project project) {
@@ -113,6 +114,8 @@ public class LibraryActivity extends BaseActivity
                 }
                 break;
             case PATTERN_ICON:
+                IconicsImageView iconicsImageView = (IconicsImageView) addView.getTag();
+                iconicsImageView.setColor(color);
                 break;
             case PATTERN_IMAGE:
                 break;
@@ -163,6 +166,7 @@ public class LibraryActivity extends BaseActivity
         menuInflater.inflate(R.menu.activity_library, menu);
         mColorItem = menu.findItem(R.id.action_color);
         mDeleteItem = menu.findItem(R.id.action_remove);
+        mBringToFrontItem = menu.findItem(R.id.action_bring_to_front);
         hideOption();
         return super.onCreateOptionsMenu(menu);
     }
@@ -171,12 +175,14 @@ public class LibraryActivity extends BaseActivity
     public void hideOption() {
         mColorItem.setVisible(false);
         mDeleteItem.setVisible(false);
+        mBringToFrontItem.setVisible(false);
     }
 
     @Override
     public void showOption() {
         mColorItem.setVisible(true);
         mDeleteItem.setVisible(true);
+        mBringToFrontItem.setVisible(true);
     }
 
     @Override
@@ -197,10 +203,21 @@ public class LibraryActivity extends BaseActivity
                 break;
             case R.id.action_save:
                 break;
+            case R.id.action_clear:
+                clearView();
+                break;
+            case R.id.action_bring_to_front:
+                bringViewToFront();
+                break;
             default:
                 break;
         }
         return true;
+    }
+
+    private void bringViewToFront() {
+        AddView addView = (AddView) mRelativeLayout.getTag();
+        addView.bringToFront();
     }
 
     private void showAlertDialog() {
@@ -212,26 +229,52 @@ public class LibraryActivity extends BaseActivity
                 switch (i) {
                     case PATTERN_OVAL:
                         addOval();
+                        showOption();
                         break;
                     case PATTERN_ICON:
+                        startActivityForResult(new Intent(getBaseContext(), IconActivity.class),
+                                ICON_REQUEST_CODE);
                         break;
                     case PATTERN_IMAGE:
                         checkPermission();
+                        showOption();
                         break;
                     case PATTERN_TEXT:
                         break;
                     case PATTERN_RECTANGLE:
                         addRectangle();
+                        showOption();
                         break;
                     case PATTERN_WIREFRAMES:
                         break;
                     default:
                         break;
                 }
-                showOption();
             }
         });
         builder.create().show();
+    }
+
+    private void addIcon(String icon) {
+        AddView addView = (AddView) View.inflate(this, R.layout.add, null);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(Constant.MIN_SIZE,
+                Constant.MIN_SIZE);
+        addView.setLayoutParams(params);
+        addView.setPresenter(mLibraryPresenter);
+        addView.setType(PATTERN_ICON);
+        RelativeLayout relativeLayout =
+                (RelativeLayout) addView.findViewById(R.id.relative_layout);
+        relativeLayout.setBackgroundColor(0);
+        IconicsImageView imageView = new IconicsImageView(this);
+        RelativeLayout.LayoutParams imageParams = new RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        imageView.setLayoutParams(imageParams);
+        relativeLayout.addView(imageView);
+        addView.setTag(imageView);
+        imageView.setIcon(icon);
+        hideCurrentAddViewIsFocused();
+        mRelativeLayout.addView(addView);
+        mRelativeLayout.setTag(addView);
     }
 
     private void addOval() {
@@ -312,6 +355,7 @@ public class LibraryActivity extends BaseActivity
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
         hideCurrentAddViewIsFocused();
+        hideOption();
         return true;
     }
 
@@ -380,6 +424,12 @@ public class LibraryActivity extends BaseActivity
                     if (result.getUri() == null) return;
                     addImage(result.getUri());
                     break;
+                case ICON_REQUEST_CODE:
+                    if (data == null) return;
+                    String icon = data.getStringExtra(IconActivity.EXTRA_ICON);
+                    addIcon(icon);
+                    showOption();
+                    break;
                 default:
                     break;
             }
@@ -396,5 +446,9 @@ public class LibraryActivity extends BaseActivity
                 .setAutoZoomEnabled(false)
                 .setAspectRatio(ScreenSizeUtil.sWidth, ScreenSizeUtil.sHeight)
                 .start(this);
+    }
+
+    public void clearView() {
+        mRelativeLayout.removeAllViews();
     }
 }
