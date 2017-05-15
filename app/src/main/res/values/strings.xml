@@ -110,6 +110,7 @@
     <string name="title_text">Text</string>
     <string name="title_image">Image</string>
     <string name="title_icon">Icon</string>
+    <string name="title_icons">Icons</string>
     <string name="title_wireframes">Wireframes</string>
     <string name="title_apply">Apply</string>
     <string name="title_stroke">Stroke</string>
@@ -119,4 +120,6 @@
     <string name="title_design">Design</string>
     <string name="title_choose_pattern">Choose a pattern</string>
     <string name="title_add_view">AddView</string>
+    <string name="action_clear">Clear</string>
+    <string name="action_bring_to_front">Bring to front</string>
 </resources>

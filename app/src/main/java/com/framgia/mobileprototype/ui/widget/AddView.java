@@ -52,7 +52,6 @@ public class AddView extends RelativeLayout implements View.OnTouchListener {
         RelativeLayout parentView = (RelativeLayout) view.getParent();
         hideAnotherView();
         showControl();
-        view.bringToFront();
         final int X = (int) event.getRawX();
         final int Y = (int) event.getRawY();
         RelativeLayout.LayoutParams params =
