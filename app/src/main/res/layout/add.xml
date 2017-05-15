@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:background="@color/colorPrimaryDark"/>
 
-    <com.framgia.mobileprototype.ui.widget.ResizeImageView
+    <com.framgia.mobileprototype.ui.widget.ResizeView
         android:id="@+id/top_left_resize_image_view"
         android:layout_width="@dimen/dp_15"
         android:layout_height="@dimen/dp_15"
@@ -22,7 +22,7 @@
         android:adjustViewBounds="true"
         android:background="@drawable/link_to_resize"/>
 
-    <com.framgia.mobileprototype.ui.widget.ResizeImageView
+    <com.framgia.mobileprototype.ui.widget.ResizeView
         android:id="@+id/top_right_resize_image_view"
         android:layout_width="@dimen/dp_15"
         android:layout_height="@dimen/dp_15"
@@ -32,7 +32,7 @@
         android:adjustViewBounds="true"
         android:background="@drawable/link_to_resize"/>
 
-    <com.framgia.mobileprototype.ui.widget.ResizeImageView
+    <com.framgia.mobileprototype.ui.widget.ResizeView
         android:id="@+id/bottom_left_resize_image_view"
         android:layout_width="@dimen/dp_15"
         android:layout_height="@dimen/dp_15"
@@ -42,7 +42,7 @@
         android:adjustViewBounds="true"
         android:background="@drawable/link_to_resize"/>
 
-    <com.framgia.mobileprototype.ui.widget.ResizeImageView
+    <com.framgia.mobileprototype.ui.widget.ResizeView
         android:id="@+id/bottom_right_resize_image_view"
         android:layout_width="@dimen/dp_15"
         android:layout_height="@dimen/dp_15"

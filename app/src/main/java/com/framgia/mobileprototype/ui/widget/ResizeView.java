@@ -1,12 +1,10 @@
 package com.framgia.mobileprototype.ui.widget;
 
 import android.content.Context;
-import android.support.v7.widget.AppCompatImageView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
-
 import com.framgia.mobileprototype.R;
 import com.framgia.mobileprototype.mockdetail.MockDetailContract;
 
@@ -15,7 +13,7 @@ import com.framgia.mobileprototype.mockdetail.MockDetailContract;
  * Project: mobile_prototype
  * Package: com.framgia.mobileprototype.ui.widget
  */
-public class ResizeImageView extends AppCompatImageView implements View.OnTouchListener {
+public class ResizeView extends RelativeLayout implements View.OnTouchListener {
     private int mBaseX;
     private int mBaseY;
     private int mBaseW;
@@ -29,7 +27,7 @@ public class ResizeImageView extends AppCompatImageView implements View.OnTouchL
     private int mMinSize;
     private MockDetailContract.Presenter mPresenter;
 
-    public ResizeImageView(Context context, AttributeSet attrs) {
+    public ResizeView(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.setOnTouchListener(this);
     }
@@ -54,7 +52,11 @@ public class ResizeImageView extends AppCompatImageView implements View.OnTouchL
                 mBaseY = Y;
                 mBaseW = params.width;
                 mBaseH = params.height;
-                mMinSize = getResources().getDimensionPixelSize(R.dimen.dp_50);
+                if (viewParent instanceof ElementView) {
+                    mMinSize = getResources().getDimensionPixelSize(R.dimen.dp_50);
+                } else {
+                    mMinSize = getResources().getDimensionPixelSize(R.dimen.dp_20);
+                }
                 switch (view.getId()) {
                     case R.id.top_right_resize_image_view:
                         mBaseTopMargin = params.topMargin;
