@@ -122,4 +122,5 @@
     <string name="title_add_view">AddView</string>
     <string name="action_clear">Clear</string>
     <string name="action_bring_to_front">Bring to front</string>
+    <string name="action_done">Done</string>
 </resources>

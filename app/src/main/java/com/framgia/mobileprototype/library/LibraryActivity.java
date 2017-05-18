@@ -18,12 +18,15 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -35,6 +38,7 @@ import com.framgia.mobileprototype.R;
 import com.framgia.mobileprototype.data.model.Project;
 import com.framgia.mobileprototype.databinding.ActivityLibraryBinding;
 import com.framgia.mobileprototype.ui.widget.AddView;
+import com.framgia.mobileprototype.ui.widget.AutoResizeTextView;
 import com.framgia.mobileprototype.util.ScreenSizeUtil;
 import com.mikepenz.iconics.view.IconicsImageView;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -128,6 +132,8 @@ public class LibraryActivity extends BaseActivity
             case PATTERN_IMAGE:
                 break;
             case PATTERN_TEXT:
+                AutoResizeTextView textView = (AutoResizeTextView) addView.getTag();
+                textView.setTextColor(color);
                 break;
             case PATTERN_RECTANGLE:
                 relativeLayout = (RelativeLayout) addView.getTag();
@@ -250,6 +256,7 @@ public class LibraryActivity extends BaseActivity
                         showOption();
                         break;
                     case PATTERN_TEXT:
+                        showTextPatternDialog();
                         break;
                     case PATTERN_RECTANGLE:
                         addRectangle();
@@ -263,6 +270,47 @@ public class LibraryActivity extends BaseActivity
             }
         });
         builder.create().show();
+    }
+
+    private void showTextPatternDialog() {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.dialog_text_pattern, null);
+        dialogBuilder.setView(dialogView);
+        final EditText editText = (EditText) dialogView.findViewById(R.id.edit_text);
+        dialogBuilder.setPositiveButton(R.string.action_done, new DialogInterface.OnClickListener
+                () {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                String text = editText.getText().toString().trim();
+                if (TextUtils.isEmpty(text)) return;
+                addText(text);
+            }
+        });
+        dialogBuilder.setNegativeButton(R.string.action_cancel_project, null);
+        AlertDialog b = dialogBuilder.create();
+        b.show();
+    }
+
+    private void addText(String text) {
+        AddView addView = (AddView) View.inflate(this, R.layout.add, null);
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(Constant.MIN_SIZE,
+                Constant.MIN_SIZE);
+        addView.setLayoutParams(params);
+        addView.setPresenter(mLibraryPresenter);
+        addView.setType(PATTERN_TEXT);
+        RelativeLayout relativeLayout =
+                (RelativeLayout) addView.findViewById(R.id.relative_layout);
+        relativeLayout.setBackgroundColor(0);
+        RelativeLayout.LayoutParams textParams = new RelativeLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        AutoResizeTextView autoResizeTextView = new AutoResizeTextView(this);
+        autoResizeTextView.setTextA(text);
+        autoResizeTextView.setLayoutParams(textParams);
+        addView.setTag(autoResizeTextView);
+        relativeLayout.addView(autoResizeTextView);
+        hideCurrentAddViewIsFocused();
+        mRelativeLayout.addView(addView);
+        mRelativeLayout.setTag(addView);
     }
 
     private void addIcon(String icon) {
