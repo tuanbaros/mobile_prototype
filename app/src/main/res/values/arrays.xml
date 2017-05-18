@@ -39,7 +39,7 @@
         <item>@string/title_text</item>
         <item>@string/title_image</item>
         <item>@string/title_icon</item>
-        <item>@string/title_wireframes</item>
+        <!--<item>@string/title_wireframes</item>-->
     </string-array>
 
     <string-array name="title_color_object">

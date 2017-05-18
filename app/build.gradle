@@ -6,7 +6,7 @@ android {
   defaultConfig {
     applicationId "com.framgia.mobileprototype"
     minSdkVersion 14
-    targetSdkVersion 25
+    targetSdkVersion 23
     versionCode 1
     versionName "1.0"
     testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -39,6 +39,5 @@ dependencies {
   compile 'org.greenrobot:eventbus:3.0.0'
   compile 'com.mikepenz:iconics-core:2.8.4@aar'
   compile 'com.mikepenz:google-material-typeface:3.0.1.0.original@aar'
-  compile 'com.android.support.constraint:constraint-layout:1.0.2'
   testCompile 'junit:junit:4.12'
 }

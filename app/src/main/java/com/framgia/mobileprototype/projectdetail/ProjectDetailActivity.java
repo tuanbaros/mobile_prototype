@@ -379,29 +379,37 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
                     break;
                 case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
                     CropImage.ActivityResult result = CropImage.getActivityResult(data);
-                    mMockImagePath = result.getUri().getPath();
-                    ImageView imageView;
-                    if (mEditMockDialog != null && mEditMockDialog.isShowing()) {
-                        imageView = mProject.isPortrait() ?
-                            mEditMockBinding.imagePortraitMock :
-                            mEditMockBinding.imageLandscapeMock;
-                        Glide.with(this).load(result.getUri()).into(imageView);
-                        return;
-                    }
-                    if (mCreateMockDialog == null) setUpCreateMockDialog();
-                    imageView = mProject.isPortrait() ?
-                        mAddMockBinding.imagePortraitMock : mAddMockBinding.imageLandscapeMock;
-                    Glide.with(this).load(result.getUri()).into(imageView);
-                    mProjectDetailPresenter.openCreateMockDialog();
+                    showImageInDialog(result.getUri());
                     break;
                 case DRAW_REQUEST_CODE:
                     Uri drawUri = getUriFromFile(data.getStringExtra(DrawActivity.EXTRA_DRAW));
                     if (drawUri != null) cropImage(drawUri);
                     break;
+                case LIBRARY_REQUEST_CODE:
+                    Uri imageUri = data.getData();
+                    if (imageUri != null) showImageInDialog(imageUri);
+                    break;
                 default:
                     break;
             }
         }
+    }
+
+    private void showImageInDialog(Uri uri) {
+        mMockImagePath = uri.getPath();
+        ImageView imageView;
+        if (mEditMockDialog != null && mEditMockDialog.isShowing()) {
+            imageView = mProject.isPortrait() ?
+                    mEditMockBinding.imagePortraitMock :
+                    mEditMockBinding.imageLandscapeMock;
+            Glide.with(this).load(uri).into(imageView);
+            return;
+        }
+        if (mCreateMockDialog == null) setUpCreateMockDialog();
+        imageView = mProject.isPortrait() ?
+                mAddMockBinding.imagePortraitMock : mAddMockBinding.imageLandscapeMock;
+        Glide.with(this).load(uri).into(imageView);
+        mProjectDetailPresenter.openCreateMockDialog();
     }
 
     @Override

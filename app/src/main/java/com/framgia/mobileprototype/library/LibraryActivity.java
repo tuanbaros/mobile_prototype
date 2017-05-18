@@ -6,11 +6,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -37,6 +39,11 @@ import com.framgia.mobileprototype.util.ScreenSizeUtil;
 import com.mikepenz.iconics.view.IconicsImageView;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 
 public class LibraryActivity extends BaseActivity
@@ -59,6 +66,7 @@ public class LibraryActivity extends BaseActivity
     private ColorPickerDialog mColorPickerDialog;
     private MenuItem mColorItem, mDeleteItem, mBringToFrontItem;
     private ArrayList<String> mDeniedPermissions = new ArrayList<>();
+    private boolean mIsSaving;
 
     public static Intent getLibraryIntent(Context context, Project project) {
         Intent intent = new Intent(context, LibraryActivity.class);
@@ -202,6 +210,8 @@ public class LibraryActivity extends BaseActivity
                 hideOption();
                 break;
             case R.id.action_save:
+                startCrop(getDraw());
+                mIsSaving = true;
                 break;
             case R.id.action_clear:
                 clearView();
@@ -422,7 +432,11 @@ public class LibraryActivity extends BaseActivity
                 case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
                     CropImage.ActivityResult result = CropImage.getActivityResult(data);
                     if (result.getUri() == null) return;
-                    addImage(result.getUri());
+                    if (!mIsSaving) {
+                        addImage(result.getUri());
+                    } else {
+                        startResult(result.getUri());
+                    }
                     break;
                 case ICON_REQUEST_CODE:
                     if (data == null) return;
@@ -434,6 +448,14 @@ public class LibraryActivity extends BaseActivity
                     break;
             }
         }
+        mIsSaving = false;
+    }
+
+    private void startResult(Uri uri) {
+        Intent intent = new Intent();
+        intent.setData(uri);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     private void pickImage() {
@@ -444,11 +466,60 @@ public class LibraryActivity extends BaseActivity
         CropImage.activity(imageUri)
                 .setGuidelines(CropImageView.Guidelines.ON)
                 .setAutoZoomEnabled(false)
-                .setAspectRatio(ScreenSizeUtil.sWidth, ScreenSizeUtil.sHeight)
+                .setMinCropResultSize(100, 100)
                 .start(this);
     }
 
     public void clearView() {
         mRelativeLayout.removeAllViews();
+    }
+
+    private void startCrop(Bitmap bitmap) {
+        OutputStream fOut = null;
+        File file = new File(Constant.FILE_TEMP);
+        try {
+            fOut = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (fOut != null) {
+                    fOut.flush();
+                    fOut.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        cropImage(getUriFromFile(file.getAbsolutePath()));
+    }
+
+    private Uri getUriFromFile(String filePath) {
+        File file = new File(filePath);
+        Uri uri = null;
+        try {
+            uri = Uri.parse(MediaStore.Images.Media
+                    .insertImage(getContentResolver(), file.getAbsolutePath(), null, null));
+            file.delete();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return uri;
+    }
+
+    private Bitmap getDraw() {
+        hideAnotherView();
+        mRelativeLayout.setDrawingCacheEnabled(true);
+        Bitmap bitmap = Bitmap.createBitmap(mRelativeLayout.getDrawingCache());
+        mRelativeLayout.destroyDrawingCache();
+        return bitmap;
+    }
+
+    private void hideAnotherView() {
+        for (int i = 0; i < mRelativeLayout.getChildCount(); i++) {
+            AddView addView = (AddView) mRelativeLayout.getChildAt(i);
+            addView.hideControl();
+        }
     }
 }
