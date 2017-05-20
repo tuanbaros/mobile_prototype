@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableBoolean;
 import android.databinding.ObservableField;
@@ -33,6 +34,7 @@ import com.framgia.mobileprototype.R;
 import com.framgia.mobileprototype.RegisterPermission;
 import com.framgia.mobileprototype.about.AboutActivity;
 import com.framgia.mobileprototype.data.model.Project;
+import com.framgia.mobileprototype.data.model.User;
 import com.framgia.mobileprototype.data.source.element.ElementLocalDataSource;
 import com.framgia.mobileprototype.data.source.element.ElementRepository;
 import com.framgia.mobileprototype.data.source.mock.MockLocalDataSource;
@@ -44,6 +46,8 @@ import com.framgia.mobileprototype.databinding.DialogAddProjectBinding;
 import com.framgia.mobileprototype.databinding.DialogEditProjectBinding;
 import com.framgia.mobileprototype.databinding.NavHeaderBinding;
 import com.framgia.mobileprototype.introduction.IntroductionActivity;
+import com.framgia.mobileprototype.login.GoogleAuthHelper;
+import com.framgia.mobileprototype.login.LoginActivity;
 import com.framgia.mobileprototype.projectdetail.ProjectDetailActivity;
 import com.framgia.mobileprototype.util.ScreenSizeUtil;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -79,6 +83,9 @@ public class ProjectsActivity extends PermissionActivity implements
     private ObservableInt mNumberProjects = new ObservableInt();
     private ObservableInt mNumberMocks = new ObservableInt();
     private boolean flag;
+    private NavHeaderBinding mNavHeaderBinding;
+    private Menu mMenu;
+    private GoogleAuthHelper mGoogleAuthHelper;
 
     public static Intent getProjectsIntent(Context context, boolean isFirstOpenApp) {
         Intent intent = new Intent(context, ProjectsActivity.class);
@@ -127,9 +134,11 @@ public class ProjectsActivity extends PermissionActivity implements
     }
 
     private void setUpNavigationHeader() {
-        NavHeaderBinding navHeaderBinding = NavHeaderBinding.inflate(getLayoutInflater());
-        navHeaderBinding.setActivity(this);
-        mProjectsBinding.navView.addHeaderView(navHeaderBinding.getRoot());
+        mNavHeaderBinding = NavHeaderBinding.inflate(getLayoutInflater());
+        mNavHeaderBinding.setActivity(this);
+        mProjectsBinding.navView.addHeaderView(mNavHeaderBinding.getRoot());
+        if (mMenu != null) return;
+        mMenu = mProjectsBinding.navView.getMenu();
     }
 
     private void setUpEditProjectDialog() {
@@ -349,11 +358,23 @@ public class ProjectsActivity extends PermissionActivity implements
     }
 
     @Override
+    public void showCurrentUser() {
+        User user = new User();
+        user.fetch(this);
+        if (user.getName() == null) return;
+        mNavHeaderBinding.setUser(user);
+        hideItemLoginAndRegister();
+        showItemLogout();
+    }
+
+    @Override
     public void start() {
         setUpScreenSize();
         setUpDrawerListener();
         setUpNavigationHeader();
         mProjectsPresenter.createAppStorageFolder(Constant.FILE_PATH);
+        mProjectsPresenter.setUpCurrentUser();
+        mGoogleAuthHelper = new GoogleAuthHelper(this);
     }
 
     @Override
@@ -428,6 +449,23 @@ public class ProjectsActivity extends PermissionActivity implements
                         (Constant.BASE_MARKET_URL + getPackageName())));
                 }
                 break;
+            case R.id.nav_login:
+                startActivity(new Intent(this, LoginActivity.class));
+                break;
+            case R.id.nav_logout:
+                SharedPreferences sharedPref = getSharedPreferences(
+                    getString(R.string.preference_file_key), Context.MODE_PRIVATE);
+                sharedPref.edit().clear().apply();
+                mNavHeaderBinding.setUser(null);
+                mGoogleAuthHelper.logout();
+                mProjectsPresenter.logout();
+                hideItemLogout();
+                showItemLoginAndRegister();
+                break;
+//            case R.id.nav_register:
+//                break;
+            case R.id.nav_explore:
+                break;
             default:
                 break;
         }
@@ -462,10 +500,35 @@ public class ProjectsActivity extends PermissionActivity implements
 
     @Subscribe
     public void onEvent(ProjectEvent event) {
-        Project project = mProjectsAdapter.get().getItem(event.getId());
-        int base = project.getNumberMocks() + 1;
-        project.setNumberMocks(base);
-        base = mNumberMocks.get() + 1;
-        mNumberMocks.set(base);
+        if (event.getUser() == null) {
+            Project project = mProjectsAdapter.get().getItem(event.getId());
+            int base = project.getNumberMocks() + 1;
+            project.setNumberMocks(base);
+            base = mNumberMocks.get() + 1;
+            mNumberMocks.set(base);
+            return;
+        }
+        mNavHeaderBinding.setUser(event.getUser());
+        mIsDrawerOpen.set(true);
+        hideItemLoginAndRegister();
+        showItemLogout();
+    }
+
+    private void showItemLogout() {
+        mMenu.findItem(R.id.nav_logout).setVisible(true);
+    }
+
+    private void hideItemLogout() {
+        mMenu.findItem(R.id.nav_logout).setVisible(false);
+    }
+
+    private void hideItemLoginAndRegister() {
+        mMenu.findItem(R.id.nav_login).setVisible(false);
+//        mMenu.findItem(R.id.nav_register).setVisible(false);
+    }
+
+    private void showItemLoginAndRegister() {
+        mMenu.findItem(R.id.nav_login).setVisible(true);
+//        mMenu.findItem(R.id.nav_register).setVisible(true);
     }
 }

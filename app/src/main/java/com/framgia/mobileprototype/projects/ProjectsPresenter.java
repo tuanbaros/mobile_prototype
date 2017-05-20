@@ -1,7 +1,11 @@
 package com.framgia.mobileprototype.projects;
 
+import com.facebook.AccessToken;
+import com.facebook.Profile;
+import com.facebook.login.LoginManager;
 import com.framgia.mobileprototype.Constant;
 import com.framgia.mobileprototype.data.model.Project;
+import com.framgia.mobileprototype.data.model.User;
 import com.framgia.mobileprototype.data.source.DataImport;
 import com.framgia.mobileprototype.data.source.DataSource;
 import com.framgia.mobileprototype.data.source.element.ElementRepository;
@@ -159,6 +163,16 @@ public class ProjectsPresenter implements ProjectsContract.Presenter {
     @Override
     public void openDetailProject(Project project) {
         mProjectsView.showDetailProjectUi(project);
+    }
+
+    @Override
+    public void setUpCurrentUser() {
+        mProjectsView.showCurrentUser();
+    }
+
+    @Override
+    public void logout() {
+        LoginManager.getInstance().logOut();
     }
 
     @Override

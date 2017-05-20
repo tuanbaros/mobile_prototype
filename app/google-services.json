@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "20570860611",
+    "project_id": "firebase-mobile-prototype"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:20570860611:android:627d475dea871266",
+        "android_client_info": {
+          "package_name": "com.framgia.mobileprototype"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "20570860611-ojqpsioft19b3a4v56flimboem49uplu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.framgia.mobileprototype",
+            "certificate_hash": "7417dae7781c199b9aeb9cbd2e47ea8e1d27d9ab"
+          }
+        },
+        {
+          "client_id": "20570860611-h915doir588u54b87altqopi6pb2hno1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwtMdaBnfa6CnE2p48wGZ90zLOe8cUnk4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

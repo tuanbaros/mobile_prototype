@@ -3,6 +3,7 @@ package com.framgia.mobileprototype.projects;
 import com.framgia.mobileprototype.BasePresenter;
 import com.framgia.mobileprototype.BaseView;
 import com.framgia.mobileprototype.data.model.Project;
+import com.framgia.mobileprototype.data.model.User;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,6 +31,7 @@ public interface ProjectsContract {
         void showDeleteProjectDialog(Project project, int position);
         void onProjectRemoved(int position, int numberMockRemoved);
         void showDetailProjectUi(Project project);
+        void showCurrentUser();
     }
 
     interface Presenter extends BasePresenter {
@@ -46,5 +48,7 @@ public interface ProjectsContract {
         void requestDeleteProject(Project project, int position);
         void removeProject(Project project, int position);
         void openDetailProject(Project project);
+        void setUpCurrentUser();
+        void logout();
     }
 }
