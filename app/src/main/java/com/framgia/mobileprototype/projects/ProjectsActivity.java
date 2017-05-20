@@ -3,6 +3,7 @@ package com.framgia.mobileprototype.projects;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -86,6 +87,7 @@ public class ProjectsActivity extends PermissionActivity implements
     private NavHeaderBinding mNavHeaderBinding;
     private Menu mMenu;
     private GoogleAuthHelper mGoogleAuthHelper;
+    private ProgressDialog mProgressDialog;
 
     public static Intent getProjectsIntent(Context context, boolean isFirstOpenApp) {
         Intent intent = new Intent(context, ProjectsActivity.class);
@@ -186,6 +188,7 @@ public class ProjectsActivity extends PermissionActivity implements
 
     @Override
     public void onBackPressed() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) return;
         if (mIsDrawerOpen.get()) {
             mIsDrawerOpen.set(false);
             return;
@@ -362,9 +365,44 @@ public class ProjectsActivity extends PermissionActivity implements
         User user = new User();
         user.fetch(this);
         if (user.getName() == null) return;
+        User.setCurrent(user);
         mNavHeaderBinding.setUser(user);
         hideItemLoginAndRegister();
         showItemLogout();
+    }
+
+    private void setUpProgressDialog() {
+        mProgressDialog = new ProgressDialog(this);
+        String upload = getResources().getString(R.string.title_upload);
+        mProgressDialog.setMessage(upload);
+        mProgressDialog.setCanceledOnTouchOutside(false);
+        mProgressDialog.setCancelable(false);
+    }
+
+    @Override
+    public void showProgressDialog(Project project) {
+        if (User.getCurrent() == null) {
+            Toast.makeText(this, "Please login to share this project!", Toast.LENGTH_LONG).show();
+            mIsDrawerOpen.set(true);
+            return;
+        }
+        if (mProgressDialog == null) {
+            setUpProgressDialog();
+        }
+        mProgressDialog.show();
+        mProjectsPresenter.getProjectToUpload(project);
+    }
+
+    @Override
+    public void hideProgressDialog() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
+    }
+
+    @Override
+    public void showUploadStatus(String s) {
+        Toast.makeText(this, s, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -457,6 +495,7 @@ public class ProjectsActivity extends PermissionActivity implements
                     getString(R.string.preference_file_key), Context.MODE_PRIVATE);
                 sharedPref.edit().clear().apply();
                 mNavHeaderBinding.setUser(null);
+                User.setCurrent(null);
                 mGoogleAuthHelper.logout();
                 mProjectsPresenter.logout();
                 hideItemLogout();
@@ -509,6 +548,7 @@ public class ProjectsActivity extends PermissionActivity implements
             return;
         }
         mNavHeaderBinding.setUser(event.getUser());
+        User.setCurrent(event.getUser());
         mIsDrawerOpen.set(true);
         hideItemLoginAndRegister();
         showItemLogout();

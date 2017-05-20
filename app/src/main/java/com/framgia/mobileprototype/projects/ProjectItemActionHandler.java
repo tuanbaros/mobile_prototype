@@ -36,6 +36,9 @@ public class ProjectItemActionHandler {
         PopupMenu popupMenu = new PopupMenu(view.getContext(), view);
         MenuInflater menuInflater = popupMenu.getMenuInflater();
         menuInflater.inflate(R.menu.activity_projects_option, popupMenu.getMenu());
+        if (project.getId().equals(String.valueOf(1)) || project.getNumberMocks() == 0) {
+            popupMenu.getMenu().findItem(R.id.action_share).setVisible(false);
+        }
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -44,6 +47,7 @@ public class ProjectItemActionHandler {
                         editProject(project);
                         break;
                     case R.id.action_share:
+                        mListener.openProgressDialog(project);
                         break;
                     case R.id.action_remove:
                         removeProject(project, position);

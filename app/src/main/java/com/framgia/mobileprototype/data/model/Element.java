@@ -33,6 +33,8 @@ public class Element extends BaseObservable implements Serializable {
     private String mGesture;
     private String mMockId;
 
+    private String mEntryId;
+
     public Element() {
     }
 
@@ -131,5 +133,13 @@ public class Element extends BaseObservable implements Serializable {
 
     public void setGesture(String gesture) {
         mGesture = gesture;
+    }
+
+    public String getEntryId() {
+        return mEntryId;
+    }
+
+    public void setEntryId(String entryId) {
+        mEntryId = entryId;
     }
 }

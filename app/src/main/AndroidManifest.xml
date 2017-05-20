@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.framgia.mobileprototype">
+    package="com.framgia.mobileprototype" >
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".App"
@@ -11,13 +11,12 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-
+        android:theme="@style/AppTheme" >
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id"/>
+            android:value="@string/facebook_app_id" />
 
-        <activity android:name=".introduction.IntroductionActivity">
+        <activity android:name=".introduction.IntroductionActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -28,7 +27,7 @@
             android:name=".projects.ProjectsActivity"
             android:label="@string/title_project"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" />
@@ -56,14 +55,14 @@
         <activity
             android:name=".demo.LandcapeDemoActivity"
             android:screenOrientation="landscape"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".mockdetail.LandcapeMockDetailActivity"
-            android:screenOrientation="landscape"/>
+            android:screenOrientation="landscape" />
         <activity
             android:name=".linkto.LandspaceLinkToActivity"
             android:screenOrientation="landscape"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".draw.LandscapeDrawActivity"
             android:screenOrientation="landscape" />
@@ -73,13 +72,14 @@
             android:theme="@style/Base.Theme.AppCompat" />
         <activity
             android:name=".library.LibraryActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".library.IconActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".library.IconActivity"
             android:label="@string/title_icons"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".login.LoginActivity"
-            android:label="@string/title_login"/>
+            android:label="@string/title_login" />
     </application>
 
 </manifest>
