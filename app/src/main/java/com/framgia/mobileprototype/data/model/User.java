@@ -22,11 +22,20 @@ public class User extends BaseObservable implements Serializable {
     private String mName;
     private String mAvatar;
     private String mToken;
+    private static User sUser;
     private final String KEY_EMAIL = "KEY_EMAIL";
     private final String KEY_NAME = "KEY_NAME";
     private final String KEY_OPENID = "KEY_OPENID";
     private final String KEY_AVATAR = "KEY_AVATAR";
     private final String KEY_TOKEN = "KEY_TOKEN";
+
+    public static User getCurrent() {
+        return sUser;
+    }
+
+    public static void setCurrent(User user) {
+        sUser = user;
+    }
 
     @Bindable
     public String getEmail() {

@@ -21,6 +21,7 @@ public class Project extends BaseObservable implements Cloneable, Serializable {
     public static final String PORTRAIT = "portrait";
     public static final String LANDSCAPE = "landscape";
     private String mId;
+    private String mEntryId;
     @SerializedName("title")
     private String mTitle;
     @SerializedName("description")
@@ -163,5 +164,13 @@ public class Project extends BaseObservable implements Cloneable, Serializable {
     @Override
     public Object clone() throws CloneNotSupportedException {
         return super.clone();
+    }
+
+    public String getEntryId() {
+        return mEntryId;
+    }
+
+    public void setEntryId(String entryId) {
+        mEntryId = entryId;
     }
 }

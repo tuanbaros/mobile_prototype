@@ -32,6 +32,9 @@ public interface ProjectsContract {
         void onProjectRemoved(int position, int numberMockRemoved);
         void showDetailProjectUi(Project project);
         void showCurrentUser();
+        void showProgressDialog(Project project);
+        void hideProgressDialog();
+        void showUploadStatus(String s);
     }
 
     interface Presenter extends BasePresenter {
@@ -50,5 +53,7 @@ public interface ProjectsContract {
         void openDetailProject(Project project);
         void setUpCurrentUser();
         void logout();
+        void openProgressDialog(Project project);
+        void getProjectToUpload(Project project);
     }
 }
