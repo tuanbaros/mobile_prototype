@@ -17,6 +17,10 @@ public class ApiService {
 
     public static final String UPLOAD = "upload";
 
+    public static final String PROJECTS = "projects/{offset}";
+
+    public static final int TIME_OUT = 15;
+
     public static String getApi(String api) {
         return HOST + api;
     }
@@ -26,6 +30,7 @@ public class ApiService {
         public static final String TOKEN = "token";
         public static final String NAME = "name";
         public static final String PROJECT = "project";
+        public static final String OFFSET = "offset";
     }
 
     public class Response {

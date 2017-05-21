@@ -10,6 +10,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -19,11 +20,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.signature.StringSignature;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.framgia.mobileprototype.Constant;
 import com.framgia.mobileprototype.R;
+import com.framgia.mobileprototype.data.remote.ApiService;
+import com.framgia.mobileprototype.explore.ExploreContract;
 import com.framgia.mobileprototype.mockdetail.MockDetailContract;
 import com.framgia.mobileprototype.ui.widget.CustomRelativeLayout;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 
@@ -133,7 +140,6 @@ public class BindingAdapterUtil {
         if (animation.equals(resources.getString(R.string.title_transition_slide_right))) {
             chosen.startAnimation(AnimationUtils.loadAnimation(context, R.anim.slide_right));
             chosen.setVisibility(View.VISIBLE);
-            return;
         }
     }
 
@@ -165,5 +171,34 @@ public class BindingAdapterUtil {
             .load(Uri.parse(Constant.ASSET_PATH + path))
             .error(R.mipmap.ic_launcher)
             .into(view);
+    }
+
+    @BindingAdapter({"onRefresh"})
+    public static void setSwipeRefreshLayoutOnRefreshListener(SwipeRefreshLayout view,
+                                                              final ExploreContract.Presenter
+                                                                  presenter) {
+        view.setColorSchemeResources(R.color.colorAccent);
+        view.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                presenter.refresh();
+            }
+        });
+    }
+
+    @BindingAdapter({"firebase_image"})
+    public static void setFirebaseImage(ImageView imageView, String image) {
+        FirebaseStorage storage = FirebaseStorage.getInstance(ApiService.FIREBASE_BUCKET);
+        StorageReference storageReference = storage.getReference();
+        StorageReference pathReference = storageReference.child(ApiService.FIREBASE_FOLDER +
+            image);
+        Glide.with(imageView.getContext())
+            .using(new FirebaseImageLoader())
+            .load(pathReference)
+            .diskCacheStrategy(DiskCacheStrategy.NONE)
+            .skipMemoryCache(true)
+            .error(R.mipmap.ic_launcher)
+            .placeholder(R.mipmap.ic_launcher)
+            .into(imageView);
     }
 }

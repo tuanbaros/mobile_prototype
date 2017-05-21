@@ -46,6 +46,7 @@ import com.framgia.mobileprototype.databinding.ActivityProjectsBinding;
 import com.framgia.mobileprototype.databinding.DialogAddProjectBinding;
 import com.framgia.mobileprototype.databinding.DialogEditProjectBinding;
 import com.framgia.mobileprototype.databinding.NavHeaderBinding;
+import com.framgia.mobileprototype.explore.ExploreActivity;
 import com.framgia.mobileprototype.introduction.IntroductionActivity;
 import com.framgia.mobileprototype.login.GoogleAuthHelper;
 import com.framgia.mobileprototype.login.LoginActivity;
@@ -504,6 +505,7 @@ public class ProjectsActivity extends PermissionActivity implements
 //            case R.id.nav_register:
 //                break;
             case R.id.nav_explore:
+                startActivity(new Intent(this, ExploreActivity.class));
                 break;
             default:
                 break;
