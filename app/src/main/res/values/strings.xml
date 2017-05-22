@@ -132,4 +132,6 @@
     <string name="title_google">Login with Google</string>
     <string name="preference_file_key">mobileprototype</string>
     <string name="title_upload">Uploading...</string>
+    <string name="text_check_internet">No Internet connection. Make sure Wi-Fi or cellular data is turned on, then try again.</string>
+    <string name="text_retry">Retry</string>
 </resources>

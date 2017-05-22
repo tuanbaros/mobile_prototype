@@ -1,0 +1,27 @@
+package com.framgia.mobileprototype.explore;
+
+import com.framgia.mobileprototype.BasePresenter;
+import com.framgia.mobileprototype.BaseView;
+import com.framgia.mobileprototype.data.model.Project;
+
+import java.util.List;
+
+/**
+ * Created by tuannt on 5/21/17.
+ * Project: mobile_prototype
+ * Package: com.framgia.mobileprototype.explore
+ */
+public interface ExploreContract {
+    interface View extends BaseView {
+        void prepareGetProjects();
+        void getProjectsSuccess(List<Project> projects);
+        void getProjectsError();
+        void emptyProjects();
+    }
+
+    interface Presenter extends BasePresenter {
+        void getProjects(int offset);
+        void prepare();
+        void refresh();
+    }
+}

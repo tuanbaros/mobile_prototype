@@ -21,6 +21,7 @@ public class Project extends BaseObservable implements Cloneable, Serializable {
     public static final String PORTRAIT = "portrait";
     public static final String LANDSCAPE = "landscape";
     private String mId;
+    @SerializedName("mEntryId")
     private String mEntryId;
     @SerializedName("title")
     private String mTitle;
@@ -38,6 +39,8 @@ public class Project extends BaseObservable implements Cloneable, Serializable {
     private String mPoster;
     @SerializedName("mockups")
     private List<Mock> mMocks = new ArrayList<>();
+    @SerializedName("author")
+    private String mAuthor;
     private int mNumberMocks;
 
     public Project(Cursor cursor) {
@@ -172,5 +175,13 @@ public class Project extends BaseObservable implements Cloneable, Serializable {
 
     public void setEntryId(String entryId) {
         mEntryId = entryId;
+    }
+
+    public String getAuthor() {
+        return "Created by: " + mAuthor;
+    }
+
+    public void setAuthor(String author) {
+        mAuthor = author;
     }
 }
