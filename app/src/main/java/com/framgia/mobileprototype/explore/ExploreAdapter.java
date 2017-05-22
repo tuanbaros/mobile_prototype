@@ -5,12 +5,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.ProgressBar;
 import com.framgia.mobileprototype.R;
 import com.framgia.mobileprototype.data.model.Project;
 import com.framgia.mobileprototype.databinding.ItemExploreBinding;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +17,7 @@ import java.util.List;
  * Project: mobile_prototype
  * Package: com.framgia.mobileprototype.explore
  */
-public class ExploreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
+public class ExploreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private List<Project> mProjects = new ArrayList<>();
     private ExploreContract.Presenter mPresenter;
     private static final int PROJECT_TYPE = 0;
@@ -51,18 +49,19 @@ public class ExploreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == PROJECT_TYPE) {
             ItemExploreBinding itemExploreBinding =
-                    DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()), R.layout.item_explore, parent, false);
+                    DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()),
+                            R.layout.item_explore, parent, false);
             return new ViewHolder(itemExploreBinding);
         }
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_load_more,
-                parent, false);
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_load_more, parent, false);
         return new LoadMoreViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ExploreAdapter.ViewHolder) {
-            ((ExploreAdapter.ViewHolder) holder).bindData(mProjects.get(position));
+            ((ExploreAdapter.ViewHolder) holder).bindData(mProjects.get(position), position);
         }
         if (holder instanceof LoadMoreViewHolder) {
             ((LoadMoreViewHolder) holder).mProgressBar.setIndeterminate(true);
@@ -87,8 +86,19 @@ public class ExploreAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             mItemExploreBinding.setHandler(mExploreItemHandler);
         }
 
-        public void bindData(Project project) {
+        public void bindData(Project project, int position) {
             if (project == null) return;
+            RecyclerView.LayoutParams params =
+                    (RecyclerView.LayoutParams) mItemExploreBinding.cardView.getLayoutParams();
+            if (position == 0) {
+                params.topMargin = mItemExploreBinding.getRoot()
+                        .getContext()
+                        .getResources()
+                        .getDimensionPixelOffset(R.dimen.dp_16);
+            } else {
+                params.topMargin = 0;
+            }
+            mItemExploreBinding.cardView.setLayoutParams(params);
             mItemExploreBinding.setProject(project);
             mItemExploreBinding.executePendingBindings();
         }
