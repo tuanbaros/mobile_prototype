@@ -8,6 +8,7 @@ import com.framgia.mobileprototype.data.remote.ApiService;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.util.ArrayList;
 import org.json.JSONArray;
 
 import java.lang.reflect.Type;
@@ -31,7 +32,7 @@ public class ExplorePresenter implements ExploreContract.Presenter {
 
     }
 
-    public void getProjects(int offset) {
+    public void getProjects(final int offset) {
         AndroidNetworking.get(ApiService.getApi(ApiService.PROJECTS))
             .addPathParameter(ApiService.Param.OFFSET, String.valueOf(offset))
             .doNotCacheResponse()
