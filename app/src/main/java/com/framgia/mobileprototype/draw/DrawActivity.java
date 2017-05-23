@@ -240,6 +240,9 @@ public class DrawActivity extends BaseActivity {
     }
 
     private int getCurrentColor() {
+        if (ColorPickerDialog.getLastColor(this) == -1) {
+            return Color.BLACK;
+        }
         return ColorPickerDialog.getLastColor(this);
     }
 }

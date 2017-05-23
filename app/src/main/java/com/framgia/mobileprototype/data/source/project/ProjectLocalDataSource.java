@@ -13,6 +13,7 @@ import com.framgia.mobileprototype.data.source.DataHelper;
 import com.framgia.mobileprototype.data.source.DataSource;
 import com.framgia.mobileprototype.data.source.element.ElementPersistenceContract;
 import com.framgia.mobileprototype.data.source.mock.MockPersistenceContract;
+import com.framgia.mobileprototype.util.EntryIdUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -190,6 +191,8 @@ public class ProjectLocalDataSource extends DataHelper implements DataSource<Pro
         ContentValues contentValues = new ContentValues();
         contentValues.put(
             ProjectPersistenceContract.ProjectEntry.COLUMN_NAME_TITLE, project.getTitle().trim());
+        contentValues.put(ProjectPersistenceContract.ProjectEntry.COLUMN_NAME_ENTRY_ID, project
+            .getEntryId() == null ? EntryIdUtil.get() : project.getEntryId());
         contentValues.put(
             ProjectPersistenceContract.ProjectEntry.COLUMN_NAME_TYPE, project.getType());
         contentValues.put(

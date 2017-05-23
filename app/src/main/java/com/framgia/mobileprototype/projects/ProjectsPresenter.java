@@ -19,6 +19,7 @@ import com.framgia.mobileprototype.data.source.DataSource;
 import com.framgia.mobileprototype.data.source.element.ElementRepository;
 import com.framgia.mobileprototype.data.source.mock.MockRepository;
 import com.framgia.mobileprototype.data.source.project.ProjectRepository;
+import com.framgia.mobileprototype.util.EntryIdUtil;
 import com.framgia.mobileprototype.util.ScreenSizeUtil;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -109,7 +110,8 @@ public class ProjectsPresenter implements ProjectsContract.Presenter {
             project.setWidth(ScreenSizeUtil.sWidth);
             project.setHeight(ScreenSizeUtil.sHeight);
         }
-        project.setPoster(project.getTitle() + Constant.DEFAULT_COMPRESS_FORMAT);
+        project.setPoster(project.getEntryId() + Constant.DEFAULT_COMPRESS_FORMAT);
+        project.setEntryId(EntryIdUtil.get());
         long id = mProjectRepository.saveData(project);
         if (id < 1) {
             mProjectsView.showErrorProjectNameExist();
@@ -157,7 +159,7 @@ public class ProjectsPresenter implements ProjectsContract.Presenter {
             return;
         }
         if (isPosterChanged) {
-            project.setPoster(project.getTitle() + Constant.DEFAULT_COMPRESS_FORMAT);
+            project.setPoster(project.getEntryId() + Constant.DEFAULT_COMPRESS_FORMAT);
         }
         long check = mProjectRepository.updateData(project);
         if (check < 1) {
@@ -217,14 +219,14 @@ public class ProjectsPresenter implements ProjectsContract.Presenter {
         if (mUploadProject.getDescription() == null) {
             mUploadProject.setDescription("");
         }
-        mUploadProject.setEntryId(User.getCurrent().getOpenId() + mUploadProject.getId());
+        mUploadProject.setEntryId(User.getCurrent().getOpenId() + mUploadProject.getEntryId());
         mMockRepository.getData(project.getId(), new DataSource.GetListCallback<Mock>() {
             @Override
             public void onSuccess(List<Mock> datas) {
                 for (Mock mock : datas) {
                     mImageNames.add(mock.getImage());
                     mock.setImage(User.getCurrent().getOpenId() + mock.getImage());
-                    mock.setEntryId(mock.getImage());
+                    mock.setEntryId(User.getCurrent().getOpenId() + mock.getEntryId());
                     mock.setProjectId(mUploadProject.getEntryId());
                     if (mock.getNote() == null) {
                         mock.setNote("");
@@ -254,7 +256,7 @@ public class ProjectsPresenter implements ProjectsContract.Presenter {
                         element.setLinkTo(User.getCurrent().getOpenId() + element.getLinkTo());
                     }
                     element.setMockId(mock.getEntryId());
-                    element.setEntryId(mock.getEntryId() + element.getId());
+                    element.setEntryId(User.getCurrent().getOpenId() + element.getEntryId());
                 }
                 mock.setElements(datas);
             }

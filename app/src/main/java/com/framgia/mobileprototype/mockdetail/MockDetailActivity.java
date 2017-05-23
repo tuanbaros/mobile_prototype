@@ -285,7 +285,7 @@ public class MockDetailActivity extends BaseActivity implements MockDetailContra
             elementView.setLinkTo(extra.getLinkTo());
             Element element = (Element) elementView.getTag(R.string.title_element);
             element.setTransition(extra.getTransition());
-            mMockDetailPresenter.saveElement(element);
+            mMockDetailPresenter.updateElement(element);
         }
         super.onActivityResult(requestCode, resultCode, data);
     }

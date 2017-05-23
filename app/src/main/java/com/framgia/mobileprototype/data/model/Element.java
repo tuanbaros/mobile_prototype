@@ -41,6 +41,8 @@ public class Element extends BaseObservable implements Serializable {
     public Element(Cursor cursor) {
         mId = cursor.getInt(cursor.getColumnIndexOrThrow(
             ElementPersistenceContract.ElementEntry._ID));
+        mEntryId = cursor.getString(cursor.getColumnIndexOrThrow(
+            ElementPersistenceContract.ElementEntry.COLUMN_NAME_ENTRY_ID));
         mX = cursor.getInt(cursor.getColumnIndexOrThrow(
             ElementPersistenceContract.ElementEntry.COLUMN_NAME_X));
         mY = cursor.getInt(cursor.getColumnIndexOrThrow(

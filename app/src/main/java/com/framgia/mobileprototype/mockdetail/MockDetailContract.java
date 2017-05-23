@@ -30,6 +30,7 @@ public interface MockDetailContract {
         void getAllElementInMock();
         void saveAllElement(List<Element> elements);
         long saveElement(Element element);
+        long updateElement(Element element);
         void deleteElement(Element element);
         void setElementGesture(String gesture);
         String getMockId();

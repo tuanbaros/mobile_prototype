@@ -3,6 +3,7 @@ package com.framgia.mobileprototype.mockdetail;
 import com.framgia.mobileprototype.data.model.Element;
 import com.framgia.mobileprototype.data.source.DataSource;
 import com.framgia.mobileprototype.data.source.element.ElementRepository;
+import com.framgia.mobileprototype.util.EntryIdUtil;
 
 import java.util.List;
 
@@ -60,6 +61,11 @@ public class MockDetailPresenter implements MockDetailContract.Presenter {
     @Override
     public long saveElement(Element element) {
         return mElementRepository.saveData(element);
+    }
+
+    @Override
+    public long updateElement(Element element) {
+        return mElementRepository.updateData(element);
     }
 
     @Override
