@@ -33,6 +33,7 @@
             tools:context="com.framgia.mobileprototype.explore.ExploreActivity">
 
             <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_project"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:paddingTop="@dimen/dp_4"

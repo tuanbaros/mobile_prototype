@@ -13,6 +13,8 @@ public class ExploreViewControl {
 
     private ObservableBoolean mIsError = new ObservableBoolean();
 
+    private boolean mIsLoadMore;
+
     private ObservableField<ExploreAdapter> mExploreAdapterField = new ObservableField<>();
 
     public ObservableBoolean getIsLoading() {
@@ -25,5 +27,13 @@ public class ExploreViewControl {
 
     public ObservableField<ExploreAdapter> getExploreAdapterField() {
         return mExploreAdapterField;
+    }
+
+    public boolean isLoadMore() {
+        return mIsLoadMore;
+    }
+
+    public void setLoadMore(boolean loadMore) {
+        mIsLoadMore = loadMore;
     }
 }

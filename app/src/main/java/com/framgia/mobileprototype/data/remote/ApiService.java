@@ -11,7 +11,9 @@ public class ApiService {
 
     public static final String FIREBASE_FOLDER = "mp/";
 
-    private static final String HOST = "http://192.168.0.9/prototype/api/";
+    //private static final String HOST = "http://192.168.0.9/prototype/api/";
+
+    private static final String HOST = "http://tongdaifpthanoi.net/prototype/api/";
 
     public static final String LOGIN = "login";
 
