@@ -7,12 +7,9 @@ import com.framgia.mobileprototype.data.model.Project;
 import com.framgia.mobileprototype.data.remote.ApiService;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
-import java.util.ArrayList;
-import org.json.JSONArray;
-
 import java.lang.reflect.Type;
 import java.util.List;
+import org.json.JSONArray;
 
 /**
  * Created by tuannt on 5/21/17.

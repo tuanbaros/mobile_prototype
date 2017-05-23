@@ -178,7 +178,7 @@ public class Project extends BaseObservable implements Cloneable, Serializable {
     }
 
     public String getAuthor() {
-        return "Created by: " + mAuthor;
+        return mAuthor;
     }
 
     public void setAuthor(String author) {

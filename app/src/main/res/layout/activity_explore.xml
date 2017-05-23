@@ -36,7 +36,6 @@
                 android:id="@+id/recycler_project"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingTop="@dimen/dp_4"
                 app:adapter="@{adapter}"
                 app:layoutManager="@{LayoutManagerUtil.linear()}"/>
 
