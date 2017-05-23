@@ -134,4 +134,7 @@
     <string name="title_upload">Uploading...</string>
     <string name="text_check_internet">No Internet connection. Make sure Wi-Fi or cellular data is turned on, then try again.</string>
     <string name="text_retry">Retry</string>
+    <string name="action_ok">OK</string>
+    <string name="text_do_you_want_download">Do you want to download this project?</string>
+    <string name="title_download">Download...</string>
 </resources>

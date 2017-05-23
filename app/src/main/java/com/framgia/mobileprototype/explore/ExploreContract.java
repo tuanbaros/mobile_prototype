@@ -17,11 +17,18 @@ public interface ExploreContract {
         void getProjectsSuccess(List<Project> projects);
         void getProjectsError();
         void emptyProjects();
+        void prepareDownloadProject();
+        void downloadProjectSuccess(Project project);
+        void downloadProjectError();
+        void projectTitleDuplicate(Project project);
     }
 
     interface Presenter extends BasePresenter {
         void getProjects(int offset);
         void prepare();
         void refresh();
+        void downloadProject(Project project);
+        boolean checkValidProjectTitle(String title);
+        void importProject(Project project);
     }
 }

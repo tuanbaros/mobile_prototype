@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
-
 import com.framgia.mobileprototype.Constant;
 import com.framgia.mobileprototype.data.model.Mock;
 import com.framgia.mobileprototype.data.model.Project;
@@ -14,7 +13,6 @@ import com.framgia.mobileprototype.data.source.DataSource;
 import com.framgia.mobileprototype.data.source.element.ElementPersistenceContract;
 import com.framgia.mobileprototype.data.source.mock.MockPersistenceContract;
 import com.framgia.mobileprototype.util.EntryIdUtil;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +22,8 @@ import java.util.List;
  * Project: mobile_prototype
  * Package: com.framgia.mobileprototype.data.source.project
  */
-public class ProjectLocalDataSource extends DataHelper implements DataSource<Project> {
+public class ProjectLocalDataSource extends DataHelper
+        implements DataSource<Project>, ProjectDataSource {
     private static ProjectLocalDataSource sProjectLocalDataSource;
 
     private ProjectLocalDataSource(Context context) {
@@ -226,5 +225,21 @@ public class ProjectLocalDataSource extends DataHelper implements DataSource<Pro
         cursor.close();
         sqLiteDatabase.close();
         return count;
+    }
+
+    @Override
+    public boolean validTitle(String title) {
+        SQLiteDatabase sqLiteDatabase = getWritableDatabase();
+        String[] columns = { ProjectPersistenceContract.ProjectEntry.COLUMN_NAME_TITLE};
+        String selection = ProjectPersistenceContract.ProjectEntry.COLUMN_NAME_TITLE + " = ?";
+        String[] selectionArgs = {title};
+        Cursor cursor = sqLiteDatabase.query(
+                ProjectPersistenceContract.ProjectEntry.TABLE_NAME, columns, selection, selectionArgs,
+                null, null, null);
+        if (cursor == null) return false;
+        int count = cursor.getCount();
+        cursor.close();
+        sqLiteDatabase.close();
+        return count == 0;
     }
 }

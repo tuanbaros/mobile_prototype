@@ -27,7 +27,6 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
 import com.framgia.mobileprototype.Constant;
 import com.framgia.mobileprototype.PermissionActivity;
@@ -54,15 +53,13 @@ import com.framgia.mobileprototype.projectdetail.ProjectDetailActivity;
 import com.framgia.mobileprototype.util.ScreenSizeUtil;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 @RegisterPermission(permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE})
 public class ProjectsActivity extends PermissionActivity implements
@@ -255,12 +252,16 @@ public class ProjectsActivity extends PermissionActivity implements
 
     @Override
     public void cancelCreateProjectDialog() {
-        if (mCreateProjectDialog.isShowing()) mCreateProjectDialog.cancel();
+        if (mCreateProjectDialog != null && mCreateProjectDialog.isShowing()) {
+            mCreateProjectDialog.dismiss();
+        }
     }
 
     @Override
     public void cancelEditProjectDialog() {
-        if (mEditProjectDialog.isShowing()) mEditProjectDialog.cancel();
+        if (mEditProjectDialog != null && mEditProjectDialog.isShowing()) {
+            mEditProjectDialog.dismiss();
+        }
     }
 
     @Override
@@ -554,6 +555,12 @@ public class ProjectsActivity extends PermissionActivity implements
         mIsDrawerOpen.set(true);
         hideItemLoginAndRegister();
         showItemLogout();
+    }
+
+    @Subscribe
+    public void onEvent(Project project) {
+        if (project == null) return;
+        updateListProjects(project);
     }
 
     private void showItemLogout() {
