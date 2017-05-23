@@ -11,9 +11,11 @@ public class ApiService {
 
     public static final String FIREBASE_FOLDER = "mp/";
 
-    //private static final String HOST = "http://192.168.0.9/prototype/api/";
+    private static final String HOME_HOST = "http://192.168.0.9/prototype/api/";
 
-    private static final String HOST = "http://tongdaifpthanoi.net/prototype/api/";
+    private static final String COMPANY_HOST = "http://192.168.6.94/prototype/api/";
+
+    private static final String LIVE_HOST = "http://tongdaifpthanoi.net/prototype/api/";
 
     public static final String LOGIN = "login";
 
@@ -24,7 +26,7 @@ public class ApiService {
     public static final int TIME_OUT = 15;
 
     public static String getApi(String api) {
-        return HOST + api;
+        return COMPANY_HOST + api;
     }
 
     public class Param {

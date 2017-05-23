@@ -85,7 +85,6 @@ public class ExploreActivity extends BaseActivity implements ExploreContract.Vie
                 mViewControl.getIsLoading().set(false);
             }
         });
-
     }
 
     @Override
