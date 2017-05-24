@@ -12,6 +12,7 @@ import com.framgia.mobileprototype.data.model.Project;
 import com.framgia.mobileprototype.data.source.DataHelper;
 import com.framgia.mobileprototype.data.source.element.ElementPersistenceContract;
 import com.framgia.mobileprototype.data.source.project.ProjectPersistenceContract;
+import com.framgia.mobileprototype.util.EntryIdUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -149,7 +150,8 @@ public class MockLocalDataSource extends DataHelper implements MockDataSource {
     private ContentValues getContentValues(Mock mock) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(
-            MockPersistenceContract.MockEntry.COLUMN_NAME_ENTRY_ID, mock.getEntryId());
+            MockPersistenceContract.MockEntry.COLUMN_NAME_ENTRY_ID, mock.getEntryId() == null ?
+                EntryIdUtil.get() : mock.getEntryId());
         contentValues.put(
             MockPersistenceContract.MockEntry.COLUMN_NAME_TITLE, mock.getTitle());
         contentValues.put(

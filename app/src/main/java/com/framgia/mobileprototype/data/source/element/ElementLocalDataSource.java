@@ -9,6 +9,7 @@ import android.support.annotation.NonNull;
 import com.framgia.mobileprototype.data.model.Element;
 import com.framgia.mobileprototype.data.source.DataHelper;
 import com.framgia.mobileprototype.data.source.DataSource;
+import com.framgia.mobileprototype.util.EntryIdUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -121,6 +122,8 @@ public class ElementLocalDataSource extends DataHelper implements DataSource<Ele
         if (element.getId() > 0) {
             contentValues.put(ElementPersistenceContract.ElementEntry._ID, element.getId());
         }
+        contentValues.put(ElementPersistenceContract.ElementEntry.COLUMN_NAME_ENTRY_ID, element
+            .getEntryId() == null ? EntryIdUtil.get() : element.getEntryId());
         contentValues.put(
             ElementPersistenceContract.ElementEntry.COLUMN_NAME_X, element.getX());
         contentValues.put(

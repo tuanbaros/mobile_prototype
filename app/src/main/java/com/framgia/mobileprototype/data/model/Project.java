@@ -46,6 +46,8 @@ public class Project extends BaseObservable implements Cloneable, Serializable {
     public Project(Cursor cursor) {
         mId = cursor.getString(cursor.getColumnIndexOrThrow(
             ProjectPersistenceContract.ProjectEntry._ID));
+        mEntryId = cursor.getString(cursor.getColumnIndexOrThrow(
+            ProjectPersistenceContract.ProjectEntry.COLUMN_NAME_ENTRY_ID));
         mTitle = cursor.getString(cursor.getColumnIndexOrThrow(
             ProjectPersistenceContract.ProjectEntry.COLUMN_NAME_TITLE));
         mDescription = cursor.getString(cursor.getColumnIndexOrThrow(

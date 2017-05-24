@@ -6,6 +6,7 @@ import com.framgia.mobileprototype.data.model.Project;
 import com.framgia.mobileprototype.data.source.DataSource;
 import com.framgia.mobileprototype.data.source.mock.MockRepository;
 import com.framgia.mobileprototype.projects.ProjectEvent;
+import com.framgia.mobileprototype.util.EntryIdUtil;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -92,8 +93,9 @@ public class ProjectDetailPresenter implements ProjectDetailContract.Presenter {
     }
 
     private void savingMock(Mock mock) {
-        SecureRandom random = new SecureRandom();
-        String entryId = new BigInteger(NUMBER_BIT_RANDOM, random).toString(BASE_RANDOM);
+//        SecureRandom random = new SecureRandom();
+//        String entryId = new BigInteger(NUMBER_BIT_RANDOM, random).toString(BASE_RANDOM);
+        String entryId = EntryIdUtil.get();
         mock.setEntryId(entryId);
         mock.setImage(entryId + Constant.DEFAULT_COMPRESS_FORMAT);
         if (checkIsCurrentProject(mock)) {
