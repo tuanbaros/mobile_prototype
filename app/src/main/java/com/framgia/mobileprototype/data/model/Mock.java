@@ -29,6 +29,7 @@ public class Mock extends BaseObservable implements Cloneable, Serializable {
     private String mProjectId;
     @SerializedName("elements")
     private List<Element> mElements;
+    @SerializedName("mPosition")
     private int mPosition;
     private boolean mCheckToDelete;
 

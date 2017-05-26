@@ -1,14 +1,30 @@
 package com.framgia.mobileprototype.explore;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 import com.framgia.mobileprototype.BaseActivity;
 import com.framgia.mobileprototype.R;
 import com.framgia.mobileprototype.data.model.Project;
+import com.framgia.mobileprototype.data.source.element.ElementLocalDataSource;
+import com.framgia.mobileprototype.data.source.element.ElementRepository;
+import com.framgia.mobileprototype.data.source.mock.MockLocalDataSource;
+import com.framgia.mobileprototype.data.source.mock.MockRepository;
+import com.framgia.mobileprototype.data.source.project.ProjectLocalDataSource;
+import com.framgia.mobileprototype.data.source.project.ProjectRepository;
 import com.framgia.mobileprototype.databinding.ActivityExploreBinding;
 import java.util.List;
+import org.greenrobot.eventbus.EventBus;
 
 public class ExploreActivity extends BaseActivity implements ExploreContract.View {
 
@@ -20,11 +36,17 @@ public class ExploreActivity extends BaseActivity implements ExploreContract.Vie
     private int mVisibleThreshold = 5;
     private int mLastVisibleItem, mTotalItemCount;
 
+    private ProgressDialog mProgressDialog;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mExploreBinding = DataBindingUtil.setContentView(this, R.layout.activity_explore);
-        mExplorePresenter = new ExplorePresenter(this);
+        mExplorePresenter = new ExplorePresenter(this,
+                ProjectRepository.getInstance(ProjectLocalDataSource.getInstance(this)),
+                MockRepository.getInstance(MockLocalDataSource.getInstance(this)),
+                ElementRepository.getInstance(ElementLocalDataSource.getInstance(this)));
         mViewControl = new ExploreViewControl();
         mExploreAdapter = new ExploreAdapter(mExplorePresenter);
         mExploreBinding.setControl(mViewControl);
@@ -99,5 +121,83 @@ public class ExploreActivity extends BaseActivity implements ExploreContract.Vie
     public void emptyProjects() {
         // TODO: 5/21/17 show empty
         mExploreAdapter.removeLoadMoreView();
+    }
+
+    private void setUpProgressDialog() {
+        mProgressDialog = new ProgressDialog(this);
+        String upload = getResources().getString(R.string.title_download);
+        mProgressDialog.setMessage(upload);
+        mProgressDialog.setCanceledOnTouchOutside(false);
+        mProgressDialog.setCancelable(false);
+    }
+
+    @Override
+    public void prepareDownloadProject() {
+        if (mProgressDialog == null) {
+            setUpProgressDialog();
+        }
+        mProgressDialog.show();
+    }
+
+    @Override
+    public void downloadProjectSuccess(Project project) {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
+        EventBus.getDefault().post(project);
+        Toast.makeText(this, "Download successfull!", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void downloadProjectError() {
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
+        Toast.makeText(this, "Download failed!", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void projectTitleDuplicate(final Project project) {
+        Toast.makeText(getBaseContext(), "Please change other name!",
+                Toast.LENGTH_SHORT).show();
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.dialog_text_pattern, null);
+        dialogBuilder.setView(dialogView);
+        final EditText editText = (EditText) dialogView.findViewById(R.id.edit_text);
+        editText.setHint("New project name");
+        dialogBuilder.setPositiveButton(R.string.action_done, null);
+        dialogBuilder.setNegativeButton(R.string.action_cancel_project, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                downloadProjectError();
+            }
+        });
+        AlertDialog b = dialogBuilder.create();
+        b.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(final DialogInterface dialog) {
+                Button button = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
+                button.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        String text = editText.getText().toString().trim();
+                        if (TextUtils.isEmpty(text)) return;
+                        if (mExplorePresenter.checkValidProjectTitle(text)) {
+                            String currentName = project.getTitle();
+                            project.setTitle(text);
+                            mExplorePresenter.importProject(project);
+                            project.setTitle(currentName);
+                            dialog.dismiss();
+                        } else {
+                            Toast.makeText(getBaseContext(), "Please change other name!",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
+        b.show();
     }
 }

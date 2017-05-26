@@ -10,7 +10,7 @@ import com.framgia.mobileprototype.data.source.DataSource;
  * Project: mobile_prototype
  * Package: com.framgia.mobileprototype.data.source
  */
-public class ProjectRepository implements DataSource<Project> {
+public class ProjectRepository implements DataSource<Project>, ProjectDataSource {
     private static ProjectRepository sProjectRepository;
     private ProjectLocalDataSource mProjectLocalDataSource;
 
@@ -48,5 +48,10 @@ public class ProjectRepository implements DataSource<Project> {
     @Override
     public void deleteData(Project data) {
         mProjectLocalDataSource.deleteData(data);
+    }
+
+    @Override
+    public boolean validTitle(String title) {
+        return mProjectLocalDataSource.validTitle(title);
     }
 }

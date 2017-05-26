@@ -110,8 +110,8 @@ public class ProjectsPresenter implements ProjectsContract.Presenter {
             project.setWidth(ScreenSizeUtil.sWidth);
             project.setHeight(ScreenSizeUtil.sHeight);
         }
-        project.setPoster(project.getEntryId() + Constant.DEFAULT_COMPRESS_FORMAT);
         project.setEntryId(EntryIdUtil.get());
+        project.setPoster(project.getEntryId() + Constant.DEFAULT_COMPRESS_FORMAT);
         long id = mProjectRepository.saveData(project);
         if (id < 1) {
             mProjectsView.showErrorProjectNameExist();

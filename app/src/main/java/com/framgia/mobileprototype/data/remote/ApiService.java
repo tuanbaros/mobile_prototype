@@ -23,6 +23,8 @@ public class ApiService {
 
     public static final String PROJECTS = "projects/{offset}";
 
+    public static final String DOWNLOAD = "download";
+
     public static final int TIME_OUT = 15;
 
     public static String getApi(String api) {
@@ -34,6 +36,7 @@ public class ApiService {
         public static final String TOKEN = "token";
         public static final String NAME = "name";
         public static final String PROJECT = "project";
+        public static final String PROJECT_ENTRY_ID = "project_entry_id";
         public static final String OFFSET = "offset";
     }
 
