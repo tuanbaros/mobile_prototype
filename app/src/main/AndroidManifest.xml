@@ -84,6 +84,7 @@
             android:name=".explore.ExploreActivity"
             android:label="@string/title_explore"
             android:screenOrientation="portrait" />
+        <activity android:name=".comment.CommentActivity"/>
     </application>
 
 </manifest>

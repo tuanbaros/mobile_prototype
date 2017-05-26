@@ -122,6 +122,7 @@
                         android:padding="@dimen/dp_8"
                         app:iiv_color="@color/colorAccent"
                         app:iiv_icon="gmd-play-arrow"
+                        style="@style/Base.Widget.AppCompat.Button.Borderless"
                         />
 
                     <com.mikepenz.iconics.view.IconicsImageView
@@ -132,6 +133,8 @@
                         android:padding="@dimen/dp_8"
                         app:iiv_color="@color/colorAccent"
                         app:iiv_icon="gmd-comment"
+                        android:onClick="@{() -> handler.showComment(project)}"
+                        style="@style/Base.Widget.AppCompat.Button.Borderless"
                         />
 
                     <com.mikepenz.iconics.view.IconicsImageView
@@ -143,6 +146,7 @@
                         android:padding="@dimen/dp_8"
                         app:iiv_color="@color/colorAccent"
                         app:iiv_icon="gmd-file-download"
+                        style="@style/Base.Widget.AppCompat.Button.Borderless"
                         />
 
                 </RelativeLayout>
