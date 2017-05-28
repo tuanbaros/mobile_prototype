@@ -403,6 +403,11 @@ public class ProjectsActivity extends PermissionActivity implements
     }
 
     @Override
+    public void showUploadStatus(int s) {
+        Toast.makeText(this, s, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
     public void showUploadStatus(String s) {
         Toast.makeText(this, s, Toast.LENGTH_LONG).show();
     }

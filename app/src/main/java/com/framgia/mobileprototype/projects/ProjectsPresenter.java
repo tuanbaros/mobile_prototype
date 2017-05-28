@@ -9,6 +9,7 @@ import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.StringRequestListener;
 import com.facebook.login.LoginManager;
 import com.framgia.mobileprototype.Constant;
+import com.framgia.mobileprototype.R;
 import com.framgia.mobileprototype.data.model.Element;
 import com.framgia.mobileprototype.data.model.Mock;
 import com.framgia.mobileprototype.data.model.Project;
@@ -239,7 +240,7 @@ public class ProjectsPresenter implements ProjectsContract.Presenter {
 
             @Override
             public void onError() {
-                mProjectsView.showUploadStatus("Empty project!");
+                mProjectsView.showUploadStatus(R.string.text_empty_project);
                 mProjectsView.hideProgressDialog();
             }
         });
@@ -316,17 +317,17 @@ public class ProjectsPresenter implements ProjectsContract.Presenter {
                 @Override
                 public void onResponse(String response) {
                     if (response.equals(ApiService.Response.ERROR)) {
-                        mProjectsView.showUploadStatus("Upload failed!");
+                        mProjectsView.showUploadStatus(R.string.text_upload_failed);
                         mProjectsView.hideProgressDialog();
                         return;
                     }
-                    mProjectsView.showUploadStatus("Upload successful!");
+                    mProjectsView.showUploadStatus(R.string.text_upload_successful);
                     mProjectsView.hideProgressDialog();
                 }
 
                 @Override
                 public void onError(ANError anError) {
-                    mProjectsView.showUploadStatus("Upload failed!");
+                    mProjectsView.showUploadStatus(R.string.text_upload_failed);
                     mProjectsView.hideProgressDialog();
                 }
             });
