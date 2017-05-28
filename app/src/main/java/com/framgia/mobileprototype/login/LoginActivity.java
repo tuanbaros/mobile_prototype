@@ -5,6 +5,7 @@ import android.databinding.DataBindingUtil;
 import android.databinding.ObservableBoolean;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
 import com.framgia.mobileprototype.BaseActivity;
@@ -77,6 +78,7 @@ public class LoginActivity extends BaseActivity implements LoginContract.View, G
         ProjectEvent projectEvent = new ProjectEvent();
         projectEvent.setUser(user);
         EventBus.getDefault().post(projectEvent);
+        Toast.makeText(this, R.string.text_login_successful, Toast.LENGTH_SHORT).show();
         finish();
     }
 

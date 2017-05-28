@@ -1,18 +1,23 @@
 package com.framgia.mobileprototype.comment;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 import com.framgia.mobileprototype.BaseActivity;
 import com.framgia.mobileprototype.R;
 import com.framgia.mobileprototype.data.model.Comment;
 import com.framgia.mobileprototype.databinding.ActivityCommentBinding;
-
+import com.framgia.mobileprototype.login.LoginActivity;
 
 import java.util.List;
 
@@ -25,8 +30,9 @@ public class CommentActivity extends BaseActivity implements CommentContract.Vie
     private CommentAdapter mCommentAdapter;
     private String mProjectName;
     private String mProjectId;
-    private int mVisibleThreshold = 5;
-    private int mLastVisibleItem, mTotalItemCount;
+    private int mVisibleThreshold = 1;
+    //    private int mLastVisibleItem, mTotalItemCount;
+    private int mPastVisiblesItems, mTotalItemCount, mVisibleItemCount;
 
     public static Intent getCommentInstance(Context context, String projectName, String projectId) {
         Intent intent = new Intent(context, CommentActivity.class);
@@ -86,6 +92,8 @@ public class CommentActivity extends BaseActivity implements CommentContract.Vie
                 if (comments.size() >= 10) {
                     mCommentControl.setLoadMore(false);
                     setUpLoadMore();
+                } else {
+                    mCommentControl.setLoadMore(true);
                 }
                 mCommentAdapter.removeLoadMoreView();
                 mCommentAdapter.updateData(comments);
@@ -105,12 +113,12 @@ public class CommentActivity extends BaseActivity implements CommentContract.Vie
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-
+//                mTotalItemCount = linearLayoutManager.getItemCount();
+                mVisibleItemCount = linearLayoutManager.getChildCount();
+                mPastVisiblesItems = linearLayoutManager.findFirstVisibleItemPosition();
                 mTotalItemCount = linearLayoutManager.getItemCount();
-                mLastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
-
-                if (!mCommentControl.isLoadMore() && mTotalItemCount <= (mLastVisibleItem +
-                    mVisibleThreshold)) {
+                if (!mCommentControl.isLoadMore() &&
+                    (mVisibleItemCount + mPastVisiblesItems) >= mTotalItemCount) {
                     mCommentPresenter.getComments(mProjectId, mCommentAdapter.getItemCount());
                     mCommentAdapter.addLoadMoreView();
                     mCommentControl.setLoadMore(true);
@@ -137,5 +145,37 @@ public class CommentActivity extends BaseActivity implements CommentContract.Vie
         }
         mCommentControl.getIsLoading().set(false);
         mCommentAdapter.removeLoadMoreView();
+    }
+
+    @Override
+    public void showDialogRequestLogin() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.title_login);
+        builder.setMessage(R.string.text_do_you_want_login_to_comment);
+        builder.setNegativeButton(R.string.action_cancel_project, null);
+        builder.setPositiveButton(R.string.action_ok,
+            new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    startActivity(new Intent(getBaseContext(), LoginActivity.class));
+                }
+            });
+        builder.create().show();
+    }
+
+    @Override
+    public void commentSuccess(List<Comment> comments) {
+        mCommentBinding.textNothing.setVisibility(View.GONE);
+        mCommentBinding.editCommentContent.setText("");
+        InputMethodManager imm =
+            (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(mCommentBinding.editCommentContent.getWindowToken(), 0);
+        mCommentAdapter.updateNewComment(comments);
+        mCommentBinding.recyclerComments.smoothScrollToPosition(0);
+    }
+
+    @Override
+    public void commentError() {
+        Toast.makeText(this, R.string.text_comment_error, Toast.LENGTH_SHORT).show();
     }
 }

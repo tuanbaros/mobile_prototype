@@ -27,6 +27,8 @@ public class ApiService {
 
     public static final String COMMENTS = "comments/{project_entry_id}/{offset}";
 
+    public static final String COMMENT = "comment";
+
     public static final int TIME_OUT = 15;
 
     public static String getApi(String api) {
@@ -40,6 +42,8 @@ public class ApiService {
         public static final String PROJECT = "project";
         public static final String PROJECT_ENTRY_ID = "project_entry_id";
         public static final String OFFSET = "offset";
+        public static final String COMMENT = "comment";
+        public static final String LAST_ID = "last_id";
     }
 
     public class Response {

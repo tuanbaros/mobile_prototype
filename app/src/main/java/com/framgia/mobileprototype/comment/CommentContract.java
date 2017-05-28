@@ -17,11 +17,15 @@ public interface CommentContract {
         void getCommentsSuccess(List<Comment> comments);
         void getCommentsError();
         void emptyComments();
+        void showDialogRequestLogin();
+        void commentSuccess(List<Comment> comments);
+        void commentError();
     }
 
     interface Presenter extends BasePresenter {
         void getComments(String projectId, int offset);
         void prepare();
         void refresh(String projectId);
+        void comment(String projectId, String content, String lastCommentId);
     }
 }
