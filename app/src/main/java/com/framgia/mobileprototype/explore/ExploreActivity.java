@@ -145,7 +145,7 @@ public class ExploreActivity extends BaseActivity implements ExploreContract.Vie
             mProgressDialog.dismiss();
         }
         EventBus.getDefault().post(project);
-        Toast.makeText(this, "Download successfull!", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, R.string.text_download_successful, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -153,19 +153,19 @@ public class ExploreActivity extends BaseActivity implements ExploreContract.Vie
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.dismiss();
         }
-        Toast.makeText(this, "Download failed!", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, R.string.text_download_failed, Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void projectTitleDuplicate(final Project project) {
-        Toast.makeText(getBaseContext(), "Please change other name!",
+        Toast.makeText(getBaseContext(), R.string.text_please_change_other_name,
                 Toast.LENGTH_SHORT).show();
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         LayoutInflater inflater = this.getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.dialog_text_pattern, null);
         dialogBuilder.setView(dialogView);
         final EditText editText = (EditText) dialogView.findViewById(R.id.edit_text);
-        editText.setHint("New project name");
+        editText.setHint(R.string.text_new_project_name);
         dialogBuilder.setPositiveButton(R.string.action_done, null);
         dialogBuilder.setNegativeButton(R.string.action_cancel_project, new DialogInterface.OnClickListener() {
             @Override
@@ -191,7 +191,7 @@ public class ExploreActivity extends BaseActivity implements ExploreContract.Vie
                             project.setTitle(currentName);
                             dialog.dismiss();
                         } else {
-                            Toast.makeText(getBaseContext(), "Please change other name!",
+                            Toast.makeText(getBaseContext(), R.string.text_please_change_other_name,
                                     Toast.LENGTH_SHORT).show();
                         }
                     }

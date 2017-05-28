@@ -131,10 +131,17 @@
     <string name="title_facebook">Login with Facebook</string>
     <string name="title_google">Login with Google</string>
     <string name="preference_file_key">mobileprototype</string>
-    <string name="title_upload">Uploading...</string>
+    <string name="title_upload">Uploading&#8230;</string>
     <string name="text_check_internet">No Internet connection. Make sure Wi-Fi or cellular data is turned on, then try again.</string>
     <string name="text_retry">Retry</string>
     <string name="action_ok">OK</string>
     <string name="text_do_you_want_download">Do you want to download this project?</string>
-    <string name="title_download">Download...</string>
+    <string name="title_download">Download&#8230;</string>
+    <string name="text_upload_successful">Upload successful</string>
+    <string name="text_upload_failed">Upload failed</string>
+    <string name="text_download_successful">Download successful</string>
+    <string name="text_download_failed">Download failed</string>
+    <string name="text_empty_project">Empty project</string>
+    <string name="text_please_change_other_name">Please change other name!</string>
+    <string name="text_new_project_name">New project name</string>
 </resources>

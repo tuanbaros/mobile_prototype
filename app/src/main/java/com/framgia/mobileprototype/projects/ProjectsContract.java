@@ -34,6 +34,7 @@ public interface ProjectsContract {
         void showCurrentUser();
         void showProgressDialog(Project project);
         void hideProgressDialog();
+        void showUploadStatus(int id);
         void showUploadStatus(String s);
     }
 

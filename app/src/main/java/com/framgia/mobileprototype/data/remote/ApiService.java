@@ -28,7 +28,7 @@ public class ApiService {
     public static final int TIME_OUT = 15;
 
     public static String getApi(String api) {
-        return COMPANY_HOST + api;
+        return HOME_HOST + api;
     }
 
     public class Param {

@@ -1,8 +1,11 @@
 package com.framgia.mobileprototype.explore;
 
+import android.support.annotation.NonNull;
+
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONArrayRequestListener;
+import com.framgia.mobileprototype.Constant;
 import com.framgia.mobileprototype.data.model.Mock;
 import com.framgia.mobileprototype.data.model.Project;
 import com.framgia.mobileprototype.data.remote.ApiService;
@@ -10,9 +13,17 @@ import com.framgia.mobileprototype.data.source.DataImport;
 import com.framgia.mobileprototype.data.source.element.ElementRepository;
 import com.framgia.mobileprototype.data.source.mock.MockRepository;
 import com.framgia.mobileprototype.data.source.project.ProjectRepository;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FileDownloadTask;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
+import java.io.File;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import org.json.JSONArray;
 
@@ -27,6 +38,8 @@ public class ExplorePresenter implements ExploreContract.Presenter {
     private ProjectRepository mProjectRepository;
     private MockRepository mMockRepository;
     private ElementRepository mElementRepository;
+    private int mCount;
+    private DataImport mDataImport;
 
     public ExplorePresenter(ExploreContract.View exploreView, ProjectRepository projectRepository,
             MockRepository mockRepository, ElementRepository elementRepository) {
@@ -128,13 +141,44 @@ public class ExplorePresenter implements ExploreContract.Presenter {
     @Override
     public void importProject(Project project) {
         Gson gson = new Gson();
-        DataImport dataImport = new DataImport(mElementRepository,
+        mDataImport = new DataImport(mElementRepository,
                 mMockRepository, mProjectRepository);
-        Project p = dataImport.save(gson.toJson(project));
-        if (p == null) {
-            mExploreView.downloadProjectError();
+        List<Download> downloads = new ArrayList<>();
+        Project p = mDataImport.changeImageName(downloads, gson.toJson(project));
+        downloadImage(p, downloads);
+    }
+
+    private void downloadImage(final Project project, final List<Download> downloads) {
+        mCount = 0;
+        if (downloads.size() == 0) {
+            mDataImport.save(project);
+            mExploreView.downloadProjectSuccess(project);
             return;
         }
-        mExploreView.downloadProjectSuccess(p);
+        FirebaseStorage storage = FirebaseStorage.getInstance(ApiService.FIREBASE_BUCKET);
+        StorageReference baseReference = storage.getReference(ApiService.FIREBASE_FOLDER);
+        for (Download download : downloads) {
+            StorageReference reference = baseReference.child(download.getUrl());
+
+            File localFile = new File(Constant.FILE_PATH + download.getName());
+
+            reference.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask
+                            .TaskSnapshot>() {
+                @Override
+                public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                    mCount++;
+                    if (mCount == downloads.size()) {
+                        mDataImport.save(project);
+                        mExploreView.downloadProjectSuccess(project);
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    mExploreView.downloadProjectError();
+                }
+            });
+        }
+
     }
 }

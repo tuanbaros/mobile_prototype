@@ -8,6 +8,7 @@ import com.framgia.mobileprototype.data.model.Project;
 import com.framgia.mobileprototype.data.source.element.ElementRepository;
 import com.framgia.mobileprototype.data.source.mock.MockRepository;
 import com.framgia.mobileprototype.data.source.project.ProjectRepository;
+import com.framgia.mobileprototype.explore.Download;
 import com.framgia.mobileprototype.util.EntryIdUtil;
 import com.framgia.mobileprototype.util.ScreenSizeUtil;
 import com.google.gson.Gson;
@@ -45,7 +46,8 @@ public class DataImport {
             reader = new BufferedReader(new InputStreamReader(inputStream));
             String line;
             while ((line = reader.readLine()) != null) result.append(line);
-            save(result.toString());
+            Project project = new Gson().fromJson(result.toString(), Project.class);
+            save(project);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -59,8 +61,7 @@ public class DataImport {
         }
     }
 
-    public Project save(String json) {
-        Project project = new Gson().fromJson(json, Project.class);
+    public Project save(Project project) {
         float scaleWidth, scaleHeight;
         if (project.getOrientation().equals(Project.LANDSCAPE)) {
             scaleWidth = (float) ScreenSizeUtil.sHeight / project.getWidth();
@@ -73,30 +74,12 @@ public class DataImport {
             project.setWidth(ScreenSizeUtil.sWidth);
             project.setHeight(ScreenSizeUtil.sHeight);
         }
-        project.setEntryId(null);
         long projectId;
         projectId = mProjectRepository.saveData(project);
         if (projectId == DataHelper.INSERT_ERROR) return null;
-        List<Element> elements = new ArrayList<>();
-        for (Mock mock : project.getMocks()) {
-            for (Element element : mock.getElements()) {
-                elements.add(element);
-            }
-        }
         for (int i = 0; i < project.getMocks().size(); i++) {
-            String mockEntryid = EntryIdUtil.get() + i;
             Mock mock = project.getMocks().get(i);
-            for (Element element : elements) {
-                if (TextUtils.isEmpty(element.getLinkTo())) continue;
-                if (!element.getLinkTo().equals(mock.getEntryId())) continue;
-                element.setLinkTo(mockEntryid);
-            }
             mock.setProjectId(String.valueOf(projectId));
-            mock.setEntryId(mockEntryid);
-            mock.setImage(mock.getEntryId() + Constant.DEFAULT_COMPRESS_FORMAT);
-        }
-        for (int i = 0; i < project.getMocks().size(); i++) {
-            Mock mock = project.getMocks().get(i);
             long mockId = mMockRepository.saveData(mock);
             if (mockId == DataHelper.INSERT_ERROR) continue;
             for (int j = 0; j < mock.getElements().size(); j++) {
@@ -115,6 +98,34 @@ public class DataImport {
         }
         project.setId(String.valueOf(projectId));
         project.setNumberMocks(project.getMocks().size());
+        return project;
+    }
+
+    public Project changeImageName(List<Download> downloads, String json) {
+        Project project = new Gson().fromJson(json, Project.class);
+        project.setEntryId(EntryIdUtil.get());
+        String name = project.getEntryId() + Constant.DEFAULT_COMPRESS_FORMAT;
+        downloads.add(new Download(name, project.getPoster()));
+        project.setPoster(name);
+        List<Element> elements = new ArrayList<>();
+        for (Mock mock : project.getMocks()) {
+            for (Element element : mock.getElements()) {
+                elements.add(element);
+            }
+        }
+        for (int i = 0; i < project.getMocks().size(); i++) {
+            String mockEntryid = EntryIdUtil.get() + i;
+            Mock mock = project.getMocks().get(i);
+            for (Element element : elements) {
+                if (TextUtils.isEmpty(element.getLinkTo())) continue;
+                if (!element.getLinkTo().equals(mock.getEntryId())) continue;
+                element.setLinkTo(mockEntryid);
+            }
+            mock.setEntryId(mockEntryid);
+            String mockName = mock.getEntryId() + Constant.DEFAULT_COMPRESS_FORMAT;
+            downloads.add(new Download(mockName, mock.getImage()));
+            mock.setImage(mockName);
+        }
         return project;
     }
 }
