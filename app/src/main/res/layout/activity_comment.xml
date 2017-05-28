@@ -3,56 +3,129 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <RelativeLayout
+    <data>
+
+        <import type="android.view.View"/>
+        <import type="com.framgia.mobileprototype.util.LayoutManagerUtil"/>
+
+        <variable
+            name="control"
+            type="com.framgia.mobileprototype.comment.CommentControl"/>
+
+        <variable
+            name="presenter"
+            type="com.framgia.mobileprototype.comment.CommentContract.Presenter"/>
+        <variable
+            name="adapter"
+            type="com.framgia.mobileprototype.comment.CommentAdapter"/>
+    </data>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        >
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/relative_comments"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
-
-        <com.mikepenz.iconics.view.IconicsImageView
-            android:id="@+id/ico_send"
-            android:layout_width="@dimen/dp_42"
-            android:layout_height="@dimen/dp_42"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_margin="@dimen/dp_10"
-            android:padding="@dimen/dp_8"
-            app:iiv_color="@color/colorPrimary"
-            app:iiv_icon="gmd-send"
-            style="@style/Base.Widget.AppCompat.Button.Borderless"
-            />
+        app:onRefresh="@{presenter}"
+        app:project_id="@{control.projectId}">
 
         <RelativeLayout
-            android:id="@+id/relative_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_toLeftOf="@+id/ico_send"
-            android:layout_toStartOf="@+id/ico_send"
-            android:padding="@dimen/dp_10"
+            android:layout_height="match_parent"
             >
 
-            <EditText
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_comments"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:adapter="@{adapter}"
+                app:layoutManager="@{LayoutManagerUtil.linear()}"
+                />
+
+            <com.mikepenz.iconics.view.IconicsImageView
+                android:id="@+id/ico_send"
+                android:layout_width="@dimen/dp_42"
+                android:layout_height="@dimen/dp_42"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_margin="@dimen/dp_10"
+                android:padding="@dimen/dp_8"
+                app:iiv_color="@color/colorPrimary"
+                app:iiv_icon="gmd-send"
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
+                />
+
+            <RelativeLayout
+                android:id="@+id/relative_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/border_edit_text"
-                android:hint="@string/text_content"
+                android:layout_alignParentBottom="true"
+                android:layout_toLeftOf="@+id/ico_send"
+                android:layout_toStartOf="@+id/ico_send"
                 android:padding="@dimen/dp_10"
-                android:textCursorDrawable="@null"/>
+                >
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/border_edit_text"
+                    android:hint="@string/text_content"
+                    android:padding="@dimen/dp_10"
+                    android:textCursorDrawable="@null"/>
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_1"
+                android:layout_above="@+id/relative_layout"
+                android:background="@android:color/darker_gray"
+                android:maxLines="5"/>
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:visibility="@{control.isLoading ? View.VISIBLE : View.GONE}"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_centerInParent="true"
+                android:visibility="@{control.isError &amp;&amp; adapter.itemCount == 0 ? View.VISIBLE : View.GONE}">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_check_internet"
+                    android:layout_marginLeft="@dimen/dp_20"
+                    android:layout_marginStart="@dimen/dp_20"
+                    android:layout_marginRight="@dimen/dp_20"
+                    android:layout_marginEnd="@dimen/dp_20"
+                    android:textSize="@dimen/sp_24"
+                    android:gravity="center_horizontal"/>
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/text_retry"
+                    android:layout_gravity="center_horizontal"
+                    android:onClick="@{() -> presenter.prepare()}"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/text_nothing_to_show"
+                android:layout_marginLeft="@dimen/dp_20"
+                android:layout_marginStart="@dimen/dp_20"
+                android:layout_marginRight="@dimen/dp_20"
+                android:layout_marginEnd="@dimen/dp_20"
+                android:layout_centerInParent="true"
+                android:textSize="@dimen/sp_24"
+                android:gravity="center_horizontal"
+                android:visibility="@{!control.isLoading &amp;&amp; !control.isError &amp;&amp; adapter.itemCount == 0 ? View.VISIBLE : View.GONE}"/>
+
         </RelativeLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_1"
-            android:layout_above="@+id/relative_layout"
-            android:background="@android:color/darker_gray"
-            android:maxLines="5"/>
-
-    </RelativeLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
 </layout>

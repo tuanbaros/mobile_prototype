@@ -107,12 +107,18 @@ public class ExploreActivity extends BaseActivity implements ExploreContract.Vie
                 mExploreAdapter.removeLoadMoreView();
                 mExploreAdapter.updateData(projects);
                 mViewControl.getIsLoading().set(false);
+                if (projects.size() > 0) {
+                    mViewControl.getIsError().set(false);
+                }
             }
         });
     }
 
     @Override
     public void getProjectsError() {
+        if (mExploreBinding.swipeRefresh.isRefreshing()) {
+            mExploreBinding.swipeRefresh.setRefreshing(false);
+        }
         mViewControl.getIsLoading().set(false);
         mViewControl.getIsError().set(true);
         mExploreAdapter.removeLoadMoreView();
@@ -121,7 +127,9 @@ public class ExploreActivity extends BaseActivity implements ExploreContract.Vie
 
     @Override
     public void emptyProjects() {
-        // TODO: 5/21/17 show empty
+        if (mExploreBinding.swipeRefresh.isRefreshing()) {
+            mExploreBinding.swipeRefresh.setRefreshing(false);
+        }
         mViewControl.getIsLoading().set(false);
         mExploreAdapter.removeLoadMoreView();
     }
@@ -206,6 +214,7 @@ public class ExploreActivity extends BaseActivity implements ExploreContract.Vie
 
     @Override
     public void openCommentUi(Project project) {
-        startActivity(new Intent(this, CommentActivity.class));
+        startActivity(
+            CommentActivity.getCommentInstance(this, project.getTitle(), project.getEntryId()));
     }
 }
