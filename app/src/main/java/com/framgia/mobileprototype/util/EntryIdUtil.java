@@ -15,13 +15,13 @@ import java.util.regex.Pattern;
 public class EntryIdUtil {
     public static String get() {
         Date date = Calendar.getInstance().getTime();
-        SimpleDateFormat format = new SimpleDateFormat("HHmmssSSSddMMyyyyz", Locale.ENGLISH);
-        //Pattern pt = Pattern.compile("[^a-zA-Z0-9]");
-        //Matcher match = pt.matcher(c);
-        //while (match.find()) {
-        //    String s = match.group();
-        //    c = c.replaceAll("\\" + s, "");
-        //}
-        return format.format(date);
+        SimpleDateFormat format = new SimpleDateFormat("HHmmssSSSddMMyyyyZ", Locale.ENGLISH);
+//        Pattern pt = Pattern.compile("[^a-zA-Z0-9]");
+//        Matcher match = pt.matcher(c);
+//        while (match.find()) {
+//            String s = match.group();
+//            c = c.replaceAll("\\" + s, "");
+//        }
+        return format.format(date).replaceAll("\\-", "").replaceAll("\\+", "");
     }
 }

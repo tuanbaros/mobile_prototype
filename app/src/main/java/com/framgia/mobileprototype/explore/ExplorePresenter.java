@@ -181,4 +181,9 @@ public class ExplorePresenter implements ExploreContract.Presenter {
         }
 
     }
+
+    @Override
+    public void showComment(Project project) {
+        mExploreView.openCommentUi(project);
+    }
 }

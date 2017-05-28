@@ -32,4 +32,8 @@ public class ExploreItemHandler {
         });
         builder.create().show();
     }
+
+    public void showComment(Project project) {
+        mPresenter.showComment(project);
+    }
 }

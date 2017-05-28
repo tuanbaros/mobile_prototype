@@ -21,6 +21,7 @@ public interface ExploreContract {
         void downloadProjectSuccess(Project project);
         void downloadProjectError();
         void projectTitleDuplicate(Project project);
+        void openCommentUi(Project project);
     }
 
     interface Presenter extends BasePresenter {
@@ -30,5 +31,6 @@ public interface ExploreContract {
         void downloadProject(Project project);
         boolean checkValidProjectTitle(String title);
         void importProject(Project project);
+        void showComment(Project project);
     }
 }

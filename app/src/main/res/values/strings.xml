@@ -144,4 +144,6 @@
     <string name="text_empty_project">Empty project</string>
     <string name="text_please_change_other_name">Please change other name!</string>
     <string name="text_new_project_name">New project name</string>
+    <string name="text_content">Type a message&#8230;</string>
+    <string name="text_nothing_to_show">Nothing to show.</string>
 </resources>

@@ -2,6 +2,7 @@ package com.framgia.mobileprototype.explore;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -15,6 +16,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 import com.framgia.mobileprototype.BaseActivity;
 import com.framgia.mobileprototype.R;
+import com.framgia.mobileprototype.comment.CommentActivity;
 import com.framgia.mobileprototype.data.model.Project;
 import com.framgia.mobileprototype.data.source.element.ElementLocalDataSource;
 import com.framgia.mobileprototype.data.source.element.ElementRepository;
@@ -120,6 +122,7 @@ public class ExploreActivity extends BaseActivity implements ExploreContract.Vie
     @Override
     public void emptyProjects() {
         // TODO: 5/21/17 show empty
+        mViewControl.getIsLoading().set(false);
         mExploreAdapter.removeLoadMoreView();
     }
 
@@ -199,5 +202,10 @@ public class ExploreActivity extends BaseActivity implements ExploreContract.Vie
             }
         });
         b.show();
+    }
+
+    @Override
+    public void openCommentUi(Project project) {
+        startActivity(new Intent(this, CommentActivity.class));
     }
 }
