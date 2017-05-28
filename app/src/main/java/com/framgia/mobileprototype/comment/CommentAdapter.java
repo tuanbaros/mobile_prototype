@@ -96,6 +96,11 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return mComments.size();
     }
 
+    public String getLastCommentId() {
+        if (mComments.size() == 0 || mComments.get(0) == null) return "0";
+        return mComments.get(0).getId();
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder {
         private ItemCommentBinding mItemCommentBinding;
 
@@ -116,12 +121,19 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 params.bottomMargin = mItemCommentBinding.getRoot()
                     .getContext()
                     .getResources()
-                    .getDimensionPixelOffset(R.dimen.dp_52);
+                    .getDimensionPixelOffset(R.dimen.dp_65);
             } else {
                 params.bottomMargin = 0;
             }
             mItemCommentBinding.setComment(comment);
             mItemCommentBinding.executePendingBindings();
+        }
+    }
+
+    public void updateNewComment(List<Comment> comments) {
+        for (Comment comment : comments) {
+            mComments.add(0, comment);
+            notifyItemInserted(0);
         }
     }
 }

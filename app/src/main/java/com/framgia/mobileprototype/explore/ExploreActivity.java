@@ -103,6 +103,8 @@ public class ExploreActivity extends BaseActivity implements ExploreContract.Vie
                 if (projects.size() >= 10) {
                     mViewControl.setLoadMore(false);
                     setUpLoadMore();
+                } else {
+                    mViewControl.setLoadMore(true);
                 }
                 mExploreAdapter.removeLoadMoreView();
                 mExploreAdapter.updateData(projects);

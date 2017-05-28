@@ -17,6 +17,9 @@ public class Comment {
     @SerializedName("user")
     private String mUsername;
 
+    @SerializedName("project_id")
+    private String mProjectId;
+
     public String getId() {
         return mId;
     }
@@ -39,5 +42,13 @@ public class Comment {
 
     public void setUsername(String username) {
         mUsername = username;
+    }
+
+    public String getProjectId() {
+        return mProjectId;
+    }
+
+    public void setProjectId(String projectId) {
+        mProjectId = projectId;
     }
 }
