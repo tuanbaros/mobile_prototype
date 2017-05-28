@@ -25,6 +25,8 @@ public class ApiService {
 
     public static final String DOWNLOAD = "download";
 
+    public static final String COMMENTS = "comments/{project_entry_id}/{offset}";
+
     public static final int TIME_OUT = 15;
 
     public static String getApi(String api) {

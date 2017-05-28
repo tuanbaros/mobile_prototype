@@ -50,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:layout_centerInParent="true"
-                android:visibility="@{control.isError ? View.VISIBLE : View.GONE}">
+                android:visibility="@{control.isError &amp;&amp; adapter.itemCount == 0 ? View.VISIBLE : View.GONE}">
 
                 <TextView
                     android:layout_width="match_parent"

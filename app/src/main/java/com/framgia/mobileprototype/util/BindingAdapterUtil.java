@@ -25,6 +25,7 @@ import com.bumptech.glide.signature.StringSignature;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.framgia.mobileprototype.Constant;
 import com.framgia.mobileprototype.R;
+import com.framgia.mobileprototype.comment.CommentContract;
 import com.framgia.mobileprototype.data.remote.ApiService;
 import com.framgia.mobileprototype.explore.ExploreContract;
 import com.framgia.mobileprototype.mockdetail.MockDetailContract;
@@ -182,6 +183,19 @@ public class BindingAdapterUtil {
             @Override
             public void onRefresh() {
                 presenter.refresh();
+            }
+        });
+    }
+
+    @BindingAdapter({"onRefresh", "project_id"})
+    public static void setSwipeRefreshLayoutOnRefreshListener(SwipeRefreshLayout view,
+                                                              final CommentContract.Presenter
+                                                                  presenter, final String projectId) {
+        view.setColorSchemeResources(R.color.colorAccent);
+        view.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                presenter.refresh(projectId);
             }
         });
     }
