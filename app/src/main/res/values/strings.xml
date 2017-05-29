@@ -149,4 +149,6 @@
     <string name="text_do_you_want_login_to_comment">Do you want to login for comment?</string>
     <string name="text_login_successful">Login successful</string>
     <string name="text_comment_error">Comment error</string>
+    <string name="text_loading">Loading&#8230;</string>
+    <string name="text_network_error">Network error!</string>
 </resources>

@@ -36,4 +36,8 @@ public class ExploreItemHandler {
     public void showComment(Project project) {
         mPresenter.showComment(project);
     }
+
+    public void showDemoProject(Project project) {
+        mPresenter.showDemoProject(project);
+    }
 }
