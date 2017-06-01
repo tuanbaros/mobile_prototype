@@ -40,4 +40,8 @@ public class ExploreItemHandler {
     public void showDemoProject(Project project) {
         mPresenter.showDemoProject(project);
     }
+
+    public void shareProjectLinkt(Project project) {
+        mPresenter.shareProjectLink(project);
+    }
 }

@@ -36,6 +36,7 @@ public interface ProjectsContract {
         void hideProgressDialog();
         void showUploadStatus(int id);
         void showUploadStatus(String s);
+        void showDialogAskShare(String projectName, String projectLink);
     }
 
     interface Presenter extends BasePresenter {

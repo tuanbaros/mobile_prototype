@@ -322,6 +322,9 @@ public class ProjectsPresenter implements ProjectsContract.Presenter {
                         return;
                     }
                     mProjectsView.showUploadStatus(R.string.text_upload_successful);
+                    mProjectsView.showDialogAskShare(mUploadProject.getTitle(), ApiService.getLink
+                            (mUploadProject
+                            .getEntryId()));
                     mProjectsView.hideProgressDialog();
                 }
 

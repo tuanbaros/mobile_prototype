@@ -151,4 +151,6 @@
     <string name="text_comment_error">Comment error</string>
     <string name="text_loading">Loading&#8230;</string>
     <string name="text_network_error">Network error!</string>
+    <string name="text_send_to">Send To</string>
+    <string name="text_do_you_want_share_link_of_project">Do you want to share link of this project now?</string>
 </resources>

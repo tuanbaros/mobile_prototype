@@ -29,10 +29,21 @@ public class ApiService {
 
     public static final String COMMENT = "comment";
 
+    private static final String SHARE = "demo/project/";
+
     public static final int TIME_OUT = 15;
 
+    private static String getHost() {
+        return COMPANY_HOST;
+    }
+
     public static String getApi(String api) {
-        return COMPANY_HOST + api;
+        return getHost() + api;
+    }
+
+    public static String getLink(String projectId) {
+        String base = getHost().replace("api/", SHARE);
+        return base + projectId;
     }
 
     public class Param {

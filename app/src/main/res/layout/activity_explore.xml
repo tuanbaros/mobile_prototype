@@ -30,7 +30,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context="com.framgia.mobileprototype.explore.ExploreActivity">
+            tools:context="com.framgia.mobileprototype.explore.ExploreActivity"
+            android:descendantFocusability="blocksDescendants">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/recycler_project"

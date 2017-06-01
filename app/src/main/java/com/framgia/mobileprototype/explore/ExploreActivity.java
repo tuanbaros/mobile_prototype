@@ -238,6 +238,16 @@ public class ExploreActivity extends BaseActivity implements ExploreContract.Vie
     }
 
     @Override
+    public void openShareLinkProjectUi(String projectLink) {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, projectLink);
+        sendIntent.setType(Constant.SHARE_TYPE);
+        startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string
+                .text_send_to)));
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == COMMENT_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             int numComment = data.getIntExtra(Constant.NUMBER_COMMENT, 0);
