@@ -14,10 +14,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import com.bumptech.glide.Glide;
+import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.framgia.mobileprototype.BaseActivity;
 import com.framgia.mobileprototype.R;
 import com.framgia.mobileprototype.comment.CommentActivity;
 import com.framgia.mobileprototype.data.model.Project;
+import com.framgia.mobileprototype.data.remote.ApiService;
 import com.framgia.mobileprototype.data.source.element.ElementLocalDataSource;
 import com.framgia.mobileprototype.data.source.element.ElementRepository;
 import com.framgia.mobileprototype.data.source.mock.MockLocalDataSource;
@@ -25,6 +28,10 @@ import com.framgia.mobileprototype.data.source.mock.MockRepository;
 import com.framgia.mobileprototype.data.source.project.ProjectLocalDataSource;
 import com.framgia.mobileprototype.data.source.project.ProjectRepository;
 import com.framgia.mobileprototype.databinding.ActivityExploreBinding;
+import com.framgia.mobileprototype.demo.LandscapeOnlineActivity;
+import com.framgia.mobileprototype.demo.OnlineDemoActivity;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import java.util.List;
 import org.greenrobot.eventbus.EventBus;
 
@@ -218,5 +225,15 @@ public class ExploreActivity extends BaseActivity implements ExploreContract.Vie
     public void openCommentUi(Project project) {
         startActivity(
             CommentActivity.getCommentInstance(this, project.getTitle(), project.getEntryId()));
+    }
+
+    @Override
+    public void openDemoProjectUi(Project project) {
+        if (project.isPortrait()) {
+            startActivity(OnlineDemoActivity.getOnlineDemoIntent(this, project));
+            return;
+        }
+        startActivity(LandscapeOnlineActivity.getOnlineDemoIntent(this, project));
+
     }
 }

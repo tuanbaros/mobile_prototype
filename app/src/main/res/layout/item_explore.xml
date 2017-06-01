@@ -122,6 +122,7 @@
                         android:padding="@dimen/dp_8"
                         app:iiv_color="@color/colorAccent"
                         app:iiv_icon="gmd-play-arrow"
+                        android:onClick="@{() -> handler.showDemoProject(project)}"
                         style="@style/Base.Widget.AppCompat.Button.Borderless"
                         />
 

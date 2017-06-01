@@ -84,7 +84,15 @@
             android:name=".explore.ExploreActivity"
             android:label="@string/title_explore"
             android:screenOrientation="portrait" />
-        <activity android:name=".comment.CommentActivity"/>
+        <activity android:name=".comment.CommentActivity" />
+        <activity
+            android:name=".demo.OnlineDemoActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".demo.LandscapeOnlineActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>
