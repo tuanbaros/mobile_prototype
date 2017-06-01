@@ -41,6 +41,8 @@ public class Project extends BaseObservable implements Cloneable, Serializable {
     private List<Mock> mMocks = new ArrayList<>();
     @SerializedName("author")
     private String mAuthor;
+    @SerializedName("num_comment")
+    private int mNumComment;
     private int mNumberMocks;
 
     public Project(Cursor cursor) {
@@ -185,5 +187,15 @@ public class Project extends BaseObservable implements Cloneable, Serializable {
 
     public void setAuthor(String author) {
         mAuthor = author;
+    }
+
+    @Bindable
+    public int getNumComment() {
+        return mNumComment;
+    }
+
+    public void setNumComment(int numComment) {
+        mNumComment = numComment;
+        notifyPropertyChanged(BR.numComment);
     }
 }

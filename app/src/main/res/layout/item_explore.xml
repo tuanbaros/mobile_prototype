@@ -127,6 +127,7 @@
                         />
 
                     <com.mikepenz.iconics.view.IconicsImageView
+                        android:id="@+id/iconic_comment"
                         android:layout_width="@dimen/dp_36"
                         android:layout_height="@dimen/dp_36"
                         android:layout_toEndOf="@+id/ico_play"
@@ -136,6 +137,20 @@
                         app:iiv_icon="gmd-comment"
                         android:onClick="@{() -> handler.showComment(project)}"
                         style="@style/Base.Widget.AppCompat.Button.Borderless"
+                        />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignBottom="@+id/iconic_comment"
+                        android:layout_alignTop="@+id/iconic_comment"
+                        android:layout_toEndOf="@+id/iconic_comment"
+                        android:layout_toRightOf="@+id/iconic_comment"
+                        android:padding="@dimen/dp_8"
+                        android:gravity="center"
+                        android:paddingLeft="0dp"
+                        android:paddingStart="0dp"
+                        android:text="@{String.valueOf(project.numComment)}"
                         />
 
                     <com.mikepenz.iconics.view.IconicsImageView

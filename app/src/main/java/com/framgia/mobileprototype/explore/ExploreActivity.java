@@ -14,13 +14,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import com.bumptech.glide.Glide;
-import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.framgia.mobileprototype.BaseActivity;
+import com.framgia.mobileprototype.Constant;
 import com.framgia.mobileprototype.R;
 import com.framgia.mobileprototype.comment.CommentActivity;
 import com.framgia.mobileprototype.data.model.Project;
-import com.framgia.mobileprototype.data.remote.ApiService;
 import com.framgia.mobileprototype.data.source.element.ElementLocalDataSource;
 import com.framgia.mobileprototype.data.source.element.ElementRepository;
 import com.framgia.mobileprototype.data.source.mock.MockLocalDataSource;
@@ -30,13 +28,11 @@ import com.framgia.mobileprototype.data.source.project.ProjectRepository;
 import com.framgia.mobileprototype.databinding.ActivityExploreBinding;
 import com.framgia.mobileprototype.demo.LandscapeOnlineActivity;
 import com.framgia.mobileprototype.demo.OnlineDemoActivity;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import java.util.List;
 import org.greenrobot.eventbus.EventBus;
 
 public class ExploreActivity extends BaseActivity implements ExploreContract.View {
-
+    private static final int COMMENT_REQUEST_CODE = 3333;
     private ExploreContract.Presenter mExplorePresenter;
     private ExploreViewControl mViewControl;
     private ExploreAdapter mExploreAdapter;
@@ -46,6 +42,8 @@ public class ExploreActivity extends BaseActivity implements ExploreContract.Vie
     private int mLastVisibleItem, mTotalItemCount;
 
     private ProgressDialog mProgressDialog;
+
+    private Project mProject;
 
 
     @Override
@@ -223,8 +221,10 @@ public class ExploreActivity extends BaseActivity implements ExploreContract.Vie
 
     @Override
     public void openCommentUi(Project project) {
-        startActivity(
-            CommentActivity.getCommentInstance(this, project.getTitle(), project.getEntryId()));
+        mProject = project;
+        startActivityForResult(
+                CommentActivity.getCommentInstance(this, project.getTitle(), project.getEntryId()),
+                COMMENT_REQUEST_CODE);
     }
 
     @Override
@@ -235,5 +235,15 @@ public class ExploreActivity extends BaseActivity implements ExploreContract.Vie
         }
         startActivity(LandscapeOnlineActivity.getOnlineDemoIntent(this, project));
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == COMMENT_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+            int numComment = data.getIntExtra(Constant.NUMBER_COMMENT, 0);
+            if (mProject.getNumComment() == numComment) return;
+            mProject.setNumComment(numComment);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

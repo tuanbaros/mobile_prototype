@@ -14,6 +14,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.framgia.mobileprototype.BaseActivity;
+import com.framgia.mobileprototype.Constant;
 import com.framgia.mobileprototype.R;
 import com.framgia.mobileprototype.data.model.Comment;
 import com.framgia.mobileprototype.databinding.ActivityCommentBinding;
@@ -177,5 +178,13 @@ public class CommentActivity extends BaseActivity implements CommentContract.Vie
     @Override
     public void commentError() {
         Toast.makeText(this, R.string.text_comment_error, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.putExtra(Constant.NUMBER_COMMENT, mCommentAdapter.getItemCount());
+        setResult(RESULT_OK, intent);
+        super.onBackPressed();
     }
 }
