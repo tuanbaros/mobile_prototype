@@ -413,6 +413,26 @@ public class ProjectsActivity extends PermissionActivity implements
     }
 
     @Override
+    public void showDialogAskShare(String projectName, final String projectLink) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(projectName);
+        builder.setMessage(R.string.text_do_you_want_share_link_of_project);
+        builder.setPositiveButton(R.string.action_ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, projectLink);
+                sendIntent.setType(Constant.SHARE_TYPE);
+                startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string
+                        .text_send_to)));
+            }
+        });
+        builder.setNegativeButton(R.string.action_cancel_project, null);
+        builder.create().show();
+    }
+
+    @Override
     public void start() {
         setUpScreenSize();
         setUpDrawerListener();

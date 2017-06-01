@@ -25,7 +25,7 @@
         android:layout_marginBottom="@dimen/dp_16"
         android:layout_marginLeft="@dimen/dp_16"
         android:layout_marginRight="@dimen/dp_16"
-        android:clickable="true"
+        android:onClick="@{() -> handler.showComment(project)}"
         android:foreground="?android:attr/selectableItemBackground"
         >
 
@@ -119,19 +119,44 @@
                         android:id="@+id/ico_play"
                         android:layout_width="@dimen/dp_36"
                         android:layout_height="@dimen/dp_36"
+                        android:onClick="@{() -> handler.showDemoProject(project)}"
                         android:padding="@dimen/dp_8"
                         app:iiv_color="@color/colorAccent"
                         app:iiv_icon="gmd-play-arrow"
-                        android:onClick="@{() -> handler.showDemoProject(project)}"
                         style="@style/Base.Widget.AppCompat.Button.Borderless"
                         />
 
                     <com.mikepenz.iconics.view.IconicsImageView
-                        android:id="@+id/iconic_comment"
+                        android:id="@+id/ico_download"
                         android:layout_width="@dimen/dp_36"
                         android:layout_height="@dimen/dp_36"
-                        android:layout_toEndOf="@+id/ico_play"
-                        android:layout_toRightOf="@+id/ico_play"
+                        android:layout_toStartOf="@+id/ico_comment"
+                        android:layout_toLeftOf="@+id/ico_comment"
+                        android:onClick="@{(view) -> handler.downloadProject(view, project)}"
+                        android:padding="@dimen/dp_8"
+                        app:iiv_color="@color/colorAccent"
+                        app:iiv_icon="gmd-file-download"
+                        style="@style/Base.Widget.AppCompat.Button.Borderless"
+                        />
+
+                    <com.mikepenz.iconics.view.IconicsImageView
+                        android:layout_width="@dimen/dp_36"
+                        android:layout_height="@dimen/dp_36"
+                        android:layout_toLeftOf="@+id/ico_download"
+                        android:layout_toStartOf="@+id/ico_download"
+                        android:padding="@dimen/dp_8"
+                        android:onClick="@{() -> handler.shareProjectLinkt(project)}"
+                        app:iiv_color="@color/colorAccent"
+                        app:iiv_icon="gmd-share"
+                        style="@style/Base.Widget.AppCompat.Button.Borderless"
+                        />
+
+                    <com.mikepenz.iconics.view.IconicsImageView
+                        android:id="@+id/ico_comment"
+                        android:layout_width="@dimen/dp_36"
+                        android:layout_height="@dimen/dp_36"
+                        android:layout_toStartOf="@+id/text_number_mock"
+                        android:layout_toLeftOf="@+id/text_number_mock"
                         android:padding="@dimen/dp_8"
                         app:iiv_color="@color/colorAccent"
                         app:iiv_icon="gmd-comment"
@@ -140,29 +165,18 @@
                         />
 
                     <TextView
+                        android:id="@+id/text_number_mock"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_alignBottom="@+id/iconic_comment"
-                        android:layout_alignTop="@+id/iconic_comment"
-                        android:layout_toEndOf="@+id/iconic_comment"
-                        android:layout_toRightOf="@+id/iconic_comment"
                         android:padding="@dimen/dp_8"
+                        android:layout_alignTop="@+id/ico_play"
+                        android:layout_alignBottom="@+id/ico_play"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:gravity="center"
                         android:paddingLeft="0dp"
                         android:paddingStart="0dp"
                         android:text="@{String.valueOf(project.numComment)}"
-                        />
-
-                    <com.mikepenz.iconics.view.IconicsImageView
-                        android:layout_width="@dimen/dp_36"
-                        android:layout_height="@dimen/dp_36"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
-                        android:onClick="@{(view) -> handler.downloadProject(view, project)}"
-                        android:padding="@dimen/dp_8"
-                        app:iiv_color="@color/colorAccent"
-                        app:iiv_icon="gmd-file-download"
-                        style="@style/Base.Widget.AppCompat.Button.Borderless"
                         />
 
                 </RelativeLayout>

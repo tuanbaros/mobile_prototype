@@ -23,6 +23,7 @@ public interface ExploreContract {
         void projectTitleDuplicate(Project project);
         void openCommentUi(Project project);
         void openDemoProjectUi(Project project);
+        void openShareLinkProjectUi(String projectLink);
     }
 
     interface Presenter extends BasePresenter {
@@ -34,5 +35,6 @@ public interface ExploreContract {
         void importProject(Project project);
         void showComment(Project project);
         void showDemoProject(Project project);
+        void shareProjectLink(Project project);
     }
 }

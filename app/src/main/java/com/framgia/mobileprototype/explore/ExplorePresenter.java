@@ -191,4 +191,9 @@ public class ExplorePresenter implements ExploreContract.Presenter {
     public void showDemoProject(Project project) {
         mExploreView.openDemoProjectUi(project);
     }
+
+    @Override
+    public void shareProjectLink(Project project) {
+        mExploreView.openShareLinkProjectUi(ApiService.getLink(project.getEntryId()));
+    }
 }
