@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
 import com.framgia.mobileprototype.BaseActivity;
 import com.framgia.mobileprototype.Constant;
 import com.framgia.mobileprototype.R;
@@ -28,11 +29,13 @@ import com.framgia.mobileprototype.data.source.project.ProjectRepository;
 import com.framgia.mobileprototype.databinding.ActivityExploreBinding;
 import com.framgia.mobileprototype.demo.LandscapeOnlineActivity;
 import com.framgia.mobileprototype.demo.OnlineDemoActivity;
-import java.util.List;
+
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
+import java.util.List;
 
 public class ExploreActivity extends BaseActivity implements ExploreContract.View {
-    private static final int COMMENT_REQUEST_CODE = 3333;
     private ExploreContract.Presenter mExplorePresenter;
     private ExploreViewControl mViewControl;
     private ExploreAdapter mExploreAdapter;
@@ -59,6 +62,7 @@ public class ExploreActivity extends BaseActivity implements ExploreContract.Vie
         mExploreBinding.setControl(mViewControl);
         mExploreBinding.setPresenter(mExplorePresenter);
         mExploreBinding.setAdapter(mExploreAdapter);
+        EventBus.getDefault().register(this);
         start();
     }
 
@@ -222,9 +226,8 @@ public class ExploreActivity extends BaseActivity implements ExploreContract.Vie
     @Override
     public void openCommentUi(Project project) {
         mProject = project;
-        startActivityForResult(
-                CommentActivity.getCommentInstance(this, project.getTitle(), project.getEntryId()),
-                COMMENT_REQUEST_CODE);
+        startActivity(
+            CommentActivity.getCommentInstance(this, project.getTitle(), project.getEntryId()));
     }
 
     @Override
@@ -247,13 +250,14 @@ public class ExploreActivity extends BaseActivity implements ExploreContract.Vie
                 .text_send_to)));
     }
 
+    @Subscribe
+    public void onEvent(Integer num) {
+        mProject.setNumComment(mProject.getNumComment() + num);
+    }
+
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == COMMENT_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
-            int numComment = data.getIntExtra(Constant.NUMBER_COMMENT, 0);
-            if (mProject.getNumComment() == numComment) return;
-            mProject.setNumComment(numComment);
-        }
-        super.onActivityResult(requestCode, resultCode, data);
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 }
