@@ -20,6 +20,9 @@ public class Comment {
     @SerializedName("project_id")
     private String mProjectId;
 
+    @SerializedName("user_open_id")
+    private String mUserOpenId;
+
     public String getId() {
         return mId;
     }
@@ -50,5 +53,17 @@ public class Comment {
 
     public void setProjectId(String projectId) {
         mProjectId = projectId;
+    }
+
+    public String getUserOpenId() {
+        return mUserOpenId;
+    }
+
+    public void setUserOpenId(String userOpenId) {
+        mUserOpenId = userOpenId;
+    }
+
+    public boolean checkByCurrentUser() {
+        return User.getCurrent() != null && User.getCurrent().getOpenId().equals(getUserOpenId());
     }
 }
