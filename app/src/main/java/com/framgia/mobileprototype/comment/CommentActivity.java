@@ -14,11 +14,12 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.framgia.mobileprototype.BaseActivity;
-import com.framgia.mobileprototype.Constant;
 import com.framgia.mobileprototype.R;
 import com.framgia.mobileprototype.data.model.Comment;
 import com.framgia.mobileprototype.databinding.ActivityCommentBinding;
 import com.framgia.mobileprototype.login.LoginActivity;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -173,18 +174,11 @@ public class CommentActivity extends BaseActivity implements CommentContract.Vie
         imm.hideSoftInputFromWindow(mCommentBinding.editCommentContent.getWindowToken(), 0);
         mCommentAdapter.updateNewComment(comments);
         mCommentBinding.recyclerComments.smoothScrollToPosition(0);
+        EventBus.getDefault().post(comments.size());
     }
 
     @Override
     public void commentError() {
         Toast.makeText(this, R.string.text_comment_error, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onBackPressed() {
-        Intent intent = new Intent();
-        intent.putExtra(Constant.NUMBER_COMMENT, mCommentAdapter.getItemCount());
-        setResult(RESULT_OK, intent);
-        super.onBackPressed();
     }
 }

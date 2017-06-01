@@ -31,6 +31,5 @@ public class Constant {
     public static final int SAMPLE_MOCK_COUNT = 6;
     public static final String CURRENT_COLOR = "CURRENT_COLOR";
     public static final String EXPAND_TITLE = " (1)";
-    public static final String NUMBER_COMMENT = "NUMBER_COMMENT";
     public static final String SHARE_TYPE = "text/plain";
 }
