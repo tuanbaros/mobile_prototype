@@ -276,12 +276,20 @@ public class ProjectsPresenter implements ProjectsContract.Presenter {
         FirebaseStorage storage = FirebaseStorage.getInstance(ApiService.FIREBASE_BUCKET);
         StorageReference storageRef = storage.getReference();
         for (String image : mImageNames) {
-            if (image == null) continue;
-            Uri file = Uri.fromFile(new File(Constant.FILE_PATH + image));
-            String pathDes = ApiService.FIREBASE_FOLDER + User.getCurrent().getOpenId() + file
+            if (image == null) {
+                mCount++;
+                continue;
+            }
+            File file = new File(Constant.FILE_PATH + image);
+            if (!file.exists()) {
+                mCount++;
+                continue;
+            }
+            Uri uri = Uri.fromFile(file);
+            String pathDes = ApiService.FIREBASE_FOLDER + User.getCurrent().getOpenId() + uri
                 .getLastPathSegment();
             StorageReference riversRef = storageRef.child(pathDes);
-            UploadTask uploadTask = riversRef.putFile(file);
+            UploadTask uploadTask = riversRef.putFile(uri);
             uploadTask.addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception exception) {
