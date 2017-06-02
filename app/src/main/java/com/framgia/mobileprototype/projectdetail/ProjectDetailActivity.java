@@ -119,6 +119,11 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
         mIsLoading.set(false);
         mMockAdapter.set(
             new MockAdapter(this, mocks, mProjectDetailPresenter, this, mProject.isPortrait()));
+        setUpItemTouchHelper();
+    }
+
+    private void setUpItemTouchHelper() {
+        if (mItemTouchHelper != null) return;
         ItemTouchHelper.Callback callback = new ItemTouchCallbackHelper(mMockAdapter.get());
         mItemTouchHelper = new ItemTouchHelper(callback);
         mItemTouchHelper.attachToRecyclerView(mProjectDetailBinding.recyclerView);
@@ -130,6 +135,7 @@ public class ProjectDetailActivity extends BaseActivity implements ProjectDetail
         mIsEmptyMock.set(true);
         mMockAdapter.set(
             new MockAdapter(this, null, mProjectDetailPresenter, this, mProject.isPortrait()));
+        setUpItemTouchHelper();
     }
 
     @Override
