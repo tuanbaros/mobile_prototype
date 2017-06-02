@@ -41,6 +41,8 @@ public class Project extends BaseObservable implements Cloneable, Serializable {
     private List<Mock> mMocks = new ArrayList<>();
     @SerializedName("author")
     private String mAuthor;
+    @SerializedName("author_open_id")
+    private String mAuthorOpenId;
     @SerializedName("num_comment")
     private int mNumComment;
     private int mNumberMocks;
@@ -197,5 +199,17 @@ public class Project extends BaseObservable implements Cloneable, Serializable {
     public void setNumComment(int numComment) {
         mNumComment = numComment;
         notifyPropertyChanged(BR.numComment);
+    }
+
+    public String getAuthorOpenId() {
+        return mAuthorOpenId;
+    }
+
+    public void setAuthorOpenId(String authorOpenId) {
+        mAuthorOpenId = authorOpenId;
+    }
+
+    public boolean checkByCurrentUser() {
+        return User.getCurrent() != null && User.getCurrent().getOpenId().equals(getAuthorOpenId());
     }
 }

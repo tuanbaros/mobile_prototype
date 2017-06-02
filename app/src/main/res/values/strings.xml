@@ -153,4 +153,5 @@
     <string name="text_network_error">Network error!</string>
     <string name="text_send_to">Send To</string>
     <string name="text_do_you_want_share_link_of_project">Do you want to share link of this project now?</string>
+    <string name="text_you">%s (You)</string>
 </resources>
