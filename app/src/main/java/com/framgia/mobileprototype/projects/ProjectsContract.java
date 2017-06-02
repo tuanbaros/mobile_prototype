@@ -57,5 +57,6 @@ public interface ProjectsContract {
         void logout();
         void openProgressDialog(Project project);
         void getProjectToUpload(Project project);
+        void shareLink(Project project);
     }
 }

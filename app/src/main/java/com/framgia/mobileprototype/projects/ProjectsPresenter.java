@@ -49,6 +49,7 @@ public class ProjectsPresenter implements ProjectsContract.Presenter {
     private List<String> mImageNames = new ArrayList<>();
     private int mCount;
     private Project mUploadProject;
+    private Project mCurrentProject;
 
     public ProjectsPresenter(ProjectsContract.View projectsView,
                              ProjectRepository projectRepository,
@@ -205,6 +206,7 @@ public class ProjectsPresenter implements ProjectsContract.Presenter {
 
     @Override
     public void getProjectToUpload(final Project project) {
+        mCurrentProject = project;
         mImageNames.clear();
         mCount = 0;
         try {
@@ -244,6 +246,12 @@ public class ProjectsPresenter implements ProjectsContract.Presenter {
                 mProjectsView.hideProgressDialog();
             }
         });
+    }
+
+    @Override
+    public void shareLink(Project project) {
+        String link = ApiService.getLink(User.getCurrent().getOpenId() + project.getEntryId());
+        mProjectsView.showDialogAskShare(project.getTitle(), link);
     }
 
     public void getElementForProject(final Mock mock) {
@@ -334,6 +342,11 @@ public class ProjectsPresenter implements ProjectsContract.Presenter {
                             (mUploadProject
                             .getEntryId()));
                     mProjectsView.hideProgressDialog();
+                    if (mCurrentProject == null) return;
+                    mCurrentProject.setListUsers(mCurrentProject.getListUsers() + Constant.PREFIX +
+                        User.getCurrent().getOpenId());
+                    mCurrentProject.setShared();
+                    mProjectRepository.updateData(mCurrentProject);
                 }
 
                 @Override

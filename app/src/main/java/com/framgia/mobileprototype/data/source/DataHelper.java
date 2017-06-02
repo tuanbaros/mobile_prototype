@@ -9,7 +9,7 @@ import com.framgia.mobileprototype.data.source.mock.MockPersistenceContract;
 import com.framgia.mobileprototype.data.source.project.ProjectPersistenceContract;
 
 public class DataHelper extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private static final String DATABASE_NAME = "mobileprototype.db";
     private static final String TEXT_TYPE = " TEXT";
     private static final String INTEGER_TYPE = " INTEGER";
@@ -27,6 +27,7 @@ public class DataHelper extends SQLiteOpenHelper {
             ProjectPersistenceContract.ProjectEntry.COLUMN_NAME_HEIGHT + INTEGER_TYPE + COMMA_SEP +
             ProjectPersistenceContract.ProjectEntry.COLUMN_NAME_ORIENTATION + TEXT_TYPE +
             COMMA_SEP +
+            ProjectPersistenceContract.ProjectEntry.COLUMN_NAME_USERS + TEXT_TYPE + COMMA_SEP +
             ProjectPersistenceContract.ProjectEntry.COLUMN_NAME_POSTER + TEXT_TYPE + COMMA_SEP +
             " UNIQUE (" + ProjectPersistenceContract.ProjectEntry.COLUMN_NAME_TITLE + ")" +
             " )";

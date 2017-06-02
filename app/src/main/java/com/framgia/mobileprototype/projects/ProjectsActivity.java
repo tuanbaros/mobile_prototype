@@ -527,6 +527,7 @@ public class ProjectsActivity extends PermissionActivity implements
                 mProjectsPresenter.logout();
                 hideItemLogout();
                 showItemLoginAndRegister();
+                mProjectsAdapter.get().updateProjectShared();
                 break;
 //            case R.id.nav_register:
 //                break;
@@ -579,6 +580,7 @@ public class ProjectsActivity extends PermissionActivity implements
         User.setCurrent(event.getUser());
         mIsDrawerOpen.set(true);
         hideItemLoginAndRegister();
+        mProjectsAdapter.get().updateProjectShared();
         showItemLogout();
     }
 

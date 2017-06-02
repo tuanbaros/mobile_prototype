@@ -206,6 +206,9 @@ public class ProjectLocalDataSource extends DataHelper
             project.getOrientation());
         contentValues.put(
             ProjectPersistenceContract.ProjectEntry.COLUMN_NAME_POSTER, project.getPoster());
+        contentValues.put(
+            ProjectPersistenceContract.ProjectEntry.COLUMN_NAME_USERS, project.getListUsers() ==
+                null ? "" : project.getListUsers());
         return contentValues;
     }
 
