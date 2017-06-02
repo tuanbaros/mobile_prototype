@@ -31,5 +31,6 @@ public final class ProjectPersistenceContract {
         public static final String COLUMN_NAME_HEIGHT = "height";
         public static final String COLUMN_NAME_ORIENTATION = "orientation";
         public static final String COLUMN_NAME_POSTER = "poster";
+        public static final String COLUMN_NAME_USERS = "users";
     }
 }

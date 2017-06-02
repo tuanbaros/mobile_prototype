@@ -111,4 +111,11 @@ public class ProjectsAdapter extends RecyclerView.Adapter<ProjectsAdapter.ViewHo
         }
         return null;
     }
+
+    public void updateProjectShared() {
+        if (mProjects == null || mProjects.size() == 0) return;
+        for (Project project : mProjects) {
+            project.setShared();
+        }
+    }
 }

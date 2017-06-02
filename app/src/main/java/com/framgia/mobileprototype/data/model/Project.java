@@ -45,6 +45,8 @@ public class Project extends BaseObservable implements Cloneable, Serializable {
     private String mAuthorOpenId;
     @SerializedName("num_comment")
     private int mNumComment;
+    private String mListUsers;
+    private boolean mShared;
     private int mNumberMocks;
 
     public Project(Cursor cursor) {
@@ -66,6 +68,9 @@ public class Project extends BaseObservable implements Cloneable, Serializable {
             ProjectPersistenceContract.ProjectEntry.COLUMN_NAME_ORIENTATION));
         mPoster = cursor.getString(cursor.getColumnIndexOrThrow(
             ProjectPersistenceContract.ProjectEntry.COLUMN_NAME_POSTER));
+        mListUsers = cursor.getString(cursor.getColumnIndexOrThrow(
+            ProjectPersistenceContract.ProjectEntry.COLUMN_NAME_USERS));
+        setShared();
     }
 
     public Project() {
@@ -211,5 +216,30 @@ public class Project extends BaseObservable implements Cloneable, Serializable {
 
     public boolean checkByCurrentUser() {
         return User.getCurrent() != null && User.getCurrent().getOpenId().equals(getAuthorOpenId());
+    }
+
+    @Bindable
+    public String getListUsers() {
+        return mListUsers;
+    }
+
+    public void setListUsers(String listUsers) {
+        mListUsers = listUsers;
+        notifyPropertyChanged(BR.listUsers);
+    }
+
+    @Bindable
+    public boolean isShared() {
+        return mShared;
+    }
+
+    public void setShared() {
+        mShared = shared();
+        notifyPropertyChanged(BR.shared);
+    }
+
+    public boolean shared() {
+        return User.getCurrent() != null && mListUsers != null &&
+            mListUsers.contains(User.getCurrent().getOpenId());
     }
 }

@@ -58,4 +58,8 @@ public class ProjectItemActionHandler {
         });
         popupMenu.show();
     }
+
+    public void shareLink(Project project) {
+        mListener.shareLink(project);
+    }
 }
